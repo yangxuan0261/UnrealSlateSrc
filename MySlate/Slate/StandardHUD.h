@@ -26,4 +26,16 @@ public:
 
 	FReply OnConfirmClicked();
 
+	virtual void DrawHUD() override;
+
+	UPROPERTY()
+	class UTexture2D* EnemyTeamHPTexture;
+	/** enemy team health bar texture */
+	UPROPERTY()
+	class UTexture2D* BarFillTexture;
+
+	void DrawActorsHealth();
+	void DrawHealthBar(AActor* ForActor, float HealthPercentage, int32 BarHeight, int32 OffsetY = 0) const;
+	float mUIScale;
+
 };
