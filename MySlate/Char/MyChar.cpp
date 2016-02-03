@@ -5,6 +5,7 @@
 
 #include "MyGameInstance.h"
 #include "Engine.h"
+#include "Level/MyLevelScriptActor.h"
 
 // Sets default values
 AMyChar::AMyChar()
@@ -31,9 +32,17 @@ void AMyChar::Tick( float DeltaTime )
 	if (mgi)
 	{
 		mgi->InterLevelPersistentValue++;
-		FString str = FString::Printf(TEXT("--- Cast myGameInstance Success - %d"), mgi->InterLevelPersistentValue);
+		//FString str = FString::Printf(TEXT("--- Cast myGameInstance Success - %d"), mgi->InterLevelPersistentValue);
+		/*GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);*/
+	}
+
+	AMyLevelScriptActor* msa = Cast<AMyLevelScriptActor>(GetWorld()->GetLevelScriptActor());
+	if (msa)
+	{
+		FString str = FString::Printf(TEXT("--- Cast AMyLevelScriptActor Success - %d"), msa->Counter);
 		GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
 	}
+
 }
 
 // Called to bind functionality to input
