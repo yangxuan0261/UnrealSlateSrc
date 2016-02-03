@@ -20,4 +20,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
 		static bool TestChangeCharAnimInstance(AMyChar* _myChar, FString _pathMesh, FString _pathAnim);
 
+	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib", meta = (WorldContext="WorldContextObject"))
+		static bool VictoryLoadLevelInstance(
+			UObject* WorldContextObject,
+			FString mapPath,
+			int32 InstanceNumber,
+			FVector Location,
+			FRotator Rotation);
 };

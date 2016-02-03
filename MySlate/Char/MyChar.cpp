@@ -3,6 +3,8 @@
 #include "MySlate.h"
 #include "MyChar.h"
 
+#include "MyGameInstance.h"
+#include "Engine.h"
 
 // Sets default values
 AMyChar::AMyChar()
@@ -25,6 +27,13 @@ void AMyChar::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
+	UMyGameInstance* mgi = Cast<UMyGameInstance>(GetGameInstance());
+	if (mgi)
+	{
+		mgi->InterLevelPersistentValue++;
+		FString str = FString::Printf(TEXT("--- Cast myGameInstance Success - %d"), mgi->InterLevelPersistentValue);
+		GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
+	}
 }
 
 // Called to bind functionality to input
