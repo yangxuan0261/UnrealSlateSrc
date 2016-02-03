@@ -40,7 +40,7 @@ void AMyChar::Tick( float DeltaTime )
 	if (msa)
 	{
 		FString str = FString::Printf(TEXT("--- Cast AMyLevelScriptActor Success - %d"), msa->Counter);
-		GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
+		//GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
 	}
 
 }

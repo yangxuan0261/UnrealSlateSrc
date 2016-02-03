@@ -27,4 +27,7 @@ public:
 			int32 InstanceNumber,
 			FVector Location,
 			FRotator Rotation);
+
+	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
+		static void TestNSLocatext(int32 _dayCount, int32 _hp);
 };

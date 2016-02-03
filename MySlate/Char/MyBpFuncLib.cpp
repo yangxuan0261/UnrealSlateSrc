@@ -96,3 +96,28 @@ bool UMyBpFuncLib::VictoryLoadLevelInstance(UObject * WorldContextObject, FStrin
 	//UGameplayStatics::OpenLevel((UObject*s) );
 	return false;
 }
+
+void UMyBpFuncLib::TestNSLocatext(int32 _dayCount, int32 _hp)
+{
+	FFormatNamedArguments Args;
+	Args.Add("DayCount", _dayCount);
+	Args.Add("Hp", _hp);
+	FText txt1 = FText::Format(NSLOCTEXT("Solus", "Day", "--- Day1 {DayCount}"), Args);
+	FText txt2 = FText::Format(NSLOCTEXT("Solus", "HP", "--- HP1 {Hp}"), Args);
+
+	FFormatOrderedArguments Args2;
+	Args2.Add(_dayCount);
+	Args2.Add(_hp);
+	FText txt3 = FText::Format(NSLOCTEXT("Solus", "Day", "--- Day2 {0}"), Args2);
+	FText txt4 = FText::Format(NSLOCTEXT("Solus", "HP", "--- HP2 {1}"), Args2);
+
+
+	FString str = txt1.ToString()
+		+ TEXT("\n")
+		+ txt2.ToString()
+		+ TEXT("\n")
+		+ txt3.ToString()
+		+ TEXT("\n")
+		+ txt4.ToString();
+		GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
+}
