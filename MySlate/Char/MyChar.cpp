@@ -16,12 +16,7 @@ AMyChar::AMyChar()
 
 }
 
-// Called when the game starts or when spawned
-void AMyChar::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
+
 
 // Called every frame
 void AMyChar::Tick( float DeltaTime )
@@ -51,4 +46,63 @@ void AMyChar::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 	Super::SetupPlayerInputComponent(InputComponent);
 
 }
+
+class Test : public TSharedFromThis<Test>
+{
+public:
+	void output(int32 _num)
+	{
+		FString str = FString::Printf(TEXT("--- Test  output - %d"), _num);
+		GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Red, str);
+	}
+};
+
+static void gOutput(int32 _num)
+{
+	FString str = FString::Printf(TEXT("--- gOutput - %d"), _num);
+	GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Black, str);
+}
+
+// Called when the game starts or when spawned
+void AMyChar::BeginPlay()
+{
+	Super::BeginPlay();
+
+	auto lambdaFunc = [&](int32 _num)->void {
+		FString str = FString::Printf(TEXT("--- lambdaFunc - %d"), _num);
+		GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
+	};
+
+	testSp = TSharedPtr<Test>(new Test); //new一个共享指针
+
+	mMyDelegate1.BindUObject(this, &AMyChar::testDelegateUObject); //只能绑定继承自UObject的类
+	mMyDelegate2.BindSP(testSp.Get(), &Test::output);//绑定继承自模板TSharedFromThis<xxx>的类
+	mMyDelegate3.BindStatic(&gOutput);//绑定静态方法
+	mMyDelegate4.BindLambda(lambdaFunc);//绑定lambda表达式
+	mMyDelegate5.BindUFunction(this, "testDelegateUFunctionBp");//绑定蓝图中的方法
+}
+
+
+void AMyChar::testDelegateUObject(int32 _num)
+{
+	FString str = FString::Printf(TEXT("--- testDelegateUObject - %d"), _num);
+	GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Yellow, str);
+}
+
+void AMyChar::runAllDelegate()
+{
+	mMyDelegate1.Execute(111);
+	bool b2 = mMyDelegate2.ExecuteIfBound(222);
+	bool b3 = mMyDelegate3.ExecuteIfBound(333);
+	bool b4 = mMyDelegate4.ExecuteIfBound(444);
+	bool b5 = mMyDelegate5.ExecuteIfBound(555);
+}
+
+void AMyChar::runBpFunc(FString _funcName, FString _arg1, int32 _arg2)
+{
+	FOutputDeviceNull ar;
+	FString command = FString::Printf(TEXT("%s \"%s\" %d"), *_funcName, *_arg1, _arg2);
+	CallFunctionByNameWithArguments(*command, ar, nullptr, true);
+}
+
 

@@ -18,4 +18,12 @@ public:
 	/** Increment this value in any map, change map, and notice it persists! */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UMyGameInstance)
 		int32 InterLevelPersistentValue;
+
+	//loading test
+	//virtual void Init() override;
+
+	//UFUNCTION()W
+	//	virtual void MyBeginLoadingScreen();
+	//UFUNCTION()
+	//	virtual void MyEndLoadingScreen();
 };

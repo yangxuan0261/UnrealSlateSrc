@@ -5,6 +5,10 @@
 #include "GameFramework/Character.h"
 #include "MyChar.generated.h"
 
+DECLARE_DELEGATE_OneParam(FMyDelegate1, int32);
+
+class Test;
+
 UCLASS()
 class AMyChar : public ACharacter
 {
@@ -22,7 +26,22 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
+	
+	//---------- 测试delegate的各种bind
+	void testDelegateUObject(int32 _num);
 
-	
-	
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+	void runAllDelegate();
+
+	TSharedPtr<Test> testSp;
+
+	FMyDelegate1 mMyDelegate1;
+	FMyDelegate1 mMyDelegate2;
+	FMyDelegate1 mMyDelegate3;
+	FMyDelegate1 mMyDelegate4;
+	FMyDelegate1 mMyDelegate5;
+
+	//---------- 测试调用指定蓝图方法，并传参数 
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		void runBpFunc(FString _funcName, FString _arg1, int32 _arg2);
 };
