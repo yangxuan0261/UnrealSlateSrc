@@ -8,6 +8,7 @@
 #include "Engine/StreamableManager.h"
 #include "Engine.h"
 #include "Engine/LevelStreamingKismet.h"
+#include "Singleton/SolusDataSingleton.h"
 
 bool UMyBpFuncLib::TestChangeCharAnimInstance(AMyChar* _myChar, FString _pathMesh, FString _pathAnim)
 {
@@ -387,3 +388,21 @@ void UMyBpFuncLib::TestFileReadUnCompressed(FString _path)
 	}
 	GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Yellow, str2 + str3 + str4);
 }
+
+void UMyBpFuncLib::TestAsyncLoad()
+{
+	
+}
+
+USolusDataSingleton * UMyBpFuncLib::GetSolusData(bool & IsValid)
+{	//IsValid看起来时新参，其实是蓝图中的返回值
+	IsValid = false;
+	USolusDataSingleton* DataInstance = Cast<USolusDataSingleton>(GEngine->GameSingleton); //这里指定配置文件中指定的单例类
+
+	if (!DataInstance) return NULL;
+	if (!DataInstance->IsValidLowLevel()) return NULL;
+
+	IsValid = true;
+	return DataInstance;
+}
+

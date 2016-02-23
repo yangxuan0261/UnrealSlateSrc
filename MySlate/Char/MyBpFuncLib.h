@@ -6,7 +6,7 @@
 #include "MyBpFuncLib.generated.h"
 
 class AMyChar;
-
+class USolusDataSingleton;
 /**
  * 
  */
@@ -47,4 +47,10 @@ public:
 		static void TestFileWriteUnCompressed(FString _path);
 	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
 		static void TestFileReadUnCompressed(FString _path);
+
+	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
+		static void TestAsyncLoad();
+
+	UFUNCTION(BlueprintCallable, Category = "Solus Data Singleton")
+		static USolusDataSingleton* GetSolusData(bool& IsValid);
 };
