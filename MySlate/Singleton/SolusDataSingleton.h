@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Engine/StreamableManager.h"
 #include "SolusDataSingleton.generated.h"
 
 UCLASS(Blueprintable, BlueprintType)
@@ -8,6 +9,9 @@ class USolusDataSingleton : public UObject
 	GENERATED_BODY()
 public:
 	USolusDataSingleton(const FObjectInitializer& ObjectInitializer);
+
+	static USolusDataSingleton* Get(); 	// Get method to access this object
+	FStreamableManager AssetLoader;		// Your asset loader
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Solus Data Singleton")
 		TArray<UClass*> SolusTreeBlueprints;

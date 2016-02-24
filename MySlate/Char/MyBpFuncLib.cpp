@@ -389,11 +389,6 @@ void UMyBpFuncLib::TestFileReadUnCompressed(FString _path)
 	GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Yellow, str2 + str3 + str4);
 }
 
-void UMyBpFuncLib::TestAsyncLoad()
-{
-	
-}
-
 USolusDataSingleton * UMyBpFuncLib::GetSolusData(bool & IsValid)
 {	//IsValid看起来时新参，其实是蓝图中的返回值
 	IsValid = false;
@@ -406,3 +401,26 @@ USolusDataSingleton * UMyBpFuncLib::GetSolusData(bool & IsValid)
 	return DataInstance;
 }
 
+USolusDataSingleton* UMyBpFuncLib::GetSolusSingleton(bool & IsValid)
+{
+	IsValid = false;
+	USolusDataSingleton* DataInstance = USolusDataSingleton::Get();
+	if (!DataInstance) return NULL;
+	if (!DataInstance->IsValidLowLevel()) return NULL;
+
+	IsValid = true;
+	return DataInstance;
+}
+
+UObject* UMyBpFuncLib::TestAsyncLoad(AMyChar* _myChar)
+{
+	FStringAssetReference HeadAssetToLoad;
+	TAssetPtr<USkeletalMesh> MeshResource;
+	TArray<FStringAssetReference> ObjToLoad;
+	FStreamableManager& BaseLoader = USolusDataSingleton::Get()->AssetLoader;
+	HeadAssetToLoad = MeshResource.ToStringReference();
+	ObjToLoad.AddUnique(HeadAssetToLoad);
+	BaseLoader.RequestAsyncLoad(ObjToLoad, FStreamableDelegate::CreateUObject(_myChar, &AMyChar::TestAsyncLoad));
+
+	return nullptr;
+}

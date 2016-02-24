@@ -44,4 +44,7 @@ public:
 	//---------- 测试调用指定蓝图方法，并传参数 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void runBpFunc(FString _funcName, FString _arg1, int32 _arg2);
+
+	//---------- 测试async load
+	void TestAsyncLoad();
 };

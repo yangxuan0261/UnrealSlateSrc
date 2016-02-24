@@ -48,9 +48,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
 		static void TestFileReadUnCompressed(FString _path);
 
-	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
-		static void TestAsyncLoad();
-
 	UFUNCTION(BlueprintCallable, Category = "Solus Data Singleton")
 		static USolusDataSingleton* GetSolusData(bool& IsValid);
+
+	UFUNCTION(BlueprintCallable, Category = "Solus Data Singleton")
+		static USolusDataSingleton* GetSolusSingleton(bool& IsValid);
+
+	UFUNCTION(BlueprintCallable, Category = "Async Load")
+		static UObject* TestAsyncLoad(AMyChar* _myChar);
 };

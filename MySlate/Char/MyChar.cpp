@@ -105,4 +105,10 @@ void AMyChar::runBpFunc(FString _funcName, FString _arg1, int32 _arg2)
 	CallFunctionByNameWithArguments(*command, ar, nullptr, true);
 }
 
+void AMyChar::TestAsyncLoad()
+{
+	FString str = FString::Printf(TEXT("--- AMyChar::TestAsyncLoad"));
+	GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Red, str);
+}
+
 
