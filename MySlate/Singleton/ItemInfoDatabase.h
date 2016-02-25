@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Engine/DataAsset.h"
-
 #include "ItemInfoDatabase.generated.h"
-
 
 USTRUCT()
 struct FVCharPartInfo

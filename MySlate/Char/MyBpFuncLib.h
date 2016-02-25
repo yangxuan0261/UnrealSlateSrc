@@ -7,7 +7,6 @@
 
 class AMyChar;
 class USolusDataSingleton;
-class UItemInfoDatabase;
 /**
  * 
  */
@@ -56,8 +55,5 @@ public:
 		static USolusDataSingleton* GetSolusSingleton(bool& IsValid);
 
 	UFUNCTION(BlueprintCallable, Category = "Async Load")
-		static UObject* TestAsyncLoad(AMyChar* _myChar, UItemInfoDatabase* _databse);
-
-	UFUNCTION(BlueprintCallable, Category = "BPObject Load")
-		static UItemInfoDatabase* TestLoadBPObject(FString _path);
+		static bool TestAsyncLoad(AMyChar* _myChar);
 };

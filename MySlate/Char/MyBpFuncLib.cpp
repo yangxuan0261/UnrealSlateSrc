@@ -413,25 +413,23 @@ USolusDataSingleton* UMyBpFuncLib::GetSolusSingleton(bool & IsValid)
 	return DataInstance;
 }
 
-UObject* UMyBpFuncLib::TestAsyncLoad(AMyChar* _myChar, UItemInfoDatabase* _database)
+bool UMyBpFuncLib::TestAsyncLoad(AMyChar* _myChar)
 {
-	if (!_myChar || !_database)
-		return nullptr;
+	if (!_myChar)
+		return false;
 
-	FStringAssetReference HeadAssetToLoad;
+	FStreamableManager* BaseLoader = USolusDataSingleton::Get()->AssetLoader;
+	UItemInfoDatabase* _database = USolusDataSingleton::Get()->ItemDatabase;
+
+	if (!BaseLoader || !_database)
+		return false;
+
 	TArray<FStringAssetReference> ObjToLoad;
-	FStreamableManager& BaseLoader = USolusDataSingleton::Get()->AssetLoader;
 	for (int32 i = 0; i < _database->MeshList.Num(); ++i)
 	{
 		ObjToLoad.AddUnique(_database->MeshList[i].MeshResource.ToStringReference());
 	}
-	BaseLoader.RequestAsyncLoad(ObjToLoad, FStreamableDelegate::CreateUObject(_myChar, &AMyChar::TestAsyncLoad));
-
-	return nullptr;
-}
-
-UItemInfoDatabase* UMyBpFuncLib::TestLoadBPObject(FString _path)
-{
-	auto cls = StaticLoadObject(UObject::StaticClass(), nullptr, *_path);
-	return Cast<UItemInfoDatabase>(cls);
+	//ÇëÇóÒì²½¼ÓÔØ
+	BaseLoader->RequestAsyncLoad(ObjToLoad, FStreamableDelegate::CreateUObject(_myChar, &AMyChar::TestAsyncLoad));
+	return true;
 }
