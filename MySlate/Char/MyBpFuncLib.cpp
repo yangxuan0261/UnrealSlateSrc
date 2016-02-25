@@ -9,6 +9,7 @@
 #include "Engine.h"
 #include "Engine/LevelStreamingKismet.h"
 #include "Singleton/SolusDataSingleton.h"
+#include "Singleton/ItemInfoDatabase.h"
 
 bool UMyBpFuncLib::TestChangeCharAnimInstance(AMyChar* _myChar, FString _pathMesh, FString _pathAnim)
 {
@@ -412,15 +413,25 @@ USolusDataSingleton* UMyBpFuncLib::GetSolusSingleton(bool & IsValid)
 	return DataInstance;
 }
 
-UObject* UMyBpFuncLib::TestAsyncLoad(AMyChar* _myChar)
+UObject* UMyBpFuncLib::TestAsyncLoad(AMyChar* _myChar, UItemInfoDatabase* _database)
 {
+	if (!_myChar || !_database)
+		return nullptr;
+
 	FStringAssetReference HeadAssetToLoad;
-	TAssetPtr<USkeletalMesh> MeshResource;
 	TArray<FStringAssetReference> ObjToLoad;
 	FStreamableManager& BaseLoader = USolusDataSingleton::Get()->AssetLoader;
-	HeadAssetToLoad = MeshResource.ToStringReference();
-	ObjToLoad.AddUnique(HeadAssetToLoad);
+	for (int32 i = 0; i < _database->MeshList.Num(); ++i)
+	{
+		ObjToLoad.AddUnique(_database->MeshList[i].MeshResource.ToStringReference());
+	}
 	BaseLoader.RequestAsyncLoad(ObjToLoad, FStreamableDelegate::CreateUObject(_myChar, &AMyChar::TestAsyncLoad));
 
 	return nullptr;
+}
+
+UItemInfoDatabase* UMyBpFuncLib::TestLoadBPObject(FString _path)
+{
+	auto cls = StaticLoadObject(UObject::StaticClass(), nullptr, *_path);
+	return Cast<UItemInfoDatabase>(cls);
 }
