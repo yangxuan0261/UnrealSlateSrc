@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+//#include "TestChar.h"
 #include "MyChar.generated.h"
 
 DECLARE_DELEGATE_OneParam(FMyDelegate1, int32);
