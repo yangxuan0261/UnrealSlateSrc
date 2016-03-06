@@ -16,9 +16,9 @@ class MYSLATE_API AMyGameMode : public AGameMode
 public:
 	AMyGameMode();
 	
-	UFUNCTION(Exec, meta = (FriendlyName = "Solus Console Command ~ solspeed"))
+	UFUNCTION(Exec)
 		virtual void solspeed();
 
-	UFUNCTION(Exec, meta = (FriendlyName = "Solus Console Command ~ solname"))
+	UFUNCTION(Exec)
 		virtual void solname(FString _str, int32 _num);
 };

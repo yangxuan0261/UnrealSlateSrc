@@ -61,12 +61,12 @@ void SStandardSlateWidget::Construct(const FArguments& InArgs)
 		.VAlign(VAlign_Center)
 		.ForegroundColor(FSlateColor::UseForeground())
 		//.DesiredSizeScale(FVector2D(5.f, 5.f))
-		.ContentScale(FVector2D(5.f, 5.f))
+		.ContentScale(FVector2D(1.5f,1.5f))
 		[
 			//Colored Background//添加按钮背景
 			SNew(SBorder)
 			.Padding(FMargin(3))
-		.DesiredSizeScale(FVector2D(5.f, 5.f))
+		.DesiredSizeScale(FVector2D(2.f, 2.f))
 		//~~~ Rainbow Image for Button!!! ~~~
 		//.BorderImage(FCoreStyle::Get().GetBrush("ColorSpectrum.Spectrum"))
 		[
