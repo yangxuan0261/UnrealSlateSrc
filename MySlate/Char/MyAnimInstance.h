@@ -12,7 +12,7 @@ UCLASS()
 class MYSLATE_API UMyAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
-	
+
 public:
 	UMyAnimInstance();
 
@@ -22,6 +22,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyAnim")
 		ACharacter* GetOwnerChar();
 
+	UFUNCTION(BlueprintCallable, Category = "MyAnim")
+		void AnimNotify_Begin(UAnimNotify* Notify);
+	UFUNCTION(BlueprintCallable, Category = "MyAnim")
+		void AnimNotify_End(UAnimNotify* Notify);
 private:
-		ACharacter* mOwnerChar;
+	ACharacter* mOwnerChar;
 };

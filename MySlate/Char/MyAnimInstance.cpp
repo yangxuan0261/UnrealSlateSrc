@@ -2,6 +2,8 @@
 
 #include "MySlate.h"
 #include "MyAnimInstance.h"
+#include "Engine.h"
+#include "MyChar.h"
 
 UMyAnimInstance::UMyAnimInstance()
 {
@@ -26,4 +28,20 @@ ACharacter* UMyAnimInstance::GetOwnerChar()
 		mOwnerChar = owner ? Cast<ACharacter>(owner) : nullptr;
 	}
 	return mOwnerChar;
+}
+
+void UMyAnimInstance::AnimNotify_Begin(UAnimNotify * Notify)
+{
+	AMyChar* mychar = Cast<AMyChar>(GetOwnerChar());
+	if (mychar)
+	{
+		FString str = FString::Printf(TEXT("--- AnimNotify_Begin - %d"), mychar->mHealth);
+		GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
+	}
+}
+
+void UMyAnimInstance::AnimNotify_End(UAnimNotify * Notify)
+{
+	FString str = FString::Printf(TEXT("--- AnimNotify_End"));
+	GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Yellow, str);
 }

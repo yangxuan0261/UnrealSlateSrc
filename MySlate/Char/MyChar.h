@@ -48,4 +48,7 @@ public:
 
 	//---------- ≤‚ ‘async load
 	void TestAsyncLoad();
+
+public:
+	int32		mHealth;
 };
