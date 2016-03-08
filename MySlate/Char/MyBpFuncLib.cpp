@@ -437,14 +437,13 @@ bool UMyBpFuncLib::TestAsyncLoad(AMyChar* _myChar)
 void UMyBpFuncLib::TestObjFunc(AMyChar* _myChar,FString _funcName)
 {
 	FName FuncFName = FName(*_funcName);
-
 	UFunction* Function = _myChar->FindFunction(FuncFName);
 	if (Function)
 	{
-		FString str = FString::Printf(TEXT("--- UFunction arg num:%d"), Function->NumParms);
+		FString str = FString::Printf(TEXT("--- UFunction arg num:%d"), Function->NumParms); //这个方法的参数个数
 		GEngine->AddOnScreenDebugMessage(0, 2.0f, FColor::Green, str);
 
-		struct FAnimNotifierHandler_Parms
+		struct FAnimNotifierHandler_Parms //结构体和方法参数的类型和顺序要一致
 		{
 			int32 NotifyNum;
 			FString NotifyStr;
