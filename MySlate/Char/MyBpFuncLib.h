@@ -56,4 +56,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Async Load")
 		static bool TestAsyncLoad(AMyChar* _myChar);
+
+	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
+		static void TestObjFunc(AMyChar* _myChar,FString _funcName);
+
 };

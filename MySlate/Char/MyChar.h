@@ -49,6 +49,10 @@ public:
 	//---------- ≤‚ ‘async load
 	void TestAsyncLoad();
 
+	//---------- ≤‚ ‘ufunction
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		void TestFunction(int32 _num);
+
 public:
 	int32		mHealth;
 };

@@ -433,3 +433,24 @@ bool UMyBpFuncLib::TestAsyncLoad(AMyChar* _myChar)
 	BaseLoader->RequestAsyncLoad(ObjToLoad, FStreamableDelegate::CreateUObject(_myChar, &AMyChar::TestAsyncLoad));
 	return true;
 }
+
+void UMyBpFuncLib::TestObjFunc(AMyChar* _myChar,FString _funcName)
+{
+	FName FuncFName = FName(*_funcName);
+
+	UFunction* Function = _myChar->FindFunction(FuncFName);
+	if (Function)
+	{
+		FString str = FString::Printf(TEXT("--- UFunction arg num:%d"), Function->NumParms);
+		GEngine->AddOnScreenDebugMessage(0, 2.0f, FColor::Green, str);
+
+		struct FAnimNotifierHandler_Parms
+		{
+			int32 NotifyNum;
+		};
+
+		FAnimNotifierHandler_Parms Parms;
+		Parms.NotifyNum = 987;
+		_myChar->ProcessEvent(Function, &Parms);
+	}
+}

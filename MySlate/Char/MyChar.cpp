@@ -111,4 +111,10 @@ void AMyChar::TestAsyncLoad()
 	GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Red, str);
 }
 
+void AMyChar::TestFunction(int32 _num)
+{
+	FString str = FString::Printf(TEXT("--- AMyChar::TestFunction - %d"), _num);
+	GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
+}
+
 
