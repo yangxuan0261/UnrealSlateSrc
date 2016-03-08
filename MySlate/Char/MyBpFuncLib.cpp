@@ -447,10 +447,12 @@ void UMyBpFuncLib::TestObjFunc(AMyChar* _myChar,FString _funcName)
 		struct FAnimNotifierHandler_Parms
 		{
 			int32 NotifyNum;
+			FString NotifyStr;
 		};
 
 		FAnimNotifierHandler_Parms Parms;
 		Parms.NotifyNum = 987;
+		Parms.NotifyStr = FString(TEXT("yangx"));
 		_myChar->ProcessEvent(Function, &Parms);
 	}
 }

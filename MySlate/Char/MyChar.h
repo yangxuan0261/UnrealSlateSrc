@@ -51,7 +51,7 @@ public:
 
 	//---------- ≤‚ ‘ufunction
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
-		void TestFunction(int32 _num);
+		void TestFunction(int32 _num, FString _str);
 
 public:
 	int32		mHealth;
