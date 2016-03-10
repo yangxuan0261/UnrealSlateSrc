@@ -14,6 +14,7 @@ AMyChar::AMyChar() : Super()
 	PrimaryActorTick.bCanEverTick = true;
 
 	mHealth = 987;
+	Weapon1 = nullptr;
 }
 
 
@@ -115,6 +116,11 @@ void AMyChar::TestFunction(int32 _num, FString _str)
 {
 	FString str = FString::Printf(TEXT("--- AMyChar::TestFunction - num:%d, str:%s"), _num, *_str);
 	GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
+}
+
+void AMyChar::SetWeapon1Class(TSubclassOf<USMyAttachment> InWeapon)
+{
+	Weapon1Class = InWeapon;
 }
 
 

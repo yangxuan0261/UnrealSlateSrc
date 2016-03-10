@@ -60,4 +60,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
 		static void TestObjFunc(AMyChar* _myChar,FString _funcName);
 
+	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
+		static void TestBpDelegate(AMyChar* _myChar, int32 _num);
+
+	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
+		static void TestDressWeapon(AMyChar* _myChar);
+
 };

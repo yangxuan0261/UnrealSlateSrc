@@ -7,8 +7,11 @@
 #include "MyChar.generated.h"
 
 DECLARE_DELEGATE_OneParam(FMyDelegate1, int32);
+//c++和bp混合使用的代理必须是这种宏，而不是上面这种，abc为蓝图中事件的形参
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMyDelegate2, int32, abc);
 
 class Test;
+class USMyAttachment;
 
 UCLASS()
 class AMyChar : public ACharacter
@@ -52,6 +55,22 @@ public:
 	//---------- 测试ufunction
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void TestFunction(int32 _num, FString _str);
+
+	//---------- 测试蓝图接收代理的广播事件
+	//必须声明为BlueprintAssignable，只给蓝图绑定事件
+	UPROPERTY(BlueprintAssignable, Category = "MyChar")
+		FMyDelegate2 OnMyDelegate2;
+
+	//---------- 测试绑定武器
+	/** default weapon for the char */
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		void SetWeapon1Class(TSubclassOf<USMyAttachment> InWeapon);
+
+	UPROPERTY(EditAnywhere, Category = "MyChar")
+		TSubclassOf<USMyAttachment> Weapon1Class;
+
+	UPROPERTY(EditAnywhere, Category = "MyChar")
+		USMyAttachment* Weapon1;
 
 public:
 	int32		mHealth;

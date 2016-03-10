@@ -10,6 +10,7 @@
 #include "Engine/LevelStreamingKismet.h"
 #include "Singleton/SolusDataSingleton.h"
 #include "Singleton/ItemInfoDatabase.h"
+#include "MyAttachment.h"
 
 bool UMyBpFuncLib::TestChangeCharAnimInstance(AMyChar* _myChar, FString _pathMesh, FString _pathAnim)
 {
@@ -453,5 +454,21 @@ void UMyBpFuncLib::TestObjFunc(AMyChar* _myChar,FString _funcName)
 		Parms.NotifyNum = 987;
 		Parms.NotifyStr = FString(TEXT("yangx"));
 		_myChar->ProcessEvent(Function, &Parms);
+	}
+}
+
+void UMyBpFuncLib::TestBpDelegate(AMyChar * _myChar, int32 _num)
+{
+	_myChar->OnMyDelegate2.Broadcast(_num);
+}
+
+void UMyBpFuncLib::TestDressWeapon(AMyChar * _myChar)
+{
+	if (!_myChar->Weapon1)
+	{
+		USMyAttachment* MyArmor = NewObject<USMyAttachment>(_myChar, *_myChar->Weapon1Class);
+		MyArmor->RegisterComponent();
+		MyArmor->AttachTo(_myChar->GetMesh(), MyArmor->AttachPoint);
+		_myChar->Weapon1 = MyArmor;
 	}
 }
