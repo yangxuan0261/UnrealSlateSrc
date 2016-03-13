@@ -13,5 +13,5 @@ public:
 
 	/** Attach point on pawn */
 	UPROPERTY(EditDefaultsOnly, Category = Attachment)
-		FName AttachPoint;
+		FName AttachPoint; //目标绑定点，提供给蓝图编辑
 };

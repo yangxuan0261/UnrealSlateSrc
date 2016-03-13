@@ -6,6 +6,7 @@
 #include "MyGameInstance.h"
 #include "Engine.h"
 #include "Level/MyLevelScriptActor.h"
+#include "AI/MyAIController.h"
 
 // Sets default values
 AMyChar::AMyChar() : Super()
@@ -15,6 +16,10 @@ AMyChar::AMyChar() : Super()
 
 	mHealth = 987;
 	Weapon1 = nullptr;
+	mMon1 = nullptr;
+
+	//设置ai控制类
+	AIControllerClass = AMyAIController::StaticClass();
 }
 
 
@@ -36,9 +41,15 @@ void AMyChar::Tick( float DeltaTime )
 	if (msa)
 	{
 		FString str = FString::Printf(TEXT("--- Cast AMyLevelScriptActor Success - %d"), msa->Counter);
-		//GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
+		//GEngine->AddOnScreenDebugMessage(0, 1.0f, FColor::Green, str);
 	}
 
+	/*if (mMon1) //PlayAnimMontage(mMon1)只能执行一次
+	{
+		float time = PlayAnimMontage(mMon1);
+		FString str = FString::Printf(TEXT("--- PlayAnimMontage - %f"), time);
+		GEngine->AddOnScreenDebugMessage(0, 1.0f, FColor::Green, str);
+	}*/
 }
 
 // Called to bind functionality to input
@@ -81,6 +92,9 @@ void AMyChar::BeginPlay()
 	mMyDelegate3.BindStatic(&gOutput);//绑定静态方法
 	mMyDelegate4.BindLambda(lambdaFunc);//绑定lambda表达式
 	mMyDelegate5.BindUFunction(this, "testDelegateUFunctionBp");//绑定蓝图中的方法
+
+	//生成ai控制类
+	SpawnDefaultController();
 }
 
 

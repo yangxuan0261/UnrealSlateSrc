@@ -12,6 +12,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMyDelegate2, int32, abc);
 
 class Test;
 class USMyAttachment;
+class UBehaviorTree;
 
 UCLASS()
 class AMyChar : public ACharacter
@@ -71,6 +72,13 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "MyChar")
 		USMyAttachment* Weapon1;
+
+
+	UPROPERTY(EditDefaultsOnly, Category = "MyChar")
+		UAnimMontage*		mMon1;
+
+	UPROPERTY(EditAnywhere, Category = "MyBehavior")
+		UBehaviorTree* BotBehavior;
 
 public:
 	int32		mHealth;
