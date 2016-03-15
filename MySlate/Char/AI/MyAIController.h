@@ -10,12 +10,7 @@ class AMyAIController : public AAIController
 {
 	GENERATED_UCLASS_BODY()
 private:
-	UPROPERTY(transient)
-		UBlackboardComponent* BlackboardComp;
 
-	/* Cached BT component */
-	UPROPERTY(transient)
-		UBehaviorTreeComponent* BehaviorComp;
 
 protected:
 	int32 EnemyKeyID;
@@ -29,13 +24,22 @@ public:
 	// End APlayerController interface
 
 	/* Finds the closest enemy and sets them as current target */
-	UFUNCTION(BlueprintCallable, Category = "Behavior")
+	UFUNCTION(BlueprintCallable, Category = "MyBehavior")
 		bool FindClosestEnemy();
 
-	bool SetEnemy(class APawn* InPawn);
+	UFUNCTION(BlueprintCallable, Category = "MyBehavior")
+		bool SetEnemy(class APawn* InPawn);
+
+	UFUNCTION(BlueprintCallable, Category = "MyBehavior")
 	class APawn* GetEnemy() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Behavior")
+	UFUNCTION(BlueprintCallable, Category = "MyBehavior")
 		void PlayAnim();
 
+	//UPROPERTY(EditAnywhere, Category = "MyBehavior")
+	//	UBlackboardComponent* BlackboardComp;
+
+	///* Cached BT component */
+	//UPROPERTY(EditAnywhere, Category = "MyBehavior")
+	//	UBehaviorTreeComponent* BehaviorComp;
 };

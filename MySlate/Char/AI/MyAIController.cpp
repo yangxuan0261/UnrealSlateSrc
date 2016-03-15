@@ -11,8 +11,8 @@
 
 AMyAIController::AMyAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	BlackboardComp = ObjectInitializer.CreateDefaultSubobject<UBlackboardComponent>(this, TEXT("BlackBoardComp"));
-	BrainComponent = BehaviorComp = ObjectInitializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComp"));
+	/*BlackboardComp = ObjectInitializer.CreateDefaultSubobject<UBlackboardComponent>(this, TEXT("BlackBoardComp"));
+	BrainComponent = BehaviorComp = ObjectInitializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComp"));*/
 	//FString str = FString::Printf(TEXT("--- AStandardHUD::OnConfirmClicked hello world - %d"), 789);
 	//GEngine->AddOnScreenDebugMessage(0, 2.0f, FColor::Red, str);
 }
@@ -20,7 +20,7 @@ AMyAIController::AMyAIController(const FObjectInitializer& ObjectInitializer) : 
 void AMyAIController::GameHasEnded(AActor * EndGameFocus, bool bIsWinner)
 {
 	// Stop the behaviour tree/logic
-	BehaviorComp->StopTree();
+	//BehaviorComp->StopTree();
 }
 
 void AMyAIController::Possess(APawn * InPawn)
@@ -32,16 +32,10 @@ void AMyAIController::Possess(APawn * InPawn)
 	// start behavior
 	if (myChar && myChar->BotBehavior)
 	{
-		if (myChar->BotBehavior->BlackboardAsset)
-		{	//初始化Behavior蓝图中的Blackboard到这个BlackboardComp组件中
-			BlackboardComp->InitializeBlackboard(*myChar->BotBehavior->BlackboardAsset);
-		}
 
-		//获取BlackboardComp中的key
-		EnemyKeyID = BlackboardComp->GetKeyID("Enemy");
-		NeedAmmoKeyID = BlackboardComp->GetKeyID("NeedAmmo");
 
-		BehaviorComp->StartTree(*(myChar->BotBehavior));
+		
+
 	}
 }
 
@@ -88,19 +82,19 @@ bool AMyAIController::FindClosestEnemy()
 
 bool AMyAIController::SetEnemy(APawn * InPawn)
 {
-	if (BlackboardComp)
-	{
-		return BlackboardComp->SetValue<UBlackboardKeyType_Object>(EnemyKeyID, InPawn);
-	}
+	//if (BlackboardComp)
+	//{
+	//	return BlackboardComp->SetValue<UBlackboardKeyType_Object>(EnemyKeyID, InPawn);
+	//}
 	return false;
 }
 
 APawn * AMyAIController::GetEnemy() const
 {
-	if (BlackboardComp)
-	{
-		return Cast<APawn>(BlackboardComp->GetValue<UBlackboardKeyType_Object>(EnemyKeyID));
-	}
+	//if (BlackboardComp)
+	//{
+	//	return Cast<APawn>(BlackboardComp->GetValue<UBlackboardKeyType_Object>(EnemyKeyID));
+	//}
 	return nullptr;
 }
 
