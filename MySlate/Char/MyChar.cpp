@@ -20,6 +20,10 @@ AMyChar::AMyChar() : Super()
 
 	//设置ai控制类
 	AIControllerClass = AMyAIController::StaticClass();
+
+	//检测是否有蓝图实现
+	UClass* selfClass = AMyChar::StaticClass();
+	hasOnDeathImplementEvent = BlueprintNodeHelpers::HasBlueprintFunction(TEXT("OnDeath"), this, selfClass);
 }
 
 
