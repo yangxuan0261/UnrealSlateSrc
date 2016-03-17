@@ -472,3 +472,11 @@ void UMyBpFuncLib::TestDressWeapon(AMyChar * _myChar)
 		_myChar->Weapon1 = MyArmor;
 	}
 }
+
+void UMyBpFuncLib::TestHasBpImpl(AMyChar * _myChar)
+{
+	FString str = FString::Printf(TEXT("--- has bp func:%d"), _myChar->hasOnDeathImplementEvent);
+	GEngine->AddOnScreenDebugMessage(0, 2.0f, FColor::Red, str);
+
+	_myChar->OnDeath(FString(TEXT("aaa")), 123);
+}

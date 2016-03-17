@@ -81,7 +81,7 @@ public:
 		UBehaviorTree* BotBehavior;
 
 	//---------- 测试是否有实现
-	uint32 hasOnDeathImplementEvent : 2;
+		uint32 hasOnDeathImplementEvent : 1;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "MyBehavior")
 		void OnDeath(const FString& _str, int32 _num);

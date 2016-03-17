@@ -7,6 +7,7 @@
 #include "Engine.h"
 #include "Level/MyLevelScriptActor.h"
 #include "AI/MyAIController.h"
+#include "BlueprintNodeHelpers.h"
 
 // Sets default values
 AMyChar::AMyChar() : Super()

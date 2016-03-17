@@ -32,9 +32,9 @@ public:
 		static void TestNSLocatext(int32 _dayCount, int32 _hp);
 
 	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
-		static void TestRefArgs1(UPARAM(ref) TArray<int32>& _numAry, UPARAM(ref) TArray<int32>& _numAry2);
+		static void TestRefArgs1(UPARAM(Ref) TArray<int32>& _numAry, UPARAM(ref) TArray<int32>& _numAry2);
 	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
-		static void TestRefArgs2(UPARAM(ref) TArray<int32>& _numAry, TArray<int32>& _numAry2);
+		static void TestRefArgs2(UPARAM(Ref) TArray<int32>& _numAry, TArray<int32>& _numAry2);
 	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
 		static void TestRefArgs3(TArray<int32>& _numAry2);
 
@@ -66,4 +66,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
 		static void TestDressWeapon(AMyChar* _myChar);
 
+	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
+		static void TestHasBpImpl(AMyChar* _myChar);
 };
