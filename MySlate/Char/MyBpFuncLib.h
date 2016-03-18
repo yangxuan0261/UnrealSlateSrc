@@ -68,4 +68,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
 		static void TestHasBpImpl(AMyChar* _myChar);
+
+	UFUNCTION(BlueprintCallable, Category = "MyBpFuncLib")
+		static void TestBaseDataContain();
 };
