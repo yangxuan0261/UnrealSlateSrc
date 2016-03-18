@@ -947,6 +947,14 @@ static void testMap1()
 		}
 	};
 
+	auto printFunc3= [&](TMap<int32, FString>& _map)->void {
+		for (TMap<int32, FString>::TConstIterator iter(_map); iter; ++iter)
+		{
+			UE_LOG(MyContaimTest, Warning, TEXT("--- key:%d, value222:%s "),
+				iter->Key, *iter->Value);
+		}
+	};
+
 	//TODO: ------------------  华丽分割线 TMap 增 ------------
 	// 创建
 	// key比较使用==
@@ -1147,6 +1155,7 @@ static void testMap1()
 	//  { Key: 9, Value: "Melon"  },
 	//  { Key: 3, Value: "Orange" }
 	// ]
+	//printFunc3(FruitMap);
 
 	//TODO: ------------------  华丽分割线 TMap 支持的操作符, 也支持move语义 ------------
 	// 操作符
@@ -1289,6 +1298,14 @@ static void testMultiMap()
 		}
 	};
 
+	auto printArrFunc1 = [&](TArray<FString>& _arr)->void {
+		for (int32 i = 0; i < _arr.Num(); i++)
+		{
+			//FString str = FString::Printf(TEXT("--- index:%d, value:%s "), i, *_arr[i]);
+			//GEngine->AddOnScreenDebugMessage(0, 3.0f, FColor::Red, str);
+			UE_LOG(MyContaimTest, Warning, TEXT("--- index:%d, value:%s "), i, *_arr[i]);
+		}
+	};
 	//auto printFunc3 = [&](TMultiMap<int32, FString>& _map)->void {
 	//	for (TMultiMap<uint8, FString>::TKeyIterator KeyIt(_map, 3); KeyIt; ++KeyIt)
 	//	{
@@ -1297,16 +1314,25 @@ static void testMultiMap()
 
 	//};
 
-	//TODO: ------------------  华丽分割线 TArray 查 ------------
+	//TODO: ------------------  华丽分割线 TMultiMap 查 ------------
 	TMultiMap<int32, FString> mtMap1;
-	mtMap1.AddUnique(5, TEXT("aaa"));
-	mtMap1.AddUnique(3, TEXT("bbb"));
-	mtMap1.AddUnique(7, TEXT("ccc"));
-	mtMap1.AddUnique(6, TEXT("ddd"));
+	mtMap1.Add(5, TEXT("aaa"));
+	mtMap1.Add(3, TEXT("bbb"));
+	mtMap1.Add(7, TEXT("ccc"));
+	mtMap1.Add(6, TEXT("ddd")); //添加三个相同的key值得键值对
+	mtMap1.Add(6, TEXT("eee"));
+	mtMap1.Add(6, TEXT("fff"));
 
 	printFunc1(mtMap1);
-	printFunc2(mtMap1);
-	printFunc1(mtMap1);
+	//printFunc2(mtMap1);
+	//printFunc1(mtMap1)
+	TArray<FString> values;
+	mtMap1.MultiFind(6, values); //找出所以key为6的value，并丢到values数组中
+								 // values == ["fff","eee","ddd"]
+	printArrFunc1(values);
+
+	//mtMap1.Empty();
+
 }
 
 void UMyBpFuncLib::TestBaseDataContain()
