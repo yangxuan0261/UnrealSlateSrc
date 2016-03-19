@@ -10,6 +10,7 @@ class USMyAttachment : public USkeletalMeshComponent
 	GENERATED_UCLASS_BODY()
 public:
 	USMyAttachment();
+	virtual ~USMyAttachment();
 
 	/** Attach point on pawn */
 	UPROPERTY(EditDefaultsOnly, Category = Attachment)

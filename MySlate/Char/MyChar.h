@@ -22,6 +22,7 @@ class AMyChar : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AMyChar();
+	virtual ~AMyChar();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

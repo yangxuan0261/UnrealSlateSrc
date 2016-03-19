@@ -5,3 +5,8 @@
 USMyAttachment::USMyAttachment(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 }
+
+USMyAttachment::~USMyAttachment()
+{
+
+}

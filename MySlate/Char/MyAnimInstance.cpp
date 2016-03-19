@@ -10,6 +10,11 @@ UMyAnimInstance::UMyAnimInstance()
 	mOwnerChar = nullptr;
 }
 
+UMyAnimInstance::~UMyAnimInstance()
+{
+
+}
+
 bool UMyAnimInstance::IsMoving()
 {
 	ACharacter* character = GetOwnerChar();

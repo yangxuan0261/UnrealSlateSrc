@@ -1,12 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
-#include "MyCompoment.h"
+#include "CoolDown.h"
 
-MyCompoment::MyCompoment()
+UCoolDown::UCoolDown() : Super()
 {
+
 }
 
-MyCompoment::~MyCompoment()
+UCoolDown::~UCoolDown()
 {
+
 }

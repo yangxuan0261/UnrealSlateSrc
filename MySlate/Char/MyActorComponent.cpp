@@ -15,6 +15,11 @@ UMyActorComponent::UMyActorComponent()
 	Age = 123;
 }
 
+UMyActorComponent::~UMyActorComponent()
+{
+
+}
+
 // Called when the game starts
 void UMyActorComponent::BeginPlay()
 {

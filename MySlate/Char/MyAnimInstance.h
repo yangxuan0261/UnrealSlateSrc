@@ -15,6 +15,7 @@ class MYSLATE_API UMyAnimInstance : public UAnimInstance
 
 public:
 	UMyAnimInstance();
+	virtual ~UMyAnimInstance();
 
 	UFUNCTION(BlueprintCallable, Category = "MyAnim")
 		bool IsMoving();

@@ -27,7 +27,10 @@ AMyChar::AMyChar() : Super()
 	hasOnDeathImplementEvent = BlueprintNodeHelpers::HasBlueprintFunction(TEXT("OnDeath"), this, selfClass);
 }
 
+AMyChar::~AMyChar()
+{
 
+}
 
 // Called every frame
 void AMyChar::Tick( float DeltaTime )

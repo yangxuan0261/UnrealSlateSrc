@@ -13,6 +13,7 @@ class MYSLATE_API UMyActorComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UMyActorComponent();
+	virtual ~UMyActorComponent();
 
 	// Called when the game starts
 	virtual void BeginPlay() override;
