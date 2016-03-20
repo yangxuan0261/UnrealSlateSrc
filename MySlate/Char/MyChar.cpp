@@ -8,6 +8,7 @@
 #include "Level/MyLevelScriptActor.h"
 #include "AI/MyAIController.h"
 #include "BlueprintNodeHelpers.h"
+#include "Skill/CoolDown/CoolDownComponent.h"
 
 // Sets default values
 AMyChar::AMyChar() : Super()
@@ -103,6 +104,10 @@ void AMyChar::BeginPlay()
 
 	//生成ai控制类
 	SpawnDefaultController();
+
+	//注册cd组件
+	mCDComp = NewObject<UCoolDownComponent>(this, TEXT("CDComponent"));
+	mCDComp->RegisterComponent();
 }
 
 
@@ -144,5 +149,3 @@ void AMyChar::SetWeapon1Class(TSubclassOf<USMyAttachment> InWeapon)
 {
 	Weapon1Class = InWeapon;
 }
-
-

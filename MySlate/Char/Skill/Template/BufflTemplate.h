@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Common/CommonHeader.h"
+
 #include "BufflTemplate.generated.h"
 
 UCLASS()

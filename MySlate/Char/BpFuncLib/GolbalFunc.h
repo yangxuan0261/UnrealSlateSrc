@@ -6,7 +6,6 @@
 
 class USkillDataMgr;
 class USkillMgr;
-class UCoolDownMgr;
 
 UCLASS()
 class UGolbalFunc : public UBlueprintFunctionLibrary
@@ -19,13 +18,15 @@ public:
 	virtual ~UGolbalFunc();
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static void					InitMgrs();
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static void					DestroyMgrs();
+
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static USkillDataMgr*		GetSkillDataMgr() { return gSkillDataMgr; }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static USkillMgr*			GetSkillMgr() { return gSkillMgr; }
-
-	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static UCoolDownMgr*		GetCoolDownMgr() { return gCoolDownMgr; }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static int32				TestSingleton();
@@ -33,5 +34,4 @@ public:
 private:
 	static USkillDataMgr*			gSkillDataMgr;
 	static USkillMgr*				gSkillMgr;
-	static UCoolDownMgr*			gCoolDownMgr;
 };

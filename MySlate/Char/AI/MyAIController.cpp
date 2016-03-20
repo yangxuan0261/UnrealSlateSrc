@@ -29,14 +29,9 @@ void AMyAIController::Possess(APawn * InPawn)
 
 	AMyChar* myChar = Cast<AMyChar>(InPawn);
 
-	// start behavior
-	if (myChar && myChar->BotBehavior)
-	{
 
 
 		
-
-	}
 }
 
 void AMyAIController::BeginInactiveState()

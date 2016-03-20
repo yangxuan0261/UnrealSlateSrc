@@ -1,9 +1,6 @@
 
 #pragma once
 
-//#include "MySlate.h"
-//#include "ISingleton.generated.h"
-
 template<class T> 
 class USingleton
 {

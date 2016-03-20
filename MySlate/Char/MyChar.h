@@ -12,7 +12,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMyDelegate2, int32, abc);
 
 class Test;
 class USMyAttachment;
-class UBehaviorTree;
+class UCoolDownComponent;
 
 UCLASS()
 class AMyChar : public ACharacter
@@ -78,15 +78,15 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "MyChar")
 		UAnimMontage*		mMon1;
 
-	UPROPERTY(EditAnywhere, Category = "MyBehavior")
-		UBehaviorTree* BotBehavior;
-
 	//---------- 测试是否有实现
 		uint32 hasOnDeathImplementEvent : 1;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "MyBehavior")
 		void OnDeath(const FString& _str, int32 _num);
 
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
+		UCoolDownComponent*		mCDComp;
 public:
 	int32		mHealth;
 };

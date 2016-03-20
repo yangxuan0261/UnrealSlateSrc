@@ -5,32 +5,38 @@
 
 #include "Char/Skill/Utils/SkillDataMgr.h"
 #include "Char/Skill/SkillMgr.h"
-#include "Char/Skill/CoolDown/CoolDownMgr.h"
 
 USkillDataMgr*	UGolbalFunc::gSkillDataMgr		= nullptr;
 USkillMgr*		UGolbalFunc::gSkillMgr			= nullptr;
-UCoolDownMgr*	UGolbalFunc::gCoolDownMgr		= nullptr;
 
 // Sets default values
+//UGolbalFunc::UGolbalFunc(const UGolbalFunc& ObjectInitializer) : Super(ObjectInitializer)
 UGolbalFunc::UGolbalFunc() : Super()
 {
-	gSkillDataMgr = USkillDataMgr::GetInstance();
-	gSkillMgr = USkillMgr::GetInstance();
-	gCoolDownMgr = UCoolDownMgr::GetInstance();
+	
 }
 
 UGolbalFunc::~UGolbalFunc()
 {
+
+}
+
+void UGolbalFunc::InitMgrs()
+{
+	gSkillDataMgr = USkillDataMgr::GetInstance();
+	gSkillMgr = USkillMgr::GetInstance();
+}
+
+void UGolbalFunc::DestroyMgrs()
+{
 	USkillDataMgr::ReleaseInstance();
 	USkillMgr::ReleaseInstance();
-	UCoolDownMgr::ReleaseInstance();
 	gSkillDataMgr = nullptr;
 	gSkillMgr = nullptr;
-	gCoolDownMgr = nullptr;
 }
 
 int32 UGolbalFunc::TestSingleton()
 {
-	return USkillDataMgr::GetInstance()->GetTestNum();
+	return 123;
 }
 

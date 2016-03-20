@@ -6,6 +6,9 @@
 
 #include "SkillDataMgr.generated.h"
 
+class USkillTemplate;
+class UBufflTemplate;
+
 UCLASS()
 class USkillDataMgr : public UObject, public USingleton<USkillDataMgr>
 {
@@ -16,11 +19,16 @@ public:
 	USkillDataMgr();
 	virtual ~USkillDataMgr();
 
+public:
 	UFUNCTION(BlueprintCallable, Category = "USkillDataMgr")
-		void		SetTestNum(int32 _num) { mTestNum = _num; }
+		void				InitFakeDate();
+
 	UFUNCTION(BlueprintCallable, Category = "USkillDataMgr")
-		int32		GetTestNum() { return mTestNum;}
+		USkillTemplate*		GetSkillTemplate(int32 _skillId);
+	UFUNCTION(BlueprintCallable, Category = "USkillDataMgr")
+		UBufflTemplate*		GetBuffTemplate(int32 _buffId);
 
 private:
-	int32		mTestNum;
+	TMap<int32, USkillTemplate*>	mSkillTempMap;
+	TMap<int32, UBufflTemplate*>	mBuffTempMap;
 };

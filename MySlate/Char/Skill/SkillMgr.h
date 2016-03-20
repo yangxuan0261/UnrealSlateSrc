@@ -3,11 +3,12 @@
 #pragma once
 
 #include "Common/ISingleton.h"
+#include "Tickable.h"
 
 #include "SkillMgr.generated.h"
 
 UCLASS()
-class USkillMgr : public UObject, public USingleton<USkillMgr>
+class USkillMgr : public UObject, public FTickableGameObject,  public USingleton<USkillMgr>
 {
 	GENERATED_BODY()
 
@@ -16,4 +17,12 @@ public:
 	USkillMgr();
 	virtual ~USkillMgr();
 
+	// Begin FTickableGameObject Interface.
+	virtual void Tick(float DeltaTime) override;
+	virtual bool IsTickable() const override;
+	virtual TStatId GetStatId() const override;
+	// End FTickableGameObject Interface.
+
+private:
+	float		mCounter;
 };
