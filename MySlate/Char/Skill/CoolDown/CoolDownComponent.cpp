@@ -24,6 +24,10 @@ UCoolDownComponent::UCoolDownComponent(const FObjectInitializer& ObjectInitializ
 UCoolDownComponent::~UCoolDownComponent()
 {
 	UE_LOG(UCoolDownLogger, Warning, TEXT("--- deconstruct ~UCoolDownComponent"));
+	for (int32 i = 0; i < mCDArr.Num(); ++i)
+	{
+		mCDArr[i]->RemoveFromRoot();
+	}
 	mCDArr.Empty();
 }
 

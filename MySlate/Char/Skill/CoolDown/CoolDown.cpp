@@ -57,6 +57,7 @@ void UCoolDown::Tick(float DeltaTime)
 		{
 			mTimer = mCDTime;
 			mIsOK = true;
+			UE_LOG(UCoolDownLogger222, Warning, TEXT("--- CD isOK, skillId:%d"), mSkillId);
 		}
 	}
 	else
