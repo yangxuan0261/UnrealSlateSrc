@@ -9,6 +9,10 @@
 #include "AI/MyAIController.h"
 #include "BlueprintNodeHelpers.h"
 #include "Skill/CoolDown/CoolDownComponent.h"
+#include "Skill/CoolDown/CoolDown.h"
+
+DECLARE_LOG_CATEGORY_EXTERN(AMyCharLogger, Log, All);
+DEFINE_LOG_CATEGORY(AMyCharLogger)
 
 // Sets default values
 AMyChar::AMyChar() : Super()
@@ -108,6 +112,7 @@ void AMyChar::BeginPlay()
 	//×¢²ácd×é¼þ
 	mCDComp = NewObject<UCoolDownComponent>(this, TEXT("CDComponent"));
 	mCDComp->RegisterComponent();
+	mCDComp->SetOwner(this);
 }
 
 
@@ -148,4 +153,11 @@ void AMyChar::TestFunction(int32 _num, FString _str)
 void AMyChar::SetWeapon1Class(TSubclassOf<USMyAttachment> InWeapon)
 {
 	Weapon1Class = InWeapon;
+}
+
+//--------------------- split
+
+void AMyChar::OnCDFinish(UCoolDown* _cd)
+{
+	UE_LOG(AMyCharLogger, Warning, TEXT("--- AMyChar::OnCDFinish, skillId:%d"), _cd->GetSkillId());
 }

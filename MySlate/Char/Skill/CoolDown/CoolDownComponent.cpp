@@ -106,6 +106,7 @@ void UCoolDownComponent::AddCD(ESkillType::Type _skillType, int32 _skillId, bool
 		UCoolDown* cd = NewObject<UCoolDown>(UCoolDown::StaticClass());
 		cd->AddToRoot();
 		cd->SetSkillTemplate(skillTemp);
+		cd->SetChar(mOwner);
 		cd->SetType(_skillType);
 		if (_isRestartCD)
 			cd->Restart();

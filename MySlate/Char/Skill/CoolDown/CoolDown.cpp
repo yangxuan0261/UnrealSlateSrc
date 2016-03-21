@@ -16,7 +16,9 @@ UCoolDown::UCoolDown() : Super()
 	mIsOK = true;
 	mCDTime = 1.f;
 	mTimer = 0.f;
+	mRatio = 1.f;
 	mType = ESkillType::Normal;
+	mOwnerChar = nullptr;
 }
 
 UCoolDown::~UCoolDown()
@@ -31,6 +33,13 @@ void UCoolDown::SetSkillTemplate(USkillTemplate * _skillTemplate)
 	mCDTime = mSkillTemplate->mCoolDown;
 	mTimer = mCDTime;
 	mIsOK = true;
+}
+
+void UCoolDown::SetChar(AMyChar * _owner)
+{
+	mOwnerChar = _owner;
+	mCDFinishDlg.Unbind();
+	mCDFinishDlg.BindUObject(_owner, &AMyChar::OnCDFinish);
 }
 
 void UCoolDown::UseSkill(AMyChar * _attActor, int32 _targetId)
@@ -52,12 +61,16 @@ void UCoolDown::Tick(float DeltaTime)
 {
 	if (!mIsOK)
 	{
-		mTimer += DeltaTime;
+		mTimer += DeltaTime * mRatio;
 		if (mTimer >= mCDTime)
 		{
 			mTimer = mCDTime;
 			mIsOK = true;
-			UE_LOG(UCoolDownLogger222, Warning, TEXT("--- CD isOK, skillId:%d"), mSkillId);
+
+			if (mOwnerChar != nullptr)
+			{
+				mCDFinishDlg.ExecuteIfBound(this); //cd完通知char，可以释放技能了
+			}
 		}
 	}
 	else

@@ -13,6 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMyDelegate2, int32, abc);
 class Test;
 class USMyAttachment;
 class UCoolDownComponent;
+class UCoolDown;
 
 UCLASS()
 class AMyChar : public ACharacter
@@ -85,8 +86,12 @@ public:
 		void OnDeath(const FString& _str, int32 _num);
 
 public:
+	void OnCDFinish(UCoolDown* _cd);
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		UCoolDownComponent*		mCDComp;
+
 public:
 	int32		mHealth;
 };
