@@ -8,7 +8,7 @@
 #include "SkillMgr.generated.h"
 
 UCLASS()
-class USkillMgr : public UObject, public FTickableGameObject,  public USingleton<USkillMgr>
+class USkillMgr : public UObject, public FTickableGameObject, public USingleton<USkillMgr>
 {
 	GENERATED_BODY()
 

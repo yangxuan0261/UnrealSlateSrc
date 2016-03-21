@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
-#include "CoolDownComponent.h"
+#include "CoolDownComp.h"
 
 #include "CoolDown.h"
 #include "Char/MyChar.h"
@@ -13,7 +13,7 @@ DECLARE_LOG_CATEGORY_EXTERN(UCoolDownLogger, Log, All);
 DEFINE_LOG_CATEGORY(UCoolDownLogger)
 
 // Sets default values
-UCoolDownComponent::UCoolDownComponent(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
+UCoolDownComp::UCoolDownComp(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
 {
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
@@ -21,9 +21,9 @@ UCoolDownComponent::UCoolDownComponent(const FObjectInitializer& ObjectInitializ
 	mOwner = nullptr;
 }
 
-UCoolDownComponent::~UCoolDownComponent()
+UCoolDownComp::~UCoolDownComp()
 {
-	UE_LOG(UCoolDownLogger, Warning, TEXT("--- deconstruct ~UCoolDownComponent"));
+	UE_LOG(UCoolDownLogger, Warning, TEXT("--- deconstruct ~UCoolDownComp"));
 	for (int32 i = 0; i < mCDArr.Num(); ++i)
 	{
 		mCDArr[i]->RemoveFromRoot();
@@ -31,14 +31,19 @@ UCoolDownComponent::~UCoolDownComponent()
 	mCDArr.Empty();
 }
 
-void UCoolDownComponent::BeginPlay()
+void UCoolDownComp::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
-void UCoolDownComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
+void UCoolDownComp::BeginDestroy()
 {
-	//UE_LOG(UCoolDownLogger, Warning, TEXT("--- UCoolDownComponent::TickComponent:%f"), DeltaTime);
+	Super::BeginDestroy();
+}
+
+void UCoolDownComp::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
+{
+	//UE_LOG(UCoolDownLogger, Warning, TEXT("--- UCoolDownComp::TickComponent:%f"), DeltaTime);
 	for (UCoolDown* cd : mCDArr)
 	{
 		if (!cd->IsNull())
@@ -46,7 +51,7 @@ void UCoolDownComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	}
 }
 
-void UCoolDownComponent::CreateCD(int32 _skillId, TSubclassOf<UCoolDown> _class)
+void UCoolDownComp::CreateCD(int32 _skillId, TSubclassOf<UCoolDown> _class)
 {
 	UCoolDown* cd = NewObject<UCoolDown>(_class);
 	cd->AddToRoot();
@@ -54,7 +59,7 @@ void UCoolDownComponent::CreateCD(int32 _skillId, TSubclassOf<UCoolDown> _class)
 	mCDArr.Add(cd);
 }
 
-void UCoolDownComponent::UseSkill(int32 _skillId, int32 _targetId)
+void UCoolDownComp::UseSkill(int32 _skillId, int32 _targetId)
 {
 	//bool noCD = true;
 	for (UCoolDown* cd : mCDArr)
@@ -73,7 +78,7 @@ void UCoolDownComponent::UseSkill(int32 _skillId, int32 _targetId)
 	}
 }
 
-void UCoolDownComponent::RestartCD(int32 _skillId)
+void UCoolDownComp::RestartCD(int32 _skillId)
 {
 	for (UCoolDown* cd : mCDArr)
 	{
@@ -85,7 +90,7 @@ void UCoolDownComponent::RestartCD(int32 _skillId)
 	}
 }
 
-void UCoolDownComponent::RemoveCDByType(ESkillType::Type _skillType)
+void UCoolDownComp::RemoveCDByType(ESkillType _skillType)
 {
 	for (int32 i = 0; i < mCDArr.Num(); ++i)
 	{
@@ -98,7 +103,7 @@ void UCoolDownComponent::RemoveCDByType(ESkillType::Type _skillType)
 	}
 }
 
-void UCoolDownComponent::AddCD(ESkillType::Type _skillType, int32 _skillId, bool _isRestartCD)
+void UCoolDownComp::AddCD(ESkillType _skillType, int32 _skillId, bool _isRestartCD)
 {
 	USkillTemplate* skillTemp = USkillDataMgr::GetInstance()->GetSkillTemplate(_skillId);
 	if (skillTemp)

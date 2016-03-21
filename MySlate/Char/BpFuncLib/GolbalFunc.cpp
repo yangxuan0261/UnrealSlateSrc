@@ -5,9 +5,11 @@
 
 #include "Char/Skill/Utils/SkillDataMgr.h"
 #include "Char/Skill/SkillMgr.h"
+#include "Char/CharMgr.h"
 
 USkillDataMgr*	UGolbalFunc::gSkillDataMgr		= nullptr;
-USkillMgr*		UGolbalFunc::gSkillMgr			= nullptr;
+USkillMgr*		UGolbalFunc::gSkillMgr = nullptr;
+UCharMgr*		UGolbalFunc::gCharMgr = nullptr;
 
 // Sets default values
 //UGolbalFunc::UGolbalFunc(const UGolbalFunc& ObjectInitializer) : Super(ObjectInitializer)
@@ -25,14 +27,17 @@ void UGolbalFunc::InitMgrs()
 {
 	gSkillDataMgr = USkillDataMgr::GetInstance();
 	gSkillMgr = USkillMgr::GetInstance();
+	gCharMgr = UCharMgr::GetInstance();
 }
 
 void UGolbalFunc::DestroyMgrs()
 {
 	USkillDataMgr::ReleaseInstance();
 	USkillMgr::ReleaseInstance();
+	UCharMgr::ReleaseInstance();
 	gSkillDataMgr = nullptr;
 	gSkillMgr = nullptr;
+	gCharMgr = nullptr;
 }
 
 int32 UGolbalFunc::TestSingleton()

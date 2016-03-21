@@ -12,7 +12,7 @@ DECLARE_DELEGATE_OneParam(FCDFinishDlg, UCoolDown*);
 
 class AMyChar;
 class USkillTemplate;
-class UCoolDownComponent;
+class UCoolDownComp;
 
 UCLASS()
 class UCoolDown : public UObject
@@ -39,8 +39,8 @@ public:
 	void			SetChar(AMyChar* _owner);
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
-		ESkillType::Type	GetType();
-	void			SetType(ESkillType::Type _type);
+		ESkillType	GetType();
+	void			SetType(ESkillType _type);
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
 		void		UseSkill(AMyChar* _attActor, int32 _targetId);
@@ -61,7 +61,7 @@ private:
 
 	USkillTemplate*		mSkillTemplate;
 	AMyChar*	mOwnerChar;
-	ESkillType::Type	mType;
+	ESkillType	mType;
 
 	FCDFinishDlg				mCDFinishDlg;//通知代理
 };
@@ -72,6 +72,6 @@ FORCEINLINE void	UCoolDown::SetCDTimer(float timer) { mCDTime = timer; }
 FORCEINLINE int32	UCoolDown::GetSkillId() { return mSkillId; }
 FORCEINLINE void	UCoolDown::SetSkillId(int32 _id) { mSkillId = _id; }
 FORCEINLINE bool	UCoolDown::IsNull() { return mSkillId == -1 ? true : false; }
-FORCEINLINE void	UCoolDown::SetType(ESkillType::Type _type) { mType = _type; }
+FORCEINLINE void	UCoolDown::SetType(ESkillType _type) { mType = _type; }
 FORCEINLINE void	UCoolDown::SetRatio(float _ratio) { mRatio = _ratio; }
-FORCEINLINE ESkillType::Type	UCoolDown::GetType() { return mType; }
+FORCEINLINE ESkillType	UCoolDown::GetType() { return mType; }

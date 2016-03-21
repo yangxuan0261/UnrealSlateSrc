@@ -5,16 +5,13 @@
 #include "SkillTypes.generated.h"
 
 UENUM()
-namespace ESkillType
+enum class ESkillType : uint8 //技能类型
 {
-	enum Type
-	{
-		Normal = 0,
-		Initiative, //主动
-		Passive_A,
-		Passive_B,
-		Passive_C,
-		Passive_Permanent,
-		Count
-	};
-}
+	Normal = 0,
+	Initiative, //主动
+	Passive_A,
+	Passive_B,
+	Passive_C,
+	Passive_Permanent,
+	Count
+};

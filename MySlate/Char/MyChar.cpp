@@ -8,8 +8,9 @@
 #include "Level/MyLevelScriptActor.h"
 #include "AI/MyAIController.h"
 #include "BlueprintNodeHelpers.h"
-#include "Skill/CoolDown/CoolDownComponent.h"
+#include "Skill/CoolDown/CoolDownComp.h"
 #include "Skill/CoolDown/CoolDown.h"
+#include "MyCharDataComp.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(AMyCharLogger, Log, All);
 DEFINE_LOG_CATEGORY(AMyCharLogger)
@@ -24,12 +25,17 @@ AMyChar::AMyChar() : Super()
 	Weapon1 = nullptr;
 	mMon1 = nullptr;
 
-	//设置ai控制类
-	AIControllerClass = AMyAIController::StaticClass();
-
 	//检测是否有蓝图实现
 	UClass* selfClass = AMyChar::StaticClass();
 	hasOnDeathImplementEvent = BlueprintNodeHelpers::HasBlueprintFunction(TEXT("OnDeath"), this, selfClass);
+
+	//--------- 
+	mCDComp = nullptr;
+	mGroup = EGroup::None;
+	mTeam = ETeam::None;
+
+	//设置ai控制类
+	AIControllerClass = AMyAIController::StaticClass();
 }
 
 AMyChar::~AMyChar()
@@ -110,9 +116,13 @@ void AMyChar::BeginPlay()
 	SpawnDefaultController();
 
 	//注册cd组件
-	mCDComp = NewObject<UCoolDownComponent>(this, TEXT("CDComponent"));
+	mCDComp = NewObject<UCoolDownComp>(this, TEXT("CDComponent"));
 	mCDComp->RegisterComponent();
 	mCDComp->SetOwner(this);
+
+	//注册data组件
+	mDataComp = NewObject<UMyCharDataComp>(this, TEXT("CharDataComponent"));
+	mDataComp->RegisterComponent();
 }
 
 

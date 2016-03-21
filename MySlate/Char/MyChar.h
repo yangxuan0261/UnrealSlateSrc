@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+#include "GameTypes.h"
 //#include "TestChar.h"
 #include "MyChar.generated.h"
 
@@ -12,8 +13,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMyDelegate2, int32, abc);
 
 class Test;
 class USMyAttachment;
-class UCoolDownComponent;
+class UCoolDownComp;
 class UCoolDown;
+class UMyCharDataComp;
 
 UCLASS()
 class AMyChar : public ACharacter
@@ -89,8 +91,17 @@ public:
 	void OnCDFinish(UCoolDown* _cd);
 
 public:
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
-		UCoolDownComponent*		mCDComp;
+		EGroup			mGroup;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
+		ETeam			mTeam;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
+		UCoolDownComp*		mCDComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
+		UMyCharDataComp*		mDataComp;
 
 public:
 	int32		mHealth;
