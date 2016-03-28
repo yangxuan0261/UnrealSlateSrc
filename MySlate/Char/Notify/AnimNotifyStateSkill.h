@@ -24,4 +24,5 @@ public:
 
 public:
 	AMyChar*		mMyChar;
+
 };
