@@ -3,6 +3,7 @@
 #include "MySlate.h"
 #include "MyCharDataComp.h"
 
+
 DECLARE_LOG_CATEGORY_EXTERN(UCharDataLogger, Log, All);
 DEFINE_LOG_CATEGORY(UCharDataLogger)
 
@@ -12,6 +13,10 @@ UMyCharDataComp::UMyCharDataComp(const FObjectInitializer& ObjectInitializer): S
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = false;
 	bAllowAnyoneToDestroyMe = true;
+
+	mGroup = EGroup::None;
+	mTeam = ETeam::None;
+	mHealth = 100.f;
 }
 
 UMyCharDataComp::~UMyCharDataComp()

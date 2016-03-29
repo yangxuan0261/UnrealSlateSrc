@@ -3,7 +3,6 @@
 #pragma once
 
 #include "GameFramework/Character.h"
-#include "GameTypes.h"
 //#include "TestChar.h"
 #include "MyChar.generated.h"
 
@@ -93,15 +92,10 @@ public:
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
-		EGroup			mGroup;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
-		ETeam			mTeam;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		UCoolDownComp*		mCDComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
-		UMyCharDataComp*		mDataComp;
+		UMyCharDataComp*	mDataComp;
 
 public:
 	int32		mHealth;

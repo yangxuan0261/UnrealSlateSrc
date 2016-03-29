@@ -31,8 +31,7 @@ AMyChar::AMyChar() : Super()
 
 	//--------- 
 	mCDComp = nullptr;
-	mGroup = EGroup::None;
-	mTeam = ETeam::None;
+	mDataComp = nullptr;
 
 	//…Ë÷√aiøÿ÷∆¿‡
 	AIControllerClass = AMyAIController::StaticClass();

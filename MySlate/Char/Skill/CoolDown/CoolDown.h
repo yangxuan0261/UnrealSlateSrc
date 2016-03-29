@@ -26,30 +26,30 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
-		bool		IsOK();
+		bool		IsOK() const { return mIsOK; }
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
-		float		GetCDTimer();
-	void			SetCDTimer(float timer);
+		float		GetCDTimer() const { return mCDTime; }
+	void			SetCDTimer(float timer) { mCDTime = timer; }
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
-		int32		GetSkillId();
-	void			SetSkillId(int32 _id);
+		int32		GetSkillId() const { return mSkillId; }
+	void			SetSkillId(int32 _id) { mSkillId = _id; }
 
 	void			SetSkillTemplate(USkillTemplate* _skillTemplate);
 	void			SetChar(AMyChar* _owner);
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
-		ESkillType	GetType();
-	void			SetType(ESkillType _type);
+		ESkillType	GetType() const { return mType; }
+	void			SetType(ESkillType _type) { mType = _type; }
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
 		void		UseSkill(AMyChar* _attActor, int32 _targetId);
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
-		void		SetRatio(float _ratio);
+		void		SetRatio(float _ratio) { mRatio = _ratio; }
 
 	void			Restart();
-	bool			IsNull();
+	bool			IsNull() const { return mSkillId == -1 ? true : false; }
 	virtual void Tick(float DeltaTime);
 
 private:
@@ -65,13 +65,3 @@ private:
 
 	FCDFinishDlg				mCDFinishDlg;//通知代理
 };
-
-FORCEINLINE bool	UCoolDown::IsOK() { return mIsOK; }
-FORCEINLINE float	UCoolDown::GetCDTimer() { return mCDTime; }
-FORCEINLINE void	UCoolDown::SetCDTimer(float timer) { mCDTime = timer; }
-FORCEINLINE int32	UCoolDown::GetSkillId() { return mSkillId; }
-FORCEINLINE void	UCoolDown::SetSkillId(int32 _id) { mSkillId = _id; }
-FORCEINLINE bool	UCoolDown::IsNull() { return mSkillId == -1 ? true : false; }
-FORCEINLINE void	UCoolDown::SetType(ESkillType _type) { mType = _type; }
-FORCEINLINE void	UCoolDown::SetRatio(float _ratio) { mRatio = _ratio; }
-FORCEINLINE ESkillType	UCoolDown::GetType() { return mType; }
