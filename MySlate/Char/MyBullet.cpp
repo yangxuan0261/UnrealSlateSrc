@@ -32,6 +32,7 @@ AMyBullet::AMyBullet()
 	bInitialized = false;
 	mAttackActor = nullptr;
 	mSkillTemp = nullptr;
+	mTargetLocation = FVector(0.f, 0.f, 0.f);
 }
 
 AMyBullet::~AMyBullet()
@@ -106,6 +107,7 @@ void AMyBullet::OnHit(FHitResult const& HitResult)
 		OnProjectileDestroyed();
 		Destroy();
 	}
+
 }
 
 void AMyBullet::DealDamage(FHitResult const& HitResult)

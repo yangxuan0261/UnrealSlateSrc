@@ -162,4 +162,5 @@ void AMyChar::SetWeapon1Class(TSubclassOf<USMyAttachment> InWeapon)
 void AMyChar::OnCDFinish(UCoolDown* _cd)
 {
 	UE_LOG(AMyCharLogger, Warning, TEXT("--- AMyChar::OnCDFinish, skillId:%d"), _cd->GetSkillId());
+
 }

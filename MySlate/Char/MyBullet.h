@@ -52,6 +52,8 @@ public:
 		TArray<AMyChar*>	mTargetActors; //受击者
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		USkillTemplate*		mSkillTemp; //技能模板
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
+		FVector				mTargetLocation;
 
 protected:
 	void DealDamage(FHitResult const& HitResult);
