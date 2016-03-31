@@ -32,9 +32,6 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
-	
 	//---------- ²âÊÔdelegateµÄ¸÷ÖÖbind
 	void testDelegateUObject(int32 _num);
 
@@ -90,13 +87,15 @@ public:
 	void OnCDFinish(UCoolDown* _cd);
 
 public:
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		UCoolDownComp*		mCDComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		UMyCharDataComp*	mDataComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
+		int32				mUsingSkill;
+
 public:
-	int32		mHealth;
+
 };

@@ -21,7 +21,6 @@ AMyChar::AMyChar() : Super()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	mHealth = 987;
 	Weapon1 = nullptr;
 	mMon1 = nullptr;
 
@@ -32,6 +31,7 @@ AMyChar::AMyChar() : Super()
 	//--------- 
 	mCDComp = nullptr;
 	mDataComp = nullptr;
+	mUsingSkill = -1;
 
 	//ÉèÖÃai¿ØÖÆÀà
 	AIControllerClass = AMyAIController::StaticClass();
@@ -68,13 +68,6 @@ void AMyChar::Tick( float DeltaTime )
 		FString str = FString::Printf(TEXT("--- PlayAnimMontage - %f"), time);
 		GEngine->AddOnScreenDebugMessage(0, 1.0f, FColor::Green, str);
 	}*/
-}
-
-// Called to bind functionality to input
-void AMyChar::SetupPlayerInputComponent(class UInputComponent* InputComponent)
-{
-	Super::SetupPlayerInputComponent(InputComponent);
-
 }
 
 class Test : public TSharedFromThis<Test>
@@ -157,7 +150,7 @@ void AMyChar::TestFunction(int32 _num, FString _str)
 {
 	FString str = FString::Printf(TEXT("--- AMyChar::TestFunction - num:%d, str:%s"), _num, *_str);
 	GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
-}
+} 
 
 void AMyChar::SetWeapon1Class(TSubclassOf<USMyAttachment> InWeapon)
 {
