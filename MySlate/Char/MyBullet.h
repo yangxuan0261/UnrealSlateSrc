@@ -25,7 +25,8 @@ public:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	// End Actor interface
 
-	void InitProjectile(const FVector& ShootDirection, uint8 InTeamNum, int32 ImpactDamage, float InLifeSpan);
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		void InitProjectile(const FVector& ShootDirection, uint8 InTeamNum, int32 ImpactDamage, float InLifeSpan);
 
 	UFUNCTION()
 		void OnHit(const FHitResult& HitResult);

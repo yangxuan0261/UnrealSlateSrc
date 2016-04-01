@@ -40,8 +40,8 @@ void UMyAnimInstance::AnimNotify_Begin(UAnimNotify * Notify)
 	AMyChar* mychar = Cast<AMyChar>(GetOwnerChar());
 	if (mychar)
 	{
-		FString str = FString::Printf(TEXT("--- AnimNotify_Begin - %d"), mychar->mHealth);
-		GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
+		//FString str = FString::Printf(TEXT("--- AnimNotify_Begin - %d"), mychar->mHealth);
+		//GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
 	}
 }
 

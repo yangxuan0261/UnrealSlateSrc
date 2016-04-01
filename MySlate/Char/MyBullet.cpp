@@ -33,6 +33,7 @@ AMyBullet::AMyBullet()
 	mAttackActor = nullptr;
 	mSkillTemp = nullptr;
 	mTargetLocation = FVector(0.f, 0.f, 0.f);
+	RemainingDamage = 50.f;
 }
 
 AMyBullet::~AMyBullet()
@@ -97,7 +98,7 @@ void AMyBullet::InitProjectile(const FVector& Direction, uint8 InTeamNum, int32 
 	bInitialized = true;
 }
 
-void AMyBullet::OnHit(FHitResult const& HitResult)
+void AMyBullet::OnHit(const FHitResult& HitResult)
 {
 	DealDamage(HitResult);
 	OnProjectileHit(HitResult.Actor.Get(), HitResult.ImpactPoint, HitResult.ImpactNormal);
