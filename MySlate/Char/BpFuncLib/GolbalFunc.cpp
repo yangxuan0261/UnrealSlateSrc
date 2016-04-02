@@ -7,7 +7,7 @@
 #include "Char/Skill/SkillMgr.h"
 #include "Char/CharMgr.h"
 
-USkillDataMgr*	UGolbalFunc::gSkillDataMgr		= nullptr;
+USkillDataMgr*	UGolbalFunc::gSkillDataMgr = nullptr;
 USkillMgr*		UGolbalFunc::gSkillMgr = nullptr;
 UCharMgr*		UGolbalFunc::gCharMgr = nullptr;
 

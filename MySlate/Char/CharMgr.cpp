@@ -3,6 +3,9 @@
 #include "MySlate.h"
 #include "CharMgr.h"
 
+#include "MyChar.h"
+#include "MyCharDataComp.h"
+
 UCharMgr::UCharMgr() : Super()
 {
 
@@ -19,8 +22,13 @@ void UCharMgr::AddChar(AMyChar* _char)
 {
 	if (_char != nullptr)
 	{
-		//if (_char->)
+		if (_char->mDataComp->mTeam == ETeam::Teammate)
 		{
+			mTeamCharArr.AddUnique(_char);
+		}
+		else if (_char->mDataComp->mTeam == ETeam::Enemy)
+		{
+			mEnemyCharArr.AddUnique(_char);
 		}
 	}
 }

@@ -3,7 +3,8 @@
 #pragma once
 
 #include "GameFramework/Character.h"
-//#include "TestChar.h"
+#include "GameTypes.h"
+
 #include "MyChar.generated.h"
 
 DECLARE_DELEGATE_OneParam(FMyDelegate1, int32);
@@ -86,6 +87,8 @@ public:
 public:
 	void OnCDFinish(UCoolDown* _cd);
 
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		bool IsAlive();
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		UCoolDownComp*		mCDComp;
@@ -94,8 +97,16 @@ public:
 		UMyCharDataComp*	mDataComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
-		int32				mUsingSkill;
+		UCoolDown*			mUsingSkill;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
+		CharState			mCharState;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
+		TArray<UCoolDown*>	mCanUseSkillArr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
+		int32				mUuid;
 public:
 
 };

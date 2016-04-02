@@ -72,7 +72,7 @@ void SStandardSlateWidget::Construct(const FArguments& InArgs)
 		[
 			//Button Text!! AssignNew so can change color later
 			SAssignNew(RefreshButtonText, STextBlock)//添加文字
-			.Text(FString("Refresh (F5) "))
+			//.Text(FString("Refresh (F5) "))
 		.Font(FSlateFontInfo(FPaths::EngineContentDir() / TEXT("Slate/Fonts/simhei.ttf"), 30.f))
 		.ColorAndOpacity(FLinearColor(1, 0, 1, 1))
 		.HighlightColor(FLinearColor(1, 1, 0, 1))
@@ -113,7 +113,7 @@ void SStandardSlateWidget::Construct(const FArguments& InArgs)
 		.VAlign(VAlign_Bottom)
 		[
 			SAssignNew(TestStyleText, STextBlock)//添加文字
-			.Text(FString("Test Style"))
+			//.Text(FString("Test Style"))
 			.TextStyle(&MenuStyle->MenuTitleStyle)
 		]
 
@@ -198,11 +198,11 @@ void SStandardSlateWidget::Tick(const FGeometry & AllottedGeometry, const double
 	//每帧检测，如果滑过RefreshButtonText就改变一下颜色
 	if (RefreshButtonText->IsHovered())
 	{
-		RefreshButtonText->SetForegroundColor(FLinearColor(0, 0, 1, 1));
+		//RefreshButtonText->SetForegroundColor(FLinearColor(0, 0, 1, 1));
 	}
 	else
 	{
-		RefreshButtonText->SetForegroundColor(FLinearColor(1, 0, 1, 1));
+		//RefreshButtonText->SetForegroundColor(FLinearColor(1, 0, 1, 1));
 	}
 
 	if (!_bStop) //加个停止标记玩玩

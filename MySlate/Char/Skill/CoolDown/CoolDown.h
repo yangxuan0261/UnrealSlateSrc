@@ -52,7 +52,7 @@ public:
 	bool			IsNull() const { return mSkillId == -1 ? true : false; }
 	virtual void Tick(float DeltaTime);
 
-private:
+public:
 	int32		mSkillId;
 	float		mCDTime;//cd时间
 	float		mTimer;//cd计时

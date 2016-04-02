@@ -59,14 +59,14 @@ void UCoolDownComp::CreateCD(int32 _skillId, TSubclassOf<UCoolDown> _class)
 	mCDArr.Add(cd);
 }
 
-void UCoolDownComp::UseSkill(int32 _skillId, int32 _targetId)
+void UCoolDownComp::UseSkill(UCoolDown* _skill, int32 _targetId)
 {
 	//bool noCD = true;
 	for (UCoolDown* cd : mCDArr)
 	{
-		if (!cd->IsNull())
+		if (cd == _skill)
 		{
-			if (cd->GetSkillId() == _skillId)
+			if (!cd->IsNull())
 			{
 				if (cd->IsOK())
 				{

@@ -47,6 +47,8 @@ void UCoolDown::UseSkill(AMyChar * _attActor, int32 _targetId)
 	if (!_attActor || IsNull())
 		return;
 
+	_attActor->mUsingSkill = this; //设置当前使用着技能
+
 	//技能任务
 
 }

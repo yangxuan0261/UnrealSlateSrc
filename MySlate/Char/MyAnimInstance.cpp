@@ -5,9 +5,15 @@
 #include "Engine.h"
 #include "MyChar.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(MyAnimInstLogger, Log, All);
+DEFINE_LOG_CATEGORY(MyAnimInstLogger)
+
 UMyAnimInstance::UMyAnimInstance()
 {
 	mOwnerChar = nullptr;
+	mSpeed = 0.f;
+	mCharState = CharState::IdleRun;
+
 }
 
 UMyAnimInstance::~UMyAnimInstance()
@@ -25,28 +31,59 @@ bool UMyAnimInstance::IsMoving()
 	return wallSpeed > 0.f ? true : false;
 }
 
-ACharacter* UMyAnimInstance::GetOwnerChar()
+AMyChar* UMyAnimInstance::GetOwnerChar()
 {
 	if (!mOwnerChar)
 	{
 		APawn* owner = TryGetPawnOwner();
-		mOwnerChar = owner ? Cast<ACharacter>(owner) : nullptr;
+		mOwnerChar = owner ? Cast<AMyChar>(owner) : nullptr;
 	}
 	return mOwnerChar;
 }
 
-void UMyAnimInstance::AnimNotify_Begin(UAnimNotify * Notify)
+void UMyAnimInstance::AnimNotify_BulletCreate(UAnimNotify * Notify)
 {
-	AMyChar* mychar = Cast<AMyChar>(GetOwnerChar());
-	if (mychar)
+	
+	if (mOwnerChar)
 	{
-		//FString str = FString::Printf(TEXT("--- AnimNotify_Begin - %d"), mychar->mHealth);
-		//GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);
+		UE_LOG(MyAnimInstLogger, Warning, TEXT("--- AnimNotify_BulletCreate"));
+
+
 	}
 }
 
-void UMyAnimInstance::AnimNotify_End(UAnimNotify * Notify)
+void UMyAnimInstance::AnimNotify_BulletShoot(UAnimNotify * Notify)
 {
-	FString str = FString::Printf(TEXT("--- AnimNotify_End"));
-	GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Yellow, str);
+	if (mOwnerChar)
+	{
+		UE_LOG(MyAnimInstLogger, Warning, TEXT("--- AnimNotify_BulletShoot"));
+	}
+	
+}
+
+void UMyAnimInstance::AnimNotify_AttackOver(UAnimNotify * Notify)
+{
+	if (mOwnerChar) //攻击完切回正常状态
+	{
+		if (mOwnerChar->mCharState == CharState::Attack)
+		{
+			mOwnerChar->mCharState = CharState::IdleRun;
+		}
+	}
+}
+
+void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
+{
+	Super::NativeUpdateAnimation(DeltaSeconds);
+
+	if (!mOwnerChar)
+	{
+		mOwnerChar = GetOwnerChar();
+	}
+
+	if (mOwnerChar)
+	{
+		mSpeed = mOwnerChar->GetVelocity().Size(); //设置速度
+		mCharState = mOwnerChar->mCharState; //设置动画状态
+	}
 }

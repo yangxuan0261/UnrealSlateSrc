@@ -15,6 +15,12 @@
 DECLARE_LOG_CATEGORY_EXTERN(AMyCharLogger, Log, All);
 DEFINE_LOG_CATEGORY(AMyCharLogger)
 
+static int32 uuid = 1;
+static int32 IdGenerator()
+{
+	return uuid++;
+}
+
 // Sets default values
 AMyChar::AMyChar() : Super()
 {
@@ -26,12 +32,14 @@ AMyChar::AMyChar() : Super()
 
 	//检测是否有蓝图实现
 	UClass* selfClass = AMyChar::StaticClass();
-	hasOnDeathImplementEvent = BlueprintNodeHelpers::HasBlueprintFunction(TEXT("OnDeath"), this, selfClass);
+	//hasOnDeathImplementEvent = BlueprintNodeHelpers::HasBlueprintFunction(TEXT("OnDeath"), this, selfClass);
 
 	//--------- 
 	mCDComp = nullptr;
 	mDataComp = nullptr;
-	mUsingSkill = -1;
+	mUsingSkill = nullptr;
+	mCharState = CharState::IdleRun;
+	mUuid = ::IdGenerator();
 
 	//设置ai控制类
 	AIControllerClass = AMyAIController::StaticClass();
@@ -162,5 +170,10 @@ void AMyChar::SetWeapon1Class(TSubclassOf<USMyAttachment> InWeapon)
 void AMyChar::OnCDFinish(UCoolDown* _cd)
 {
 	UE_LOG(AMyCharLogger, Warning, TEXT("--- AMyChar::OnCDFinish, skillId:%d"), _cd->GetSkillId());
+	mCanUseSkillArr.AddUnique(_cd);
+}
 
+bool AMyChar::IsAlive()
+{
+	return mDataComp->mHealth > 0.f ? true : false;
 }

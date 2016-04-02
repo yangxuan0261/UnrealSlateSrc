@@ -33,7 +33,7 @@ public:
 		void		CreateCD(int32 _skillId, TSubclassOf<UCoolDown> _class); //可以把蓝图类传进来
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDownComp")
-		void		UseSkill(int32 _skillId, int32 _targetId);
+		void		UseSkill(UCoolDown* _skill, int32 _targetId);
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDownComp")
 		void		RestartCD(int32 _skillId);

@@ -3,13 +3,13 @@
 #pragma once
 
 #include "Animation/AnimInstance.h"
+#include "GameTypes.h"
 #include "MyAnimInstance.generated.h"
 
-/**
- * 
- */
+class AMyChar;
+
 UCLASS()
-class MYSLATE_API UMyAnimInstance : public UAnimInstance
+class UMyAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 
@@ -17,16 +17,25 @@ public:
 	UMyAnimInstance();
 	virtual ~UMyAnimInstance();
 
-	UFUNCTION(BlueprintCallable, Category = "MyAnim")
+	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
 		bool IsMoving();
 
-	UFUNCTION(BlueprintCallable, Category = "MyAnim")
-		ACharacter* GetOwnerChar();
+	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
+		AMyChar* GetOwnerChar();
 
-	UFUNCTION(BlueprintCallable, Category = "MyAnim")
-		void AnimNotify_Begin(UAnimNotify* Notify);
-	UFUNCTION(BlueprintCallable, Category = "MyAnim")
-		void AnimNotify_End(UAnimNotify* Notify);
-private:
-	ACharacter* mOwnerChar;
+	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
+		void AnimNotify_BulletCreate(UAnimNotify* Notify);
+	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
+		void AnimNotify_BulletShoot(UAnimNotify* Notify);
+	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
+		void AnimNotify_AttackOver(UAnimNotify* Notify);
+
+	virtual	void NativeUpdateAnimation(float DeltaSeconds) override;
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyAnimInstance")
+		AMyChar*	mOwnerChar;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyAnimInstance")
+		float		mSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyAnimInstance")
+		CharState	mCharState;
 };

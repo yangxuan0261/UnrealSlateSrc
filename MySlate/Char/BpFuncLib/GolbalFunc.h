@@ -30,6 +30,9 @@ public:
 		static USkillMgr*			GetSkillMgr() { return gSkillMgr; }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static UCharMgr*			GetCharMgr() { return gCharMgr; }
+
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static int32				TestSingleton();
 
 private:

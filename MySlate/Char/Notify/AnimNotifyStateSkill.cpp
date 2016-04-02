@@ -23,19 +23,19 @@ void UAnimNotifyStateSkill::NotifyBegin(USkeletalMeshComponent * MeshComp, UAnim
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
 
-	if (mMyChar == nullptr)
-		mMyChar = Cast<AMyChar>(MeshComp->GetOwner());
+	//if (mMyChar == nullptr)
+	//	mMyChar = Cast<AMyChar>(MeshComp->GetOwner());
 
-	if (mMyChar != nullptr)
-	{
-		//create bullet
+	//if (mMyChar != nullptr)
+	//{
+	//	//create bullet
 
-	}
-	else
-	{
-		UE_LOG(UAnimNotifyLogger, Warning, TEXT("--- UAnimNotifyStateSkill::NotifyBegin, mMyChar == nullptr"));
+	//}
+	//else
+	//{
+	//	UE_LOG(UAnimNotifyLogger, Warning, TEXT("--- UAnimNotifyStateSkill::NotifyBegin, mMyChar == nullptr"));
 
-	}
+	//}
 
 }
 

@@ -22,3 +22,13 @@ enum class ETeam : uint8 //ÊÇµÐÊÇÓÑ
 	Teammate,
 	Enemy,
 };
+
+UENUM(BlueprintType)
+enum class CharState : uint8 //¶¯»­×´Ì¬
+{
+	IdleRun = 0,
+	Attack,
+	Injured,
+	Death,
+	Count,
+};

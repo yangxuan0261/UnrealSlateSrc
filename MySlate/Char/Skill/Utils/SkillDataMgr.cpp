@@ -29,6 +29,7 @@ void USkillDataMgr::InitFakeDate()
 	skill1->mName = TEXT("Skill1 Name");
 	skill1->mDescr = TEXT("Skill1 Descr");
 	skill1->mCoolDown = 3.f;
+	skill1->mAttackDist = 100.f;
 	mSkillTempMap.Add(skill1->mId, skill1);
 
 	USkillTemplate* skill2 = NewObject<USkillTemplate>(USkillTemplate::StaticClass());
@@ -37,6 +38,7 @@ void USkillDataMgr::InitFakeDate()
 	skill2->mName = TEXT("Skill2 Name");
 	skill2->mDescr = TEXT("Skill2 Descr");
 	skill2->mCoolDown = 7.f;
+	skill2->mAttackDist = 50.f;
 	mSkillTempMap.Add(skill2->mId, skill2);
 }
 

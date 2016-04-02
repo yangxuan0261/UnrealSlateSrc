@@ -20,7 +20,6 @@ AMyBullet::AMyBullet()
 	CollisionComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 	CollisionComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	CollisionComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-	CollisionComp->bCanEverAffectNavigation = false;
 	RootComponent = CollisionComp;
 
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));

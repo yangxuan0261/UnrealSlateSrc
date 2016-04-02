@@ -35,6 +35,8 @@ public:
 		FString			mDescr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
 		float			mCoolDown;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+		float			mAttackDist;
 
 	//GetSetProperty(mDescr, Descr, USkillTemplate);
 	//GetSetProperty(mCoolDown, CoolDown, USkillTemplate);
