@@ -89,6 +89,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		bool IsAlive();
+
+	//UFUNCTION(BlueprintCallable, Category = "MyChar")
+		//void FaceToTarget();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		UCoolDownComp*		mCDComp;

@@ -7,6 +7,8 @@
 
 #include "SkillMgr.generated.h"
 
+class UBehaviorData;
+
 UCLASS()
 class USkillMgr : public UObject, public FTickableGameObject, public USingleton<USkillMgr>
 {
@@ -23,6 +25,15 @@ public:
 	virtual TStatId GetStatId() const override;
 	// End FTickableGameObject Interface.
 
+public:
+	UFUNCTION(BlueprintCallable, Category = "USkillMgr")
+		UBehaviorData* GetBehaviorData(int32 _id);
+
+private:
+	UBehaviorData* LoadBehaviorData(int32 _id);
+
 private:
 	float		mCounter;
+
+	TMap<int32, UBehaviorData*>		mBehaviorDataMap;//存放技能数据
 };

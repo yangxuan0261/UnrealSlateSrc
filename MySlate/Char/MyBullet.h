@@ -28,6 +28,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void InitProjectile(const FVector& ShootDirection, uint8 InTeamNum, int32 ImpactDamage, float InLifeSpan);
 
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		void SetTarget(AMyChar* _target);
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		void SetSpeed(float _speed);
+
 	UFUNCTION()
 		void OnHit(const FHitResult& HitResult);
 
@@ -48,17 +54,18 @@ public:
 		USphereComponent* CollisionComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
-		AMyChar*		mAttackActor; //攻击者
+		AMyChar*			mAttackActor; //攻击者
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
-		TArray<AMyChar*>	mTargetActors; //受击者
+		AMyChar*			mTargetActor; //受击者
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		USkillTemplate*		mSkillTemp; //技能模板
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
-		FVector				mTargetLocation;
+		FVector				mTargetLoc; //目标地点
 
 protected:
 	void DealDamage(FHitResult const& HitResult);
+	FVector		mLastTargetLoc;
 
-	bool bInitialized;
-	int32 RemainingDamage;
+	bool		bInitialized;
+	int32		RemainingDamage;
 };

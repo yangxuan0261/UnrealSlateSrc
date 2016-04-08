@@ -7,6 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "Char/MyChar.h"
 #include "Char/MyCharDataComp.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values for this component's properties
 AMyBullet::AMyBullet()
@@ -30,8 +31,11 @@ AMyBullet::AMyBullet()
 
 	bInitialized = false;
 	mAttackActor = nullptr;
+	mTargetActor = nullptr;
 	mSkillTemp = nullptr;
-	mTargetLocation = FVector(0.f, 0.f, 0.f);
+	MovementComp->InitialSpeed = 0.f;
+	mTargetLoc = FVector(0.f, 0.f, 0.f);
+	mLastTargetLoc = FVector(0.f, 0.f, 0.f);
 	RemainingDamage = 50.f;
 }
 
@@ -49,6 +53,20 @@ void AMyBullet::BeginPlay()
 void AMyBullet::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	//每帧修正到目标的飞行方向
+	if (mTargetActor != nullptr)
+	{
+		FVector targetLoc = mTargetActor->GetActorLocation();
+		if ( mLastTargetLoc != targetLoc)
+		{
+			FVector bulletLoc = GetActorLocation();
+			FRotator rota = UKismetMathLibrary::FindLookAtRotation(bulletLoc, targetLoc);
+			SetActorRotation(rota);
+			MovementComp->Velocity = MovementComp->InitialSpeed * (targetLoc - bulletLoc); //子弹移动方向
+			mLastTargetLoc = targetLoc;
+		}
+	}
 }
 
 void AMyBullet::LifeSpanExpired()
@@ -67,14 +85,15 @@ void AMyBullet::NotifyActorBeginOverlap(AActor* OtherActor)
 	if (!OtherChar || !mAttackActor)
 		return;
 
-	if (mTargetActors.Find(OtherChar) != INDEX_NONE)
-		return;
+	if (mTargetActor != nullptr) //如果有目标对象，碰撞到非目标对象直接返回
+	{
+		if (OtherChar != mTargetActor)
+			return;
+	}
 
 	//add enemy
 	if (mAttackActor->mDataComp->mTeam != OtherChar->mDataComp->mTeam)
 	{
-		mTargetActors.AddUnique(OtherChar);
-
 		FHitResult PawnHit;
 		PawnHit.Actor = OtherChar;
 		PawnHit.Component = OtherChar->GetCapsuleComponent();
@@ -95,6 +114,16 @@ void AMyBullet::InitProjectile(const FVector& Direction, uint8 InTeamNum, int32 
 
 	RemainingDamage = ImpactDamage;
 	bInitialized = true;
+}
+
+void AMyBullet::SetTarget(AMyChar * _target)
+{
+	mTargetActor = _target;
+}
+
+void AMyBullet::SetSpeed(float _speed)
+{
+	MovementComp->InitialSpeed = _speed;
 }
 
 void AMyBullet::OnHit(const FHitResult& HitResult)

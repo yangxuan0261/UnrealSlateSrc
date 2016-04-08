@@ -4,6 +4,7 @@
 #include "SkillMgr.h"
 
 #include "Common/CommonHeader.h"
+#include "Effect/BehaviorData.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(SkillMgrLogger, Log, All);
 DEFINE_LOG_CATEGORY(SkillMgrLogger)
@@ -32,4 +33,21 @@ bool USkillMgr::IsTickable() const
 TStatId USkillMgr::GetStatId() const
 {
 	return TStatId();
+}
+
+UBehaviorData* USkillMgr::GetBehaviorData(int32 _id)
+{
+	UBehaviorData** bPtr = mBehaviorDataMap.Find(_id);
+	if (bPtr == nullptr)
+	{
+		*bPtr = LoadBehaviorData(_id);
+		if (*bPtr != nullptr)
+			mBehaviorDataMap.Add(_id, *bPtr);
+	}
+	return *bPtr;
+}
+
+UBehaviorData* USkillMgr::LoadBehaviorData(int32 _id)
+{
+	return nullptr;
 }
