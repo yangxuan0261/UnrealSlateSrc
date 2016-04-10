@@ -14,7 +14,6 @@ UMyAnimInstance::UMyAnimInstance()
 	mOwnerChar = nullptr;
 	mSpeed = 0.f;
 	mCharState = CharState::IdleRun;
-
 }
 
 UMyAnimInstance::~UMyAnimInstance()
@@ -24,12 +23,7 @@ UMyAnimInstance::~UMyAnimInstance()
 
 bool UMyAnimInstance::IsMoving()
 {
-	ACharacter* character = GetOwnerChar();
-	if (!character)
-		return false;
-
-	float wallSpeed = FVector::DotProduct(character->GetVelocity(), character->GetActorRotation().Vector());
-	return wallSpeed > 0.f ? true : false;
+	return GetOwnerChar()->GetVelocity().Size() > 0.f ? true : false;
 }
 
 AMyChar* UMyAnimInstance::GetOwnerChar()

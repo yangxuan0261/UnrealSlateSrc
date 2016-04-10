@@ -32,14 +32,4 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MyBehavior")
 	class APawn* GetEnemy() const;
-
-	UFUNCTION(BlueprintCallable, Category = "MyBehavior")
-		void PlayAnim();
-
-	//UPROPERTY(EditAnywhere, Category = "MyBehavior")
-	//	UBlackboardComponent* BlackboardComp;
-
-	///* Cached BT component */
-	//UPROPERTY(EditAnywhere, Category = "MyBehavior")
-	//	UBehaviorTreeComponent* BehaviorComp;
 };

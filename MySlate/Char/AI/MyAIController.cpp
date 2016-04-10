@@ -93,11 +93,3 @@ APawn * AMyAIController::GetEnemy() const
 	return nullptr;
 }
 
-void AMyAIController::PlayAnim()
-{
-	AMyChar* myChar = Cast<AMyChar>(GetOwner());
-	if (!myChar)
-		return;
-
-	myChar->PlayAnimMontage(myChar->mMon1);
-}
