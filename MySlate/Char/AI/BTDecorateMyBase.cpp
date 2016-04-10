@@ -84,6 +84,7 @@ bool UBTDecorateMyBase::IsAttackRange()
 
 	if (mOwnerChar->mUsingSkill != nullptr)
 	{
+		/*
 		USkillTemplate* skillTemp = mOwnerChar->mUsingSkill->mSkillTemplate;
 
 
@@ -98,7 +99,7 @@ bool UBTDecorateMyBase::IsAttackRange()
 				return skillTemp->mAttackDist > DistSq ? true : false;
 			}
 		}
-		
+		*/
 	}
 
 	return false;

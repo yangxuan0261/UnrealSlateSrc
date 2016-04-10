@@ -47,6 +47,7 @@ bool UBTTaskMyBase::MoveToTarget()
 
 	if (mOwnerChar->mUsingSkill != nullptr)
 	{
+		/* 
 		USkillTemplate* skillTemp = mOwnerChar->mUsingSkill->mSkillTemplate;
 
 
@@ -68,6 +69,7 @@ bool UBTTaskMyBase::MoveToTarget()
 				}
 			}
 		}
+		*/
 
 	}
 	return false;

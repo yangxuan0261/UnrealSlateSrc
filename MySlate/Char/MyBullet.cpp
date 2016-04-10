@@ -9,6 +9,9 @@
 #include "Char/MyCharDataComp.h"
 #include "Kismet/KismetMathLibrary.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(BulletLogger, Log, All);
+DEFINE_LOG_CATEGORY(BulletLogger)
+
 // Sets default values for this component's properties
 AMyBullet::AMyBullet()
 {
@@ -48,6 +51,8 @@ AMyBullet::~AMyBullet()
 void AMyBullet::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AMyBullet::OnCollisionCompBeginOverlap);//绑定碰撞组件碰撞事件
 }
 
 void AMyBullet::Tick(float DeltaSeconds)
@@ -63,7 +68,7 @@ void AMyBullet::Tick(float DeltaSeconds)
 			FVector bulletLoc = GetActorLocation();
 			FRotator rota = UKismetMathLibrary::FindLookAtRotation(bulletLoc, targetLoc);
 			SetActorRotation(rota);
-			MovementComp->Velocity = MovementComp->InitialSpeed * (targetLoc - bulletLoc); //子弹移动方向
+			MovementComp->Velocity = MovementComp->GetMaxSpeed() * (targetLoc - bulletLoc).GetSafeNormal(); //子弹移动方向
 			mLastTargetLoc = targetLoc;
 		}
 	}
@@ -73,36 +78,6 @@ void AMyBullet::LifeSpanExpired()
 {
 	OnProjectileDestroyed();
 	Super::LifeSpanExpired();
-}
-
-void AMyBullet::NotifyActorBeginOverlap(AActor* OtherActor)
-{
-	Super::NotifyActorBeginOverlap(OtherActor);
-	if (!bInitialized)
-		return;
-
-	AMyChar* OtherChar = Cast<AMyChar>(OtherActor);
-	if (!OtherChar || !mAttackActor)
-		return;
-
-	if (mTargetActor != nullptr) //如果有目标对象，碰撞到非目标对象直接返回
-	{
-		if (OtherChar != mTargetActor)
-			return;
-	}
-
-	//add enemy
-	if (mAttackActor->mDataComp->mTeam != OtherChar->mDataComp->mTeam)
-	{
-		FHitResult PawnHit;
-		PawnHit.Actor = OtherChar;
-		PawnHit.Component = OtherChar->GetCapsuleComponent();
-		PawnHit.bBlockingHit = true;
-		PawnHit.Location = PawnHit.ImpactPoint = GetActorLocation();
-		PawnHit.Normal = PawnHit.ImpactNormal = -MovementComp->Velocity.GetSafeNormal();
-
-		OnHit(PawnHit);
-	}
 }
 
 void AMyBullet::InitProjectile(const FVector& Direction, uint8 InTeamNum, int32 ImpactDamage, float InLifeSpan)
@@ -116,6 +91,11 @@ void AMyBullet::InitProjectile(const FVector& Direction, uint8 InTeamNum, int32 
 	bInitialized = true;
 }
 
+void AMyBullet::SetAttacker(AMyChar* _attacker)
+{
+	mAttackActor = _attacker;
+}
+
 void AMyBullet::SetTarget(AMyChar * _target)
 {
 	mTargetActor = _target;
@@ -124,6 +104,7 @@ void AMyBullet::SetTarget(AMyChar * _target)
 void AMyBullet::SetSpeed(float _speed)
 {
 	MovementComp->InitialSpeed = _speed;
+	MovementComp->MaxSpeed = _speed;
 }
 
 void AMyBullet::OnHit(const FHitResult& HitResult)
@@ -132,11 +113,51 @@ void AMyBullet::OnHit(const FHitResult& HitResult)
 	OnProjectileHit(HitResult.Actor.Get(), HitResult.ImpactPoint, HitResult.ImpactNormal);
 
 	if (RemainingDamage <= 0)
+		DestroyBullet();
+}
+
+void AMyBullet::DestroyBullet()
+{
+	OnProjectileDestroyed();
+	Destroy();
+}
+
+void AMyBullet::OnCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	AMyChar* OtherChar = Cast<AMyChar>(OtherActor);
+
+	if (mTargetActor != nullptr) //如果有目标对象，碰撞到非目标对象直接返回
 	{
-		OnProjectileDestroyed();
-		Destroy();
+		if (OtherChar == mTargetActor)
+			DestroyBullet();
 	}
 
+	//if (!bInitialized)
+	//	return;
+
+	//AMyChar* OtherChar = Cast<AMyChar>(OtherActor);
+	////if (!OtherChar || !mAttackActor)
+	////	return;
+
+	//if (mTargetActor != nullptr) //如果有目标对象，碰撞到非目标对象直接返回
+	//{
+	//	if (OtherChar == mTargetActor)
+	//		DestroyBullet();
+	//}
+
+
+	////add enemy
+	//if (mAttackActor->mDataComp->mTeam != OtherChar->mDataComp->mTeam)
+	//{
+	//	FHitResult PawnHit;
+	//	PawnHit.Actor = OtherChar;
+	//	PawnHit.Component = OtherChar->GetCapsuleComponent();
+	//	PawnHit.bBlockingHit = true;
+	//	PawnHit.Location = PawnHit.ImpactPoint = GetActorLocation();
+	//	PawnHit.Normal = PawnHit.ImpactNormal = -MovementComp->Velocity.GetSafeNormal();
+
+	//	OnHit(PawnHit);
+	//}
 }
 
 void AMyBullet::DealDamage(FHitResult const& HitResult)

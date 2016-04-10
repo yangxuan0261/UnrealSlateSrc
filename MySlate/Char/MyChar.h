@@ -16,6 +16,8 @@ class USMyAttachment;
 class UCoolDownComp;
 class UCoolDown;
 class UMyCharDataComp;
+class AMyBullet;
+class USkillFunction;
 
 UCLASS()
 class AMyChar : public ACharacter
@@ -81,6 +83,8 @@ public:
 	//---------- 测试是否有实现
 		uint32 hasOnDeathImplementEvent : 1;
 
+
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "MyBehavior")
 		void OnDeath(const FString& _str, int32 _num);
 
@@ -92,6 +96,10 @@ public:
 
 	//UFUNCTION(BlueprintCallable, Category = "MyChar")
 		//void FaceToTarget();
+public:
+	/** The class of minion to spawn. */
+	UPROPERTY(EditDefaultsOnly, Category = Category = "MyChar")
+		TSubclassOf<AMyBullet> BulletClass;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
@@ -101,7 +109,7 @@ public:
 		UMyCharDataComp*	mDataComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
-		UCoolDown*			mUsingSkill;
+		USkillFunction*			mUsingSkill;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		CharState			mCharState;
@@ -111,6 +119,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		int32				mUuid;
+
+
 public:
 
 };

@@ -10,6 +10,7 @@
 #include "BlueprintNodeHelpers.h"
 #include "Skill/CoolDown/CoolDownComp.h"
 #include "Skill/CoolDown/CoolDown.h"
+#include "Skill/SkillFunction.h"
 #include "MyCharDataComp.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(AMyCharLogger, Log, All);
@@ -55,20 +56,20 @@ void AMyChar::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	UMyGameInstance* mgi = Cast<UMyGameInstance>(GetGameInstance());
-	if (mgi)
-	{
-		mgi->InterLevelPersistentValue++;
-		//FString str = FString::Printf(TEXT("--- Cast myGameInstance Success - %d"), mgi->InterLevelPersistentValue);
-		/*GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);*/
-	}
+	//UMyGameInstance* mgi = Cast<UMyGameInstance>(GetGameInstance());
+	//if (mgi)
+	//{
+	//	mgi->InterLevelPersistentValue++;
+	//	//FString str = FString::Printf(TEXT("--- Cast myGameInstance Success - %d"), mgi->InterLevelPersistentValue);
+	//	/*GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, str);*/
+	//}
 
-	AMyLevelScriptActor* msa = Cast<AMyLevelScriptActor>(GetWorld()->GetLevelScriptActor());
-	if (msa)
-	{
-		FString str = FString::Printf(TEXT("--- Cast AMyLevelScriptActor Success - %d"), msa->Counter);
-		//GEngine->AddOnScreenDebugMessage(0, 1.0f, FColor::Green, str);
-	}
+	//AMyLevelScriptActor* msa = Cast<AMyLevelScriptActor>(GetWorld()->GetLevelScriptActor());
+	//if (msa)
+	//{
+	//	FString str = FString::Printf(TEXT("--- Cast AMyLevelScriptActor Success - %d"), msa->Counter);
+	//	//GEngine->AddOnScreenDebugMessage(0, 1.0f, FColor::Green, str);
+	//}
 
 	/*if (mMon1) //PlayAnimMontage(mMon1)只能执行一次
 	{
@@ -76,6 +77,12 @@ void AMyChar::Tick( float DeltaTime )
 		FString str = FString::Printf(TEXT("--- PlayAnimMontage - %f"), time);
 		GEngine->AddOnScreenDebugMessage(0, 1.0f, FColor::Green, str);
 	}*/
+
+	//---------------------- split
+	if (mUsingSkill != nullptr)
+	{
+		mUsingSkill->Tick(DeltaTime);
+	}
 }
 
 class Test : public TSharedFromThis<Test>

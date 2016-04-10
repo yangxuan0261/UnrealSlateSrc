@@ -22,26 +22,36 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void LifeSpanExpired() override;
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	// End Actor interface
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void InitProjectile(const FVector& ShootDirection, uint8 InTeamNum, int32 ImpactDamage, float InLifeSpan);
 
-	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void SetTarget(AMyChar* _target);
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void SetSpeed(float _speed);
+		void SetAttacker(AMyChar* _attacker);
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		virtual void SetTarget(AMyChar* _target);
+		//void SetTarget_Implementation(AMyChar* _target);
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		virtual void SetSpeed(float _speed);
 
 	UFUNCTION()
-		void OnHit(const FHitResult& HitResult);
+		virtual void OnHit(const FHitResult& HitResult);
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		virtual void DestroyBullet();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "AMyBullet")
 		void OnProjectileDestroyed();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "AMyBullet")
 		void OnProjectileHit(AActor* HitActor, const FVector& HitLocation, const FVector& HitNormal);
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		virtual void OnCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 public:
 

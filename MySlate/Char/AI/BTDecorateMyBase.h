@@ -15,6 +15,16 @@ public:
 	UBTDecorateMyBase();
 	virtual ~UBTDecorateMyBase();
 
+	//virtual void OnNodeActivation(FBehaviorTreeSearchData& SearchData);
+
+	///** called when underlying node has finished
+	//* this function should be considered as const (don't modify state of object) if node is not instanced! */
+	//virtual void OnNodeDeactivation(FBehaviorTreeSearchData& SearchData, EBTNodeResult::Type NodeResult);
+
+	///** called when underlying node was processed (deactivated or failed to activate)
+	//* this function should be considered as const (don't modify state of object) if node is not instanced! */
+	//virtual void OnNodeProcessed(FBehaviorTreeSearchData& SearchData, EBTNodeResult::Type& NodeResult);
+
 public:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
