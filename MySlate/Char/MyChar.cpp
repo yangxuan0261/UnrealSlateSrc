@@ -83,3 +83,10 @@ bool AMyChar::IsAlive()
 {
 	return mDataComp->mHealth > 0.f ? true : false;
 }
+
+void AMyChar::Death()
+{
+
+
+	OnDeath(); //通知一下蓝图
+}

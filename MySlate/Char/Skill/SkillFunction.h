@@ -2,7 +2,10 @@
 
 #pragma once
 
+#include "SkillTypes.h"
 #include "SkillFunction.generated.h"
+
+class USkillTemplate;
 
 UCLASS()
 class USkillFunction : public UObject
@@ -14,7 +17,15 @@ public:
 	USkillFunction();
 	virtual ~USkillFunction();
 
+
 public:
-	UFUNCTION(BlueprintCallable, Category = "MyChar")
+	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		virtual void Tick(float DeltaSeconds);
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
+		USkillTemplate*		mSkillTemplate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
+		ESkillType	mType;
 };

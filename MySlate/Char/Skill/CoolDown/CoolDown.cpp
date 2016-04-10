@@ -4,7 +4,10 @@
 #include "CoolDown.h"
 
 #include "Char/MyChar.h"
+#include "Char/Skill/Utils/SkillDataMgr.h"
 #include "Char/Skill/Template/SkillTemplate.h"
+#include "Char/Skill/Template/BufflTemplate.h"
+#include "Char/Skill/SkillFunction.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(UCoolDownLogger222, Log, All);
 DEFINE_LOG_CATEGORY(UCoolDownLogger222)
@@ -13,11 +16,11 @@ UCoolDown::UCoolDown() : Super()
 {
 	mSkillId = -1;
 	mSkillTemplate = nullptr;
+	mSkillFunc = nullptr;
 	mIsOK = true;
 	mCDTime = 1.f;
 	mTimer = 0.f;
 	mRatio = 1.f;
-	mType = ESkillType::Normal;
 	mOwnerChar = nullptr;
 }
 
@@ -26,9 +29,17 @@ UCoolDown::~UCoolDown()
 	UE_LOG(UCoolDownLogger222, Warning, TEXT("--- UCoolDown::~UCoolDown, skillId:%d"), mSkillId);
 }
 
-void UCoolDown::SetSkillTemplate(USkillTemplate * _skillTemplate)
+void UCoolDown::BeginDestroy()
 {
-	mSkillTemplate = _skillTemplate;
+	//清理一些对象
+
+
+	Super::BeginDestroy();
+}
+
+void UCoolDown::SetSkillTemplate(USkillTemplate* _skillTemp)
+{
+	mSkillTemplate = _skillTemp;
 	mSkillId = mSkillTemplate->mId;
 	mCDTime = mSkillTemplate->mCoolDown;
 	mTimer = mCDTime;

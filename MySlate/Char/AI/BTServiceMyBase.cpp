@@ -1,14 +1,20 @@
 #include "MySlate.h"
 #include "BTServiceMyBase.h"
 
-#include "Char/AI/MyAIController.h"
 #include "Char/MyChar.h"
 #include "Char/CharMgr.h"
 #include "Char/MyCharDataComp.h"
+#include "Char/AI/MyAIController.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
 
 UBTServiceMyBase::UBTServiceMyBase() : Super()
 {
 	mOwnerChar = nullptr;
+	mOwnerAI = nullptr;
+	mBTComp = nullptr;
+
+	//…Ë÷√√ø÷°tick
+	bNotifyTick = 1;
 }
 
 UBTServiceMyBase::~UBTServiceMyBase()
@@ -20,17 +26,18 @@ void UBTServiceMyBase::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * Node
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
-	if (!mOwnerChar)
-	{
-		mOwnerChar = GetMyChar();
-	}
-
 }
 
-AMyChar* UBTServiceMyBase::GetMyChar()
+void UBTServiceMyBase::OnInstanceCreated(UBehaviorTreeComponent& OwnerComp)
 {
-	AMyChar* myChar = Cast<AMyChar>(AIOwner->GetPawn());
-	return myChar != nullptr ? myChar : nullptr;
+	mBTComp = &OwnerComp;
+	mOwnerAI = mBTComp != nullptr ? Cast<AMyAIController>(mBTComp->GetOwner()) : nullptr;
+	mOwnerChar = mOwnerAI != nullptr ? Cast<AMyChar>(mOwnerAI->GetPawn()) : nullptr;
+}
+
+void UBTServiceMyBase::OnInstanceDestroyed(UBehaviorTreeComponent& OwnerComp)
+{
+
 }
 
 AMyChar * UBTServiceMyBase::GetCloestEnemy()

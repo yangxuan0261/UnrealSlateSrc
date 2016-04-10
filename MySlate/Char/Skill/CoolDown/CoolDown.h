@@ -13,6 +13,7 @@ DECLARE_DELEGATE_OneParam(FCDFinishDlg, UCoolDown*);
 class AMyChar;
 class USkillTemplate;
 class UCoolDownComp;
+class USkillFunction;
 
 UCLASS()
 class UCoolDown : public UObject
@@ -24,7 +25,9 @@ public:
 	UCoolDown();
 	virtual ~UCoolDown();
 
+	virtual void BeginDestroy() override;
 
+public:
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
 		bool		IsOK() const { return mIsOK; }
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
@@ -33,14 +36,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
 		int32		GetSkillId() const { return mSkillId; }
-	void			SetSkillId(int32 _id) { mSkillId = _id; }
 
-	void			SetSkillTemplate(USkillTemplate* _skillTemplate);
+	void			SetSkillTemplate(USkillTemplate* _skillTemp);
+
 	void			SetChar(AMyChar* _owner);
-
-	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
-		ESkillType	GetType() const { return mType; }
-	void			SetType(ESkillType _type) { mType = _type; }
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
 		void		UseSkill(AMyChar* _attActor, int32 _targetId);
@@ -50,6 +49,7 @@ public:
 
 	void			Restart();
 	bool			IsNull() const { return mSkillId == -1 ? true : false; }
+
 	virtual void Tick(float DeltaTime);
 
 public:
@@ -60,8 +60,8 @@ public:
 	bool		mIsOK;//
 
 	USkillTemplate*		mSkillTemplate;
+	USkillFunction*		mSkillFunc;
 	AMyChar*	mOwnerChar;
-	ESkillType	mType;
 
 	FCDFinishDlg				mCDFinishDlg;//通知代理
 };

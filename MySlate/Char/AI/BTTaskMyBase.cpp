@@ -1,8 +1,8 @@
 #include "MySlate.h"
 #include "BTTaskMyBase.h"
 
-#include "Char/AI/MyAIController.h"
 #include "Char/MyChar.h"
+#include "Char/AI/MyAIController.h"
 #include "Char/Skill/CoolDown/CoolDownComp.h"
 #include "Char/Skill/Template/SkillTemplate.h"
 #include "Char/Skill/CoolDown/CoolDown.h"
@@ -10,11 +10,18 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(BTDTaskLogger, Log, All);
+DEFINE_LOG_CATEGORY(BTDTaskLogger)
+
 UBTTaskMyBase::UBTTaskMyBase()
 	: Super()
 {
 	mOwnerChar = nullptr;
+	mOwnerAI = nullptr;
 	mBTComp = nullptr;
+
+	//…Ë÷√√ø÷°tick
+	bNotifyTick = 1;
 }
 
 UBTTaskMyBase::~UBTTaskMyBase()
@@ -22,29 +29,25 @@ UBTTaskMyBase::~UBTTaskMyBase()
 
 }
 
-AMyChar* UBTTaskMyBase::GetMyChar()
+void UBTTaskMyBase::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
-	AMyChar* myChar = Cast<AMyChar>(AIOwner->GetPawn());
-	return myChar != nullptr ? myChar : nullptr;
+	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 }
 
-
-
-UBehaviorTreeComponent* UBTTaskMyBase::GetBTComp()
+void UBTTaskMyBase::OnInstanceCreated(UBehaviorTreeComponent& OwnerComp)
 {
-	UBehaviorTreeComponent* btComp = Cast<UBehaviorTreeComponent>(AIOwner->GetBrainComponent());
-	return btComp != nullptr ? btComp : nullptr;
+	mBTComp = &OwnerComp;
+	mOwnerAI = mBTComp != nullptr ? Cast<AMyAIController>(mBTComp->GetOwner()) : nullptr;
+	mOwnerChar = mOwnerAI != nullptr ? Cast<AMyChar>(mOwnerAI->GetPawn()) : nullptr;
+}
+
+void UBTTaskMyBase::OnInstanceDestroyed(UBehaviorTreeComponent& OwnerComp)
+{
+
 }
 
 bool UBTTaskMyBase::MoveToTarget()
 {
-	if (!mOwnerChar)
-		mOwnerChar = GetMyChar();
-
-	if (!mBTComp)
-		mBTComp = GetBTComp();
-
-
 	if (mOwnerChar->mUsingSkill != nullptr)
 	{
 		/* 

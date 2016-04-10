@@ -9,12 +9,20 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
+#include "Char/AI/MyAIController.h"
+
+DECLARE_LOG_CATEGORY_EXTERN(BTDecorateLogger, Log, All);
+DEFINE_LOG_CATEGORY(BTDecorateLogger)
 
 UBTDecorateMyBase::UBTDecorateMyBase()
 	: Super()
 {
 	mOwnerChar = nullptr;
+	mOwnerAI = nullptr;
 	mBTComp = nullptr;
+
+	//设置tick 开关
+	bNotifyTick = true;
 }
 
 UBTDecorateMyBase::~UBTDecorateMyBase()
@@ -22,36 +30,28 @@ UBTDecorateMyBase::~UBTDecorateMyBase()
 
 }
 
+
 void UBTDecorateMyBase::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
-	if (!mOwnerChar)
-		mOwnerChar = GetMyChar();
 }
 
-AMyChar* UBTDecorateMyBase::GetMyChar()
+//初始化成员都放在这个方法
+void UBTDecorateMyBase::OnInstanceCreated(UBehaviorTreeComponent& OwnerComp)
 {
-	AMyChar* myChar = Cast<AMyChar>(AIOwner->GetPawn());
-	return myChar != nullptr ? myChar : nullptr;
+	mBTComp = &OwnerComp;
+	mOwnerAI = mBTComp != nullptr ? Cast<AMyAIController>(mBTComp->GetOwner()) : nullptr;
+	mOwnerChar = mOwnerAI != nullptr ? Cast<AMyChar>(mOwnerAI->GetPawn()) : nullptr;
 }
 
-
-
-UBehaviorTreeComponent* UBTDecorateMyBase::GetBTComp()
+void UBTDecorateMyBase::OnInstanceDestroyed(UBehaviorTreeComponent& OwnerComp)
 {
-	UBehaviorTreeComponent* btComp = Cast<UBehaviorTreeComponent>(AIOwner->GetBrainComponent());
-	return btComp != nullptr ? btComp : nullptr;
+
 }
 
 bool UBTDecorateMyBase::CanUseSkill()
 {
-	if (!mOwnerChar)
-		mOwnerChar = GetMyChar();
-
-	if (!mOwnerChar)
-		return false;
-
 	if (mOwnerChar->mCharState != CharState::Attack) //不在攻击状态且有可放的技能
 	{
 		if (mOwnerChar->mCanUseSkillArr.Num() > 0)
@@ -64,24 +64,14 @@ bool UBTDecorateMyBase::CanUseSkill()
 
 void UBTDecorateMyBase::UseSkill()
 {
-	if (!mOwnerChar)
-		mOwnerChar = GetMyChar();
-
 	if (mOwnerChar->mCanUseSkillArr.Num() > 0)
 	{
 		mOwnerChar->mCDComp->UseSkill(mOwnerChar->mCanUseSkillArr[0], 0);
 	}
-
 }
 
 bool UBTDecorateMyBase::IsAttackRange()
 {
-	if (!mOwnerChar)
-		mOwnerChar = GetMyChar();
-
-	if (!mBTComp)
-		mBTComp = GetBTComp();
-
 	if (mOwnerChar->mUsingSkill != nullptr)
 	{
 		/*

@@ -8,6 +8,7 @@
 #include "Char/Skill/Utils/SkillDataMgr.h"
 #include "Char/Skill/Template/SkillTemplate.h"
 #include "Char/Skill/Template/BufflTemplate.h"
+#include "Char/Skill/SkillFunction.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(UCoolDownLogger, Log, All);
 DEFINE_LOG_CATEGORY(UCoolDownLogger)
@@ -24,10 +25,8 @@ UCoolDownComp::UCoolDownComp(const FObjectInitializer& ObjectInitializer): Super
 UCoolDownComp::~UCoolDownComp()
 {
 	UE_LOG(UCoolDownLogger, Warning, TEXT("--- deconstruct ~UCoolDownComp"));
-	for (int32 i = 0; i < mCDArr.Num(); ++i)
-	{
-		mCDArr[i]->RemoveFromRoot();
-	}
+	for (UCoolDown* cd : mCDArr)
+		cd->RemoveFromRoot();
 	mCDArr.Empty();
 }
 
@@ -53,10 +52,10 @@ void UCoolDownComp::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 void UCoolDownComp::CreateCD(int32 _skillId, TSubclassOf<UCoolDown> _class)
 {
-	UCoolDown* cd = NewObject<UCoolDown>(_class);
-	cd->AddToRoot();
-	cd->SetSkillId(_skillId);
-	mCDArr.Add(cd);
+	//UCoolDown* cd = NewObject<UCoolDown>(_class);
+	//cd->AddToRoot();
+	//cd->SetSkillId(_skillId);
+	//mCDArr.Add(cd);
 }
 
 void UCoolDownComp::UseSkill(UCoolDown* _skill, int32 _targetId)
@@ -94,10 +93,10 @@ void UCoolDownComp::RemoveCDByType(ESkillType _skillType)
 {
 	for (int32 i = 0; i < mCDArr.Num(); ++i)
 	{
-		if (mCDArr[i]->GetType() == _skillType)
+		if (mCDArr[i]->mSkillFunc->mType == _skillType)
 		{
-			mCDArr[i]->RemoveFromRoot();
-			mCDArr.RemoveAtSwap(i);
+			mCDArr[i]->RemoveFromRoot(); //销毁这个cd对象
+			mCDArr.RemoveAt(i);
 			return;
 		}
 	}
@@ -112,12 +111,22 @@ void UCoolDownComp::AddCD(ESkillType _skillType, int32 _skillId, bool _isRestart
 		cd->AddToRoot();
 		cd->SetSkillTemplate(skillTemp);
 		cd->SetChar(mOwner);
-		cd->SetType(_skillType);
 		if (_isRestartCD)
 			cd->Restart();
+
+		USkillFunction* skillFunc = NewObject<USkillFunction>(cd, UCoolDown::StaticClass()); //设置USkillFunction跟随UCoolDown销毁
+		if (skillFunc)
+		{
+			cd->mSkillFunc = skillFunc;
+			cd->mSkillFunc->mSkillTemplate = skillTemp;
+		}
 
 		//清楚旧的，加入新的
 		RemoveCDByType(_skillType);
 		mCDArr.Add(cd);
+	}
+	else
+	{
+		UE_LOG(UCoolDownLogger222, Warning, TEXT("--- Error: No USkillTemplate, mSkillId:%d"), _skillId);
 	}
 }

@@ -15,11 +15,13 @@ public:
 	UBTTaskMyBase();
 	virtual ~UBTTaskMyBase();
 
-public:
-	UFUNCTION(BlueprintCallable, Category = "UBTTaskMyBase")
-		AMyChar*	GetMyChar();
-	UFUNCTION(BlueprintCallable, Category = "UBTTaskMyBase")
-		UBehaviorTreeComponent*	GetBTComp();
+	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+
+	//UBTAuxiliaryNode Interface Begin 
+	virtual void OnInstanceCreated(UBehaviorTreeComponent& OwnerComp) override;
+	virtual void OnInstanceDestroyed(UBehaviorTreeComponent& OwnerComp) override;
+	//UBTAuxiliaryNode Interface End 
+
 	UFUNCTION(BlueprintCallable, Category = "UBTTaskMyBase")
 		bool		MoveToTarget();
 
@@ -27,7 +29,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBTTaskMyBase")
 		AMyChar*	mOwnerChar;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBTTaskMyBase")
+		AMyAIController*	mOwnerAI;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBTTaskMyBase")
 		UBehaviorTreeComponent*	mBTComp;
-
 
 };
