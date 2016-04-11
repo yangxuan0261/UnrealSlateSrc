@@ -3,6 +3,8 @@
 #include "MySlate.h"
 #include "SkillFunction.h"
 
+#include "Template/SkillTemplate.h"
+
 DECLARE_LOG_CATEGORY_EXTERN(USkillFuncLogger, Log, All);
 DEFINE_LOG_CATEGORY(USkillFuncLogger)
 
@@ -26,6 +28,8 @@ void USkillFunction::Tick(float DeltaSeconds)
 
 void USkillFunction::SetSkillTemplate(USkillTemplate* _skillTemp)
 {
-
+	mSkillTemplate = _skillTemp;
+	mSkillId = _skillTemp->mId;
+	mType = _skillTemp->mSkillType;
 }
 

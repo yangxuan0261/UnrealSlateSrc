@@ -25,7 +25,6 @@ public:
 	UCoolDown();
 	virtual ~UCoolDown();
 
-	virtual void BeginDestroy() override;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")

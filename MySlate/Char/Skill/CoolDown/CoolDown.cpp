@@ -27,14 +27,11 @@ UCoolDown::UCoolDown() : Super()
 UCoolDown::~UCoolDown()
 {
 	UE_LOG(UCoolDownLogger222, Warning, TEXT("--- UCoolDown::~UCoolDown, skillId:%d"), mSkillId);
-}
-
-void UCoolDown::BeginDestroy()
-{
-	//清理一些对象
-
-
-	Super::BeginDestroy();
+	if (mSkillFunc)
+	{
+		mSkillFunc->RemoveFromRoot();
+		mSkillFunc->ConditionalBeginDestroy();
+	}
 }
 
 void UCoolDown::SetSkillTemplate(USkillTemplate* _skillTemp)
@@ -44,6 +41,14 @@ void UCoolDown::SetSkillTemplate(USkillTemplate* _skillTemp)
 	mCDTime = mSkillTemplate->mCoolDown;
 	mTimer = mCDTime;
 	mIsOK = true;
+
+	USkillFunction* skillFunc = NewObject<USkillFunction>(UCoolDown::StaticClass()); //设置USkillFunction跟随UCoolDown销毁
+	skillFunc->AddToRoot();
+	if (skillFunc)
+	{
+		mSkillFunc = skillFunc;
+		mSkillFunc->SetSkillTemplate(_skillTemp);
+	}
 }
 
 void UCoolDown::SetChar(AMyChar * _owner)

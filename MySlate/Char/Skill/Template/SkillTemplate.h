@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Common/CommonHeader.h"
+#include "Char/Skill/SkillTypes.h"
 
 #include "SkillTemplate.generated.h"
 
@@ -37,6 +38,8 @@ public:
 		float			mCoolDown;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
 		float			mAttackDist;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+		ESkillType		mSkillType;
 
 	//GetSetProperty(mDescr, Descr, USkillTemplate);
 	//GetSetProperty(mCoolDown, CoolDown, USkillTemplate);

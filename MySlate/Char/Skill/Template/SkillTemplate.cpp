@@ -10,6 +10,8 @@ USkillTemplate::USkillTemplate() : Super()
 	mName		= TEXT("Default SkillName");
 	mDescr		= TEXT("Default SkillDescr");
 	mCoolDown	= 5.f;
+	mAttackDist = 10.f;
+	mSkillType = ESkillType::Normal;
 }
 
 USkillTemplate::~USkillTemplate()

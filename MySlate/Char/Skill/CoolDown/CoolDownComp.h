@@ -39,10 +39,10 @@ public:
 		void		RestartCD(int32 _skillId);
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDownComp")
-		void		RemoveCDByType(ESkillType _skillType);
+		void		RemoveCDById(int32 _skillId);
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDownComp")
-		void		AddCD(ESkillType _skillType, int32 _skillId, bool _isRestartCD);
+		void		AddCD(int32 _skillId, bool _isRestartCD);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCoolDownComp")
 		TArray<UCoolDown*>		mCDArr;

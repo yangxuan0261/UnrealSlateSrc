@@ -89,20 +89,21 @@ void UCoolDownComp::RestartCD(int32 _skillId)
 	}
 }
 
-void UCoolDownComp::RemoveCDByType(ESkillType _skillType)
+void UCoolDownComp::RemoveCDById(int32 _skillId)
 {
 	for (int32 i = 0; i < mCDArr.Num(); ++i)
 	{
-		if (mCDArr[i]->mSkillFunc->mType == _skillType)
+		if (mCDArr[i]->mSkillId == _skillId)
 		{
-			mCDArr[i]->RemoveFromRoot(); //销毁这个cd对象
+			mCDArr[i]->RemoveFromRoot(); //cd对象丢给gc系统
+			mCDArr[i]->ConditionalBeginDestroy();
 			mCDArr.RemoveAt(i);
 			return;
 		}
 	}
 }
 
-void UCoolDownComp::AddCD(ESkillType _skillType, int32 _skillId, bool _isRestartCD)
+void UCoolDownComp::AddCD(int32 _skillId, bool _isRestartCD)
 {
 	USkillTemplate* skillTemp = USkillDataMgr::GetInstance()->GetSkillTemplate(_skillId);
 	if (skillTemp)
@@ -114,17 +115,8 @@ void UCoolDownComp::AddCD(ESkillType _skillType, int32 _skillId, bool _isRestart
 		if (_isRestartCD)
 			cd->Restart();
 
-		USkillFunction* skillFunc = NewObject<USkillFunction>(cd, UCoolDown::StaticClass()); //设置USkillFunction跟随UCoolDown销毁
-		if (skillFunc)
-		{
-			cd->mSkillFunc = skillFunc;
-			cd->mSkillFunc->mSkillTemplate = skillTemp;
-			cd->mSkillFunc->mType = _skillType;
-			cd->mSkillFunc->mSkillId = _skillId;
-		}
-
 		//清楚旧的，加入新的
-		RemoveCDByType(_skillType);
+		RemoveCDById(_skillId);
 		mCDArr.Add(cd);
 	}
 	else

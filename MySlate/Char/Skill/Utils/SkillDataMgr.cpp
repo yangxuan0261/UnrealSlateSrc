@@ -6,6 +6,8 @@
 #include "Common/CommonHeader.h"
 #include "Char/Skill/Template/SkillTemplate.h"
 #include "Char/Skill/Template/BufflTemplate.h"
+#include "Char/Skill/SkillTypes.h"
+
 
 DECLARE_LOG_CATEGORY_EXTERN(SkillDataMgrLogger, Log, All);
 DEFINE_LOG_CATEGORY(SkillDataMgrLogger)
@@ -18,7 +20,13 @@ USkillDataMgr::USkillDataMgr() : Super()
 
 USkillDataMgr::~USkillDataMgr()
 {
+	for (TMap<int32, USkillTemplate*>::TConstIterator iter = mSkillTempMap.CreateConstIterator(); iter; ++iter)
+		iter->Value->RemoveFromRoot();
+	mSkillTempMap.Empty();
 
+	for (TMap<int32, UBufflTemplate*>::TConstIterator iter = mBuffTempMap.CreateConstIterator(); iter; ++iter)
+		iter->Value->RemoveFromRoot();
+	mBuffTempMap.Empty();
 }
 
 void USkillDataMgr::InitFakeDate()
@@ -30,6 +38,7 @@ void USkillDataMgr::InitFakeDate()
 	skill1->mDescr = TEXT("Skill1 Descr");
 	skill1->mCoolDown = 3.f;
 	skill1->mAttackDist = 100.f;
+	skill1->mSkillType = ESkillType::Normal;
 	mSkillTempMap.Add(skill1->mId, skill1);
 
 	USkillTemplate* skill2 = NewObject<USkillTemplate>(USkillTemplate::StaticClass());
@@ -39,6 +48,7 @@ void USkillDataMgr::InitFakeDate()
 	skill2->mDescr = TEXT("Skill2 Descr");
 	skill2->mCoolDown = 7.f;
 	skill2->mAttackDist = 50.f;
+	skill2->mSkillType = ESkillType::Initiative;
 	mSkillTempMap.Add(skill2->mId, skill2);
 }
 
