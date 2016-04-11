@@ -11,14 +11,20 @@ USkillFunction::USkillFunction() : Super()
 {
 	mSkillTemplate = nullptr;
 	mType = ESkillType::Normal;
+	mSkillId = -1;
 }
 
 USkillFunction::~USkillFunction()
 {
-	UE_LOG(UCoolDownLogger222, Warning, TEXT("--- USkillFunction::~USkillFunction:%d"), mSkillTemplate->mId);
+	UE_LOG(UCoolDownLogger222, Warning, TEXT("--- USkillFunction::~USkillFunction:%d"), mSkillId);
 }
 
 void USkillFunction::Tick(float DeltaSeconds)
+{
+
+}
+
+void USkillFunction::SetSkillTemplate(USkillTemplate* _skillTemp)
 {
 
 }

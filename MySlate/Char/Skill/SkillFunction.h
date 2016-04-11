@@ -22,10 +22,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		virtual void Tick(float DeltaSeconds);
 
+	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
+		void			SetSkillTemplate(USkillTemplate* _skillTemp);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
 		USkillTemplate*		mSkillTemplate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
 		ESkillType	mType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
+		int32		mSkillId;
 };

@@ -119,6 +119,8 @@ void UCoolDownComp::AddCD(ESkillType _skillType, int32 _skillId, bool _isRestart
 		{
 			cd->mSkillFunc = skillFunc;
 			cd->mSkillFunc->mSkillTemplate = skillTemp;
+			cd->mSkillFunc->mType = _skillType;
+			cd->mSkillFunc->mSkillId = _skillId;
 		}
 
 		//清楚旧的，加入新的
