@@ -28,10 +28,7 @@ UCoolDown::~UCoolDown()
 {
 	UE_LOG(UCoolDownLogger222, Warning, TEXT("--- UCoolDown::~UCoolDown, skillId:%d"), mSkillId);
 	if (mSkillFunc)
-	{
 		mSkillFunc->RemoveFromRoot();
-		mSkillFunc->ConditionalBeginDestroy();
-	}
 }
 
 void UCoolDown::SetSkillTemplate(USkillTemplate* _skillTemp)

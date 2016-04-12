@@ -20,8 +20,11 @@ public:
 	virtual UAbsFilter* clone();
 	virtual void paser(TArray<FString> _params);//Ω‚ Õ ˝æ›
 
+	FString		GetKey() const { return mKey; }
+	void		SetKey(const FString& _key) { mKey = _key; }
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UAbsFilter")
-		FString		mFilterKey;
+		FString		mKey;
 
 };

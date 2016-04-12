@@ -9,12 +9,17 @@
 #include "Engine.h"
 #include "../MyChar.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(AMyAILogger, Log, All);
+DEFINE_LOG_CATEGORY(AMyAILogger)
+
 AMyAIController::AMyAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	/*BlackboardComp = ObjectInitializer.CreateDefaultSubobject<UBlackboardComponent>(this, TEXT("BlackBoardComp"));
-	BrainComponent = BehaviorComp = ObjectInitializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComp"));*/
-	//FString str = FString::Printf(TEXT("--- AStandardHUD::OnConfirmClicked hello world - %d"), 789);
-	//GEngine->AddOnScreenDebugMessage(0, 2.0f, FColor::Red, str);
+
+}
+
+AMyAIController::~AMyAIController()
+{
+	UE_LOG(AMyAILogger, Warning, TEXT("--- UCoolDownComp::~AMyAIController"));
 }
 
 void AMyAIController::GameHasEnded(AActor * EndGameFocus, bool bIsWinner)

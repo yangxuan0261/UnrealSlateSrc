@@ -15,4 +15,11 @@ public:
 	UBaseAttributeFunc();
 	virtual ~UBaseAttributeFunc();
 
+
+	FString		GetKey() const { return mKey; }
+	void		SetKey(const FString& _key) { mKey = _key; }
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UAbsFilter")
+		FString		mKey;
 };

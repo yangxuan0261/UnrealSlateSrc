@@ -35,8 +35,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TurnForward(AActor* _actor, const FVector& _targetLoc);
 
+	//--------------- test function
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TestStrSplit();
+
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static void					TestForceGC();
 		
 private:
 	static USkillDataMgr*			gSkillDataMgr;

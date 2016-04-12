@@ -5,7 +5,7 @@
 
 UAbsFilter::UAbsFilter()
 {
-
+	mKey = "";
 }
 
 UAbsFilter::~UAbsFilter()

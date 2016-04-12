@@ -96,7 +96,6 @@ void UCoolDownComp::RemoveCDById(int32 _skillId)
 		if (mCDArr[i]->mSkillId == _skillId)
 		{
 			mCDArr[i]->RemoveFromRoot(); //cd对象丢给gc系统
-			mCDArr[i]->ConditionalBeginDestroy();
 			mCDArr.RemoveAt(i);
 			return;
 		}
@@ -108,15 +107,17 @@ void UCoolDownComp::AddCD(int32 _skillId, bool _isRestartCD)
 	USkillTemplate* skillTemp = USkillDataMgr::GetInstance()->GetSkillTemplate(_skillId);
 	if (skillTemp)
 	{
+		////清楚旧的
+		RemoveCDById(_skillId);
+
 		UCoolDown* cd = NewObject<UCoolDown>(UCoolDown::StaticClass());
 		cd->AddToRoot();
+		mCDArr.Add(cd);
 		cd->SetSkillTemplate(skillTemp);
 		cd->SetChar(mOwner);
-		if (_isRestartCD)
+		if (_isRestartCD) {
 			cd->Restart();
-
-		//清楚旧的，加入新的
-		RemoveCDById(_skillId);
+		}
 		mCDArr.Add(cd);
 	}
 	else

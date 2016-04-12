@@ -18,9 +18,13 @@ public:
 	UFunctionFactory();
 	virtual ~UFunctionFactory();
 
+private:
+	void registerFunction(UAbsPkEvent* _object);//注册Function
+	void registerFilter(UAbsFilter* _object);//注册选人
+
 	UAbsFilter* createFilter(const FString& _str);//根据样板产出对象(选人)
 
 private:
-	TMap<FString, UAbsPkEvent*>	m_productFormer;
-	TMap<FString, UAbsPkEvent*>	m_filterMap;
+	TMap<FString, UAbsPkEvent*>	mFunctionMap;
+	TMap<FString, UAbsFilter*>	mFilterMap;
 };

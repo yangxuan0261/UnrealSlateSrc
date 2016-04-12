@@ -6,7 +6,7 @@
 // Sets default values
 UBaseAttributeFunc::UBaseAttributeFunc() : Super()
 {
-
+	mKey = "";
 }
 
 UBaseAttributeFunc::~UBaseAttributeFunc()

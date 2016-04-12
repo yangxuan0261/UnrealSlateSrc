@@ -63,3 +63,8 @@ void UGolbalFunc::TestStrSplit()
 
 }
 
+void UGolbalFunc::TestForceGC()
+{
+	GWorld->GetWorld()->ForceGarbageCollection(true);
+}
+

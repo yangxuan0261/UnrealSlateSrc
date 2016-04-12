@@ -46,6 +46,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCoolDownComp")
 		TArray<UCoolDown*>		mCDArr;
+	TArray<UCoolDown*>		mCDArr222;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCoolDownComp")
 		AMyChar*				mOwner;

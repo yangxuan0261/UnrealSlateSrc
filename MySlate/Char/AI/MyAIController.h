@@ -9,8 +9,8 @@ UCLASS()
 class AMyAIController : public AAIController
 {
 	GENERATED_UCLASS_BODY()
-private:
-
+public:
+	virtual ~AMyAIController();
 
 protected:
 	int32 EnemyKeyID;
