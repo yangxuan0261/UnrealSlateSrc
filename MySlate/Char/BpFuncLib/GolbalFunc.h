@@ -33,8 +33,11 @@ public:
 		static UCharMgr*			GetCharMgr() { return gCharMgr; }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static int32				TestSingleton();
+		static void					TurnForward(AActor* _actor, const FVector& _targetLoc);
 
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static void					TestStrSplit();
+		
 private:
 	static USkillDataMgr*			gSkillDataMgr;
 	static USkillMgr*				gSkillMgr;

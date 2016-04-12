@@ -7,6 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "Char/MyChar.h"
 #include "Char/MyCharDataComp.h"
+#include "Char/Skill/Template/SkillTemplate.h"
 #include "Kismet/KismetMathLibrary.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(BulletLogger, Log, All);
@@ -85,7 +86,6 @@ void AMyBullet::InitProjectile(const FVector& Direction, uint8 InTeamNum, int32 
 	MovementComp->OnProjectileStop.AddDynamic(this, &AMyBullet::OnHit);
 	MovementComp->Velocity = MovementComp->InitialSpeed * Direction;
 
-	SetLifeSpan(InLifeSpan);
 
 	RemainingDamage = ImpactDamage;
 	bInitialized = true;
@@ -105,6 +105,29 @@ void AMyBullet::SetSpeed(float _speed)
 {
 	MovementComp->InitialSpeed = _speed;
 	MovementComp->MaxSpeed = _speed;
+}
+
+void AMyBullet::SetTargetLoc(UPARAM(ref) const FVector& _targetLoc)
+{
+	SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), _targetLoc));
+
+	//设置目标点，计算生命周期t = s / v;
+	mTargetLoc = _targetLoc;
+	
+	if (mSkillTemp)
+		mDist = mSkillTemp->mAttackDist;
+
+	if (MovementComp->MaxSpeed > 0.f && mDist > 0.f)
+		SetLifeSpan(mDist / MovementComp->MaxSpeed);
+	else
+	{
+		UE_LOG(BulletLogger, Warning, TEXT("--- MovementComp->MaxSpeed or mDist , == 0"));
+	}
+}
+
+void AMyBullet::SetSkillTemplate(USkillTemplate* _skillTemp)
+{
+	mSkillTemp = _skillTemp;
 }
 
 void AMyBullet::OnHit(const FHitResult& HitResult)

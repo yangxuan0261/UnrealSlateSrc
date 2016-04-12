@@ -4,17 +4,24 @@
 
 #include "AbsFilter.generated.h"
 
-UCLASS()
+class AMyChar;
+class UPkMsg;
+
+UCLASS(Abstract)
 class UAbsFilter : public UObject
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	UAbsFilter();
 	virtual ~UAbsFilter();
 
+	virtual void filter(UPkMsg* msg);//过虑可选actor
+	virtual UAbsFilter* clone();
+	virtual void paser(TArray<FString> _params);//解释数据
 
-private:
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UAbsFilter")
+		FString		mFilterKey;
 
 };

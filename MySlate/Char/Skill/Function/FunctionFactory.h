@@ -18,6 +18,8 @@ public:
 	UFunctionFactory();
 	virtual ~UFunctionFactory();
 
+	UAbsFilter* createFilter(const FString& _str);//根据样板产出对象(选人)
+
 private:
 	TMap<FString, UAbsPkEvent*>	m_productFormer;
 	TMap<FString, UAbsPkEvent*>	m_filterMap;

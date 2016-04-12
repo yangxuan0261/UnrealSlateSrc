@@ -26,8 +26,11 @@ public:
 	//	FString			GetDescr() { return mDescr; }
 	//UFUNCTION(BlueprintCallable, Category = "USkillTemplate")
 	//	float			GetCoolDown() { return mCoolDown; }
+public:
+	
 
 public:
+	//∂¡±Ì Ù–‘
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
 		int32			mId;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
@@ -40,7 +43,6 @@ public:
 		float			mAttackDist;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
 		ESkillType		mSkillType;
-
-	//GetSetProperty(mDescr, Descr, USkillTemplate);
-	//GetSetProperty(mCoolDown, CoolDown, USkillTemplate);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+		FString			mfilter;
 };

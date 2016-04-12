@@ -6,12 +6,13 @@
 // Sets default values
 USkillTemplate::USkillTemplate() : Super()
 {
-	mId			= -1;
-	mName		= TEXT("Default SkillName");
-	mDescr		= TEXT("Default SkillDescr");
-	mCoolDown	= 5.f;
+	mId = -1;
+	mName = TEXT("Default SkillName");
+	mDescr = TEXT("Default SkillDescr");
+	mCoolDown = 5.f;
 	mAttackDist = 10.f;
 	mSkillType = ESkillType::Normal;
+	mfilter = "";
 }
 
 USkillTemplate::~USkillTemplate()

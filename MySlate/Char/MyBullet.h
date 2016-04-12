@@ -9,6 +9,12 @@ class USphereComponent;
 class AMyChar;
 class USkillTemplate;
 
+/*
+set target order
+SetSkillTemplate or SetSpeed
+SetTargetLoc
+*/
+
 UCLASS()
 class AMyBullet : public AActor
 {
@@ -37,6 +43,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		virtual void SetSpeed(float _speed);
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		void SetTargetLoc(UPARAM(ref) const FVector& _targetLoc);
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		void SetSkillTemplate(USkillTemplate* _skillTemp);
 
 	UFUNCTION()
 		virtual void OnHit(const FHitResult& HitResult);
@@ -78,4 +90,5 @@ protected:
 
 	bool		bInitialized;
 	int32		RemainingDamage;
+	float		mDist; //¹¥»÷¾àÀë
 };

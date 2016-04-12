@@ -3,12 +3,27 @@
 #include "MySlate.h"
 #include "AbsFilter.h"
 
-// Sets default values
-UAbsFilter::UAbsFilter() : Super()
+UAbsFilter::UAbsFilter()
 {
+
 }
+
 UAbsFilter::~UAbsFilter()
 {
 
 }
 
+void UAbsFilter::filter(UPkMsg* msg)
+{
+
+}
+
+UAbsFilter * UAbsFilter::clone()
+{
+	return nullptr;
+}
+
+void UAbsFilter::paser(TArray<FString> _params)
+{
+
+}
