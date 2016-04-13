@@ -30,5 +30,18 @@ void UCharMgr::AddChar(AMyChar* _char)
 		{
 			mEnemyCharArr.AddUnique(_char);
 		}
+
+		mAllCharMap.Add(_char->mUuid, _char);
 	}
+}
+
+AMyChar* UCharMgr::GetChar(int32 _id)
+{
+	AMyChar** mychar = mAllCharMap.Find(_id);
+	return mychar != nullptr ? *mychar : nullptr;
+}
+
+void UCharMgr::RemoveChar(int32 _id)
+{
+	mAllCharMap.Remove(_id);
 }

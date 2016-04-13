@@ -6,6 +6,9 @@
 DECLARE_LOG_CATEGORY_EXTERN(UPkPorcessLogger, Log, All);
 DEFINE_LOG_CATEGORY(UPkPorcessLogger)
 
+#include "PkMsg.h"
+#include "char/MyChar.h"
+
 // Sets default values
 UPkPorcess::UPkPorcess() : Super()
 {
@@ -14,5 +17,60 @@ UPkPorcess::UPkPorcess() : Super()
 
 UPkPorcess::~UPkPorcess()
 {
-	
+	if (mPkMsg != nullptr)
+	{
+		mPkMsg->RemoveFromRoot();
+	}
+}
+
+void UPkPorcess::SetMsg(UPkMsg* _pkMsg)
+{
+	if (mPkMsg != nullptr)
+	{
+		mPkMsg->RemoveFromRoot();
+	}
+	mPkMsg = _pkMsg;
+	mPkMsg->AddToRoot();
+}
+
+void UPkPorcess::Run()
+{
+
+}
+
+bool UPkPorcess::CheckCanPk()
+{
+	return false;
+}
+
+void UPkPorcess::FilterVS()
+{
+
+}
+
+void UPkPorcess::RunBeforePk()
+{
+}
+
+void UPkPorcess::RunBeforeSkill()
+{
+}
+
+void UPkPorcess::PkLogic()
+{
+}
+
+void UPkPorcess::RunEndSkill()
+{
+
+}
+
+void UPkPorcess::RunEndPk()
+{
+
+}
+
+void UPkPorcess::PkPrice()
+{
+
 }

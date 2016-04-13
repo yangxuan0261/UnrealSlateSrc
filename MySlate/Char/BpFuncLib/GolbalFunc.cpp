@@ -7,6 +7,7 @@
 #include "Char/Skill/SkillMgr.h"
 #include "Char/CharMgr.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Char/Skill/Function/FunctionFactory.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(UGolbalFuncLogger, Log, All);
 DEFINE_LOG_CATEGORY(UGolbalFuncLogger)
@@ -14,6 +15,7 @@ DEFINE_LOG_CATEGORY(UGolbalFuncLogger)
 USkillDataMgr*	UGolbalFunc::gSkillDataMgr = nullptr;
 USkillMgr*		UGolbalFunc::gSkillMgr = nullptr;
 UCharMgr*		UGolbalFunc::gCharMgr = nullptr;
+UFunctionFactory*	UGolbalFunc::gFunctionMgr = nullptr;
 
 // Sets default values
 //UGolbalFunc::UGolbalFunc(const UGolbalFunc& ObjectInitializer) : Super(ObjectInitializer)
@@ -32,6 +34,8 @@ void UGolbalFunc::InitMgrs()
 	gSkillDataMgr = USkillDataMgr::GetInstance();
 	gSkillMgr = USkillMgr::GetInstance();
 	gCharMgr = UCharMgr::GetInstance();
+	gFunctionMgr = UFunctionFactory::GetInstance();
+	gFunctionMgr->InitFuncAndFilters();
 }
 
 void UGolbalFunc::DestroyMgrs()
@@ -39,9 +43,11 @@ void UGolbalFunc::DestroyMgrs()
 	USkillDataMgr::ReleaseInstance();
 	USkillMgr::ReleaseInstance();
 	UCharMgr::ReleaseInstance();
+	UFunctionFactory::ReleaseInstance();
 	gSkillDataMgr = nullptr;
 	gSkillMgr = nullptr;
 	gCharMgr = nullptr;
+	gFunctionMgr = nullptr;
 }
 
 void UGolbalFunc::TurnForward(AActor* _actor, const FVector& _targetLoc)

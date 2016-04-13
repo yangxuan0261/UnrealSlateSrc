@@ -13,17 +13,17 @@ UAbsFilter::~UAbsFilter()
 
 }
 
-void UAbsFilter::filter(UPkMsg* msg)
+void UAbsFilter::Filter(UPkMsg* msg)
 {
 
 }
 
-UAbsFilter * UAbsFilter::clone()
+UAbsFilter * UAbsFilter::Clone()
 {
 	return nullptr;
 }
 
-void UAbsFilter::paser(TArray<FString> _params)
+void UAbsFilter::Paser(const TArray<FString>& _params)
 {
 
 }

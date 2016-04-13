@@ -17,9 +17,11 @@ public:
 	ULockFilter();
 	virtual ~ULockFilter();
 
-	virtual void filter(UPkMsg* msg);
-	virtual UAbsFilter* clone();
-	virtual void paser(TArray<FString> _params);
+	virtual void Filter(UPkMsg* msg) override;
+	virtual UAbsFilter* Clone() override;
+	virtual void Paser(const TArray<FString>& _params);
+
+	static ULockFilter* CreateFilter(const FString& _key);
 
 public:
 	int32		mType; //1¼º·½£¬-1µÐ·½

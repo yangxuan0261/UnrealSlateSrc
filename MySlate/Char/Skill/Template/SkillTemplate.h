@@ -7,6 +7,10 @@
 
 #include "SkillTemplate.generated.h"
 
+class UAbsPkEvent;
+class UAbsFilter;
+
+
 UCLASS()
 class USkillTemplate : public UObject
 {
@@ -27,7 +31,26 @@ public:
 	//UFUNCTION(BlueprintCallable, Category = "USkillTemplate")
 	//	float			GetCoolDown() { return mCoolDown; }
 public:
-	
+	const TArray<UAbsPkEvent*>& GetBeforePk();
+	const TArray<UAbsPkEvent*>& GetBeforeSkill();
+	const TArray<UAbsPkEvent*>& GetBeforeEvns();
+	const TArray<UAbsPkEvent*>& GetEndEvns();
+	const TArray<UAbsPkEvent*>& GetEndSkill();
+	const TArray<UAbsPkEvent*>& GetEndPk();
+
+public:
+	TArray<UAbsPkEvent*> mBeforeSkillEvns;
+	TArray<UAbsPkEvent*> mBeforePk;
+	TArray<UAbsPkEvent*> mBeforeEvns;
+	TArray<UAbsPkEvent*> mEndEvns;
+	TArray<UAbsPkEvent*> mEndPk;
+	TArray<UAbsPkEvent*> mEndSkillEvns;
+	FString beforeSkillStr;
+	FString beforeEvnsStr;
+	FString endEvnsStr;
+	FString pkBeforeStr;
+	FString pkEndStr;
+	FString endSkillStr;
 
 public:
 	//∂¡±Ì Ù–‘

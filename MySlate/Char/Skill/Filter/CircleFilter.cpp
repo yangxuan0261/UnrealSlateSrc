@@ -13,17 +13,17 @@ UCircleFilter::~UCircleFilter()
 
 }
  
-void UCircleFilter::filter(UPkMsg* msg)
+void UCircleFilter::Filter(UPkMsg* msg)
 {
 
 }
 
-UAbsFilter* UCircleFilter::clone()
+UAbsFilter* UCircleFilter::Clone()
 {
-	return nullptr;
+	return CreateFilter(mKey);
 }
 
-void UCircleFilter::paser(TArray<FString> _params)
+void UCircleFilter::Paser(const TArray<FString>& _params)
 {
 	mType = -1;
 	mCount = -1;
@@ -34,4 +34,11 @@ void UCircleFilter::paser(TArray<FString> _params)
 		mCount = FCString::Atoi(*_params[1]);
 		mRadius = FCString::Atoi(*_params[2]);
 	}
+}
+
+UCircleFilter* UCircleFilter::CreateFilter(const FString& _key)
+{
+	UCircleFilter* circleFilter = NewObject<UCircleFilter>(UCircleFilter::StaticClass());
+	circleFilter->SetKey(_key);
+	return circleFilter;
 }

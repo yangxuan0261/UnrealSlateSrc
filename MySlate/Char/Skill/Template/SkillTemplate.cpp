@@ -20,3 +20,33 @@ USkillTemplate::~USkillTemplate()
 
 }
 
+const TArray<UAbsPkEvent*>& USkillTemplate::GetBeforeSkill()
+{
+	return mBeforeSkillEvns;
+}
+
+const TArray<UAbsPkEvent*>& USkillTemplate::GetBeforePk()
+{
+	return mBeforePk;
+}
+
+const TArray<UAbsPkEvent*>& USkillTemplate::GetBeforeEvns()
+{
+	return mBeforeEvns;
+}
+
+const TArray<UAbsPkEvent*>& USkillTemplate::GetEndEvns()
+{
+	return mEndEvns;
+}
+
+const TArray<UAbsPkEvent*>& USkillTemplate::GetEndPk()
+{
+	return mEndPk;
+}
+
+const TArray<UAbsPkEvent*>& USkillTemplate::GetEndSkill()
+{
+	return mEndSkillEvns;
+}
+

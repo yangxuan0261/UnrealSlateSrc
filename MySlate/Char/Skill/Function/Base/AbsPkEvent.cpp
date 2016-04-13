@@ -12,3 +12,8 @@ UAbsPkEvent::~UAbsPkEvent()
 
 }
 
+UAbsPkEvent* UAbsPkEvent::Clone()
+{
+	return nullptr;
+}
+

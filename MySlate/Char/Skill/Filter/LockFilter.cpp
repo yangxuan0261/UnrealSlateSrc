@@ -12,21 +12,28 @@ ULockFilter::~ULockFilter()
 
 }
 
-void ULockFilter::filter(UPkMsg* msg)
+void ULockFilter::Filter(UPkMsg* msg)
 {
 
 }
 
-UAbsFilter* ULockFilter::clone()
+UAbsFilter* ULockFilter::Clone()
 {
-	return nullptr;
+	return CreateFilter(mKey);
 }
 
-void ULockFilter::paser(TArray<FString> _params)
+void ULockFilter::Paser(const TArray<FString>& _params)
 {
 	mType = -1; //Ä¬ÈÏµÐ·½
 	if (_params.Num() > 0)
 	{
 		mType = FCString::Atoi(*_params[0]);
 	}
+}
+
+ULockFilter* ULockFilter::CreateFilter(const FString& _key)
+{
+	ULockFilter* lockFilter = NewObject<ULockFilter>(ULockFilter::StaticClass());
+	lockFilter->SetKey(_key);
+	return lockFilter;
 }

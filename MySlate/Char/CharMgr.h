@@ -22,6 +22,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
 		void		AddChar(AMyChar* _char);
 
+	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
+		AMyChar*	GetChar(int32 _id);
+	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
+		void		RemoveChar(int32 _id);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharManager")
 		TArray<AMyChar*>		mSelfCharArr;
@@ -29,4 +34,7 @@ public:
 		TArray<AMyChar*>		mTeamCharArr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharManager")
 		TArray<AMyChar*>		mEnemyCharArr;
+
+private:
+	TMap<int32, AMyChar*> mAllCharMap;
 };

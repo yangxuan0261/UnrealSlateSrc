@@ -16,9 +16,9 @@ public:
 	UAbsFilter();
 	virtual ~UAbsFilter();
 
-	virtual void filter(UPkMsg* msg);//过虑可选actor
-	virtual UAbsFilter* clone();
-	virtual void paser(TArray<FString> _params);//解释数据
+	virtual void Filter(UPkMsg* msg);//过虑可选actor
+	virtual UAbsFilter* Clone();
+	virtual void Paser(const TArray<FString>& _params);//解释数据
 
 	FString		GetKey() const { return mKey; }
 	void		SetKey(const FString& _key) { mKey = _key; }

@@ -27,9 +27,6 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick( float DeltaSeconds ) override;
 
-
-
-
 public:
 	void OnCDFinish(UCoolDown* _cd);
 
@@ -67,8 +64,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		int32				mUuid;
-
-
 public:
 
 };

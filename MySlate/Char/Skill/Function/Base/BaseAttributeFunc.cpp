@@ -13,3 +13,8 @@ UBaseAttributeFunc::~UBaseAttributeFunc()
 {
 
 }
+
+void UBaseAttributeFunc::Paser(const TArray<FString>& _params)
+{
+	
+}

@@ -15,7 +15,8 @@ public:
 	UAbsPkEvent();
 	virtual ~UAbsPkEvent();
 
-	
+	virtual UAbsPkEvent* Clone();
+
 private:
 
 };

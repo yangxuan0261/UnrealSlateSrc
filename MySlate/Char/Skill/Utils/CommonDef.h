@@ -14,7 +14,7 @@ public:
 	virtual ~UEmpty() {}
 };
 
-const FString Split_Com = TEXT(",");
-const FString Split_Line = TEXT("_");
-const FString Split_Pound = TEXT("#");
-const FString Split_Sem = TEXT(";");
+#define  Split_Com		TEXT(",")
+#define  Split_Line		TEXT("_")
+#define  Split_Pound	TEXT("#")
+#define  Split_Sem		TEXT(";")

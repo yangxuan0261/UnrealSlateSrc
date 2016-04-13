@@ -15,6 +15,7 @@ public:
 	UBaseAttributeFunc();
 	virtual ~UBaseAttributeFunc();
 
+	virtual void Paser(const TArray<FString>& _params);//½âÊÍÊı¾İ
 
 	FString		GetKey() const { return mKey; }
 	void		SetKey(const FString& _key) { mKey = _key; }
