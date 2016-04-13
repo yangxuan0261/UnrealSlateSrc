@@ -15,8 +15,6 @@ UPkMsg::UPkMsg() : Super()
 	mSkillLogicType = ESkillAttackType::ATTACK_PHY;
 	mAttackerId = 0;				
 	mTargetId = 0;
-	mAttackerPtr = nullptr;
-	mTargetPtr = nullptr;
 }
 
 UPkMsg::~UPkMsg()

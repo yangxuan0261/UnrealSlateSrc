@@ -74,3 +74,21 @@ void UGolbalFunc::TestForceGC()
 	GWorld->GetWorld()->ForceGarbageCollection(true);
 }
 
+static TMap<int32, FString> mTestMap;
+void UGolbalFunc::TestMapAdd()
+{
+	mTestMap.Add(1, TEXT("aaa"));
+	mTestMap.Add(3, TEXT("bbb"));
+	mTestMap.Add(2, TEXT("ccc"));
+	mTestMap.Add(5, TEXT("ddd"));
+	mTestMap.Add(4, TEXT("eee"));
+	mTestMap.Add(2, TEXT("eee"));
+	mTestMap.Add(2, TEXT("eee"));
+}
+
+void UGolbalFunc::TestMapRemove(int32 _key)
+{
+	int32 num = mTestMap.Remove(_key);
+	UE_LOG(UGolbalFuncLogger, Warning, TEXT("--- remove key:%d, num:%d, mapSize:%d"), _key, num, mTestMap.Num());
+}
+

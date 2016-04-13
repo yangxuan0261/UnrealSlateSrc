@@ -42,10 +42,17 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TestForceGC();
-		
+
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static void					TestMapAdd();
+
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static void					TestMapRemove(int32 _key);
+
 private:
 	static USkillDataMgr*			gSkillDataMgr;
 	static USkillMgr*				gSkillMgr;
 	static UCharMgr*				gCharMgr;
 	static UFunctionFactory*		gFunctionMgr;
+
 };

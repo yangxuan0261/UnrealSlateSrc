@@ -3,11 +3,24 @@
 #pragma once
 
 #include "Char/Skill/SkillTypes.h"
+#include "FightData.h"
 
 #include "PkMsg.generated.h"
 
 class AMyChar;
-class UFightData;
+
+class UParam
+{
+	UParam()
+	{
+		mFightData = NewObject<UFightData>(UFightData::StaticClass());
+		mFightData->AddToRoot();
+	}
+	~UParam() { mFightData->RemoveFromRoot(); }
+
+	UFightData*		mFightData;			//战斗数据
+	int32			mTargetId;
+};
 
 UCLASS()
 class UPkMsg : public UObject
@@ -19,12 +32,14 @@ public:
 	UPkMsg();
 	virtual ~UPkMsg();
 
+	const TArray<UParam*>& GetTargets() const { return mTargetArr; }
+
 private:
 	bool			mCanLog;
 	int32			mSkillId;						//技能id
 	ESkillAttackType	mSkillLogicType;				//技能逻辑类型 SKILL_ATTACK_TYPE
 	int32			mAttackerId;					//攻击者 唯一id
 	int32			mTargetId;						//锁定目标者 唯一id
-	AMyChar*		mAttackerPtr;					//攻击者
-	AMyChar*		mTargetPtr;						//锁定目标者
+	TArray<UParam*>	mTargetArr;						//目标集
+	UFightData*		mAttackerData;					//攻击者参数，不用指针是防止攻击死亡的情况
 };
