@@ -5,7 +5,7 @@
 #include "Tickable.h"
 #include "Char/Skill/SkillTypes.h"
 
-#include "Char/MyBaseComp.h"
+#include "Char/Comp/MyBaseComp.h"
 #include "CoolDownComp.generated.h"
 
 class UCoolDown;

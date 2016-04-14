@@ -3,8 +3,9 @@
 #include "MySlate.h"
 #include "MyAnimInstance.h"
 #include "Engine.h"
-#include "MyChar.h"
-#include "MyBullet.h"
+
+#include "../MyChar.h"
+#include "../MyBullet.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(MyAnimInstLogger, Log, All);
 DEFINE_LOG_CATEGORY(MyAnimInstLogger)

@@ -27,7 +27,10 @@ UPkMsg::UPkMsg() : Super()
 
 UPkMsg::~UPkMsg()
 {
-	mAttackerData->RemoveFromRoot();
+	if (mAttackerData != nullptr)
+	{
+		mAttackerData->RemoveFromRoot();
+	}
 }
 
 void UPkMsg::Init()
@@ -57,3 +60,24 @@ void UPkMsg::AddTarget(AMyChar* _char)
 	mTargetArr.Add(param);
 }
 
+//-------------------------------- UParam Begin
+
+UParam::UParam()
+{
+	mFightData = nullptr;
+	mTargetId = 0;
+}
+
+UParam::~UParam()
+{
+	if (mFightData)
+	{
+		mFightData->RemoveFromRoot();
+	}
+}
+
+void UParam::Init()
+{
+	mFightData = NewObject<UFightData>(UFightData::StaticClass());
+	mFightData->AddToRoot();
+}

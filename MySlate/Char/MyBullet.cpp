@@ -6,9 +6,10 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "Char/MyChar.h"
-#include "Char/MyCharDataComp.h"
+#include "Char/Comp/MyCharDataComp.h"
 #include "Char/Skill/Template/SkillTemplate.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "CharMgr.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(BulletLogger, Log, All);
 DEFINE_LOG_CATEGORY(BulletLogger)
@@ -37,8 +38,8 @@ AMyBullet::AMyBullet()
 	//MeshComp->
 
 	bInitialized = false;
-	mAttackActor = nullptr;
-	mTargetActor = nullptr;
+	mAttackerId = 0;
+	mTargetId = 0;
 	mSkillTemp = nullptr;
 	MovementComp->InitialSpeed = 0.f;
 	mTargetLoc = FVector(0.f, 0.f, 0.f);
@@ -63,25 +64,37 @@ void AMyBullet::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	//每帧修正到目标的飞行方向
-	if (mTargetActor != nullptr)
+	//TODO: 可以考虑攻击者死亡，但子弹仍然有效，需要子弹创建时带上，攻击者数据
+	AMyChar* attacker = UCharMgr::GetInstance()->GetChar(mAttackerId);
+	if (attacker == nullptr) //攻击者死亡，销毁子弹
 	{
-		FVector targetLoc = mTargetActor->GetActorLocation();
-		if ( mLastTargetLoc != targetLoc)
+		DestroyBullet();
+		return;
+	}
+
+	if (mTargetId > 0) //有目标，每帧修正到目标的飞行方向
+	{
+		AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
+		if (target != nullptr)
 		{
-			FVector bulletLoc = GetActorLocation();
-			FRotator rota = UKismetMathLibrary::FindLookAtRotation(bulletLoc, targetLoc);
-			SetActorRotation(rota);
-			MovementComp->Velocity = MovementComp->GetMaxSpeed() * (targetLoc - bulletLoc).GetSafeNormal(); //子弹移动方向
-			mLastTargetLoc = targetLoc;
+			FVector targetLoc = target->GetActorLocation();
+			if (mLastTargetLoc != targetLoc)
+			{
+				FVector bulletLoc = GetActorLocation();
+				FRotator rota = UKismetMathLibrary::FindLookAtRotation(bulletLoc, targetLoc);
+				SetActorRotation(rota);
+				MovementComp->Velocity = MovementComp->GetMaxSpeed() * (targetLoc - bulletLoc).GetSafeNormal(); //子弹移动方向
+				mLastTargetLoc = targetLoc;
+			}
+		}
+		else//受击者死亡，销毁子弹
+		{
+			UE_LOG(BulletLogger, Warning, TEXT("--- Bullet flying, but target death, destroy bullet"));
+			DestroyBullet();
+			return;
 		}
 	}
-}
 
-void AMyBullet::LifeSpanExpired()
-{
-	OnProjectileDestroyed();
-	Super::LifeSpanExpired();
 }
 
 void AMyBullet::InitProjectile(const FVector& Direction, uint8 InTeamNum, int32 ImpactDamage, float InLifeSpan)
@@ -92,16 +105,6 @@ void AMyBullet::InitProjectile(const FVector& Direction, uint8 InTeamNum, int32 
 
 	RemainingDamage = ImpactDamage;
 	bInitialized = true;
-}
-
-void AMyBullet::SetAttacker(AMyChar* _attacker)
-{
-	mAttackActor = _attacker;
-}
-
-void AMyBullet::SetTarget(AMyChar * _target)
-{
-	mTargetActor = _target;
 }
 
 void AMyBullet::SetSpeed(float _speed)
@@ -150,11 +153,25 @@ void AMyBullet::DestroyBullet()
 
 void AMyBullet::OnCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+	if (mTargetId == 0)//没用受击者，不做碰撞检测
+	{
+		return;
+	}
+
+	AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
+	if (target == nullptr)
+	{
+		UE_LOG(BulletLogger, Error, TEXT("--- Bullet Overlap, mTargetId > 0, but target ptr == null"));
+		return;
+	}
+
 	AMyChar* OtherChar = Cast<AMyChar>(OtherActor);
 
-	if (mTargetActor != nullptr) //如果有目标对象，碰撞到非目标对象直接返回
+	if (target != nullptr) //如果有目标对象，且碰撞到的对象为目标对象，开始结算
 	{
-		if (OtherChar == mTargetActor)
+		if (target == OtherChar)
+
+			//TODO: 这里做受击表现，结算，销毁子弹
 			DestroyBullet();
 	}
 

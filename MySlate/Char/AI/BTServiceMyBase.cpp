@@ -3,7 +3,7 @@
 
 #include "Char/MyChar.h"
 #include "Char/CharMgr.h"
-#include "Char/MyCharDataComp.h"
+#include "Char/Comp/MyCharDataComp.h"
 #include "Char/AI/MyAIController.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 

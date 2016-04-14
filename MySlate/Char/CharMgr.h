@@ -24,6 +24,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
 		AMyChar*	GetChar(int32 _id);
+
 	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
 		void		RemoveChar(int32 _id);
 

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "GameTypes.h"
+#include "../GameTypes.h"
 #include "MyBaseComp.h"
 #include "MyCharDataComp.generated.h"
 

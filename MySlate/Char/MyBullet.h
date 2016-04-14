@@ -27,7 +27,6 @@ public:
 	// Begin Actor interface
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
-	virtual void LifeSpanExpired() override;
 	// End Actor interface
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
@@ -35,11 +34,10 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void SetAttacker(AMyChar* _attacker);
+		void SetAttackerId(int32 _attackerId) { mAttackerId = _attackerId; }
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		virtual void SetTarget(AMyChar* _target);
-		//void SetTarget_Implementation(AMyChar* _target);
+		virtual void SetTargetId(int32 _targetId) { mTargetId = _targetId; }
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		virtual void SetSpeed(float _speed);
@@ -80,9 +78,9 @@ public:
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
-		AMyChar*			mAttackActor; //攻击者
+		int32				mAttackerId; //攻击者
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
-		AMyChar*			mTargetActor; //受击者
+		int32				mTargetId; //受击者
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		USkillTemplate*		mSkillTemp; //技能模板
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")

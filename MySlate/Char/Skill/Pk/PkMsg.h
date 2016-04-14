@@ -15,16 +15,9 @@ class UParam : public UObject
 {
 	GENERATED_BODY()
 public:
-	UParam()
-	{
-		mFightData = NewObject<UFightData>(UFightData::StaticClass());
-		mFightData->AddToRoot();
-	}
-
-	virtual ~UParam()
-	{ 
-		mFightData->RemoveFromRoot(); 
-	}
+	UParam();
+	virtual ~UParam();
+	void Init();
 
 	UFightData*		mFightData;			//Õ½¶·Êý¾Ý
 	int32			mTargetId;

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Animation/AnimInstance.h"
-#include "GameTypes.h"
+#include "../GameTypes.h"
 #include "MyAnimInstance.generated.h"
 
 class AMyChar;

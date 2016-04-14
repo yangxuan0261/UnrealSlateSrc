@@ -11,7 +11,8 @@
 #include "Skill/CoolDown/CoolDownComp.h"
 #include "Skill/CoolDown/CoolDown.h"
 #include "Skill/SkillFunction.h"
-#include "MyCharDataComp.h"
+#include "Comp/MyCharDataComp.h"
+#include "CharMgr.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(AMyCharLogger, Log, All);
 DEFINE_LOG_CATEGORY(AMyCharLogger)
@@ -23,6 +24,7 @@ AMyChar::AMyChar() : Super()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//--------- 
+	gCharMgr = nullptr;
 	mCDComp = nullptr;
 	mDataComp = nullptr;
 	mUsingSkill = nullptr;
@@ -53,6 +55,7 @@ void AMyChar::Tick( float DeltaTime )
 void AMyChar::BeginPlay()
 {
 	Super::BeginPlay();
+	gCharMgr = UCharMgr::GetInstance();
 
 	//生成ai控制类
 	SpawnDefaultController();
@@ -80,9 +83,11 @@ bool AMyChar::IsAlive()
 
 void AMyChar::Death()
 {
-
+	//TODO: 从管理器中移除，这里应该做回收，而不是销毁，暂时先销毁
+	gCharMgr->RemoveChar(mUuid); 
 
 	OnDeath(); //通知一下蓝图
+	Destroy();
 }
 
 void AMyChar::Reset()

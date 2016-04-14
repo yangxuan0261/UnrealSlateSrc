@@ -13,6 +13,7 @@ class UCoolDown;
 class UMyCharDataComp;
 class AMyBullet;
 class USkillFunction;
+class UCharMgr;
 
 UCLASS()
 class AMyChar : public ACharacter
@@ -72,6 +73,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		int32				mUuid;
-public:
-
+private:
+	UCharMgr*	gCharMgr; //char π‹¿Ì∆˜
 };
