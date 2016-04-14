@@ -3,19 +3,19 @@
 #pragma once
 
 #include "GameTypes.h"
-
+#include "MyBaseComp.h"
 #include "MyCharDataComp.generated.h"
 
 class UCoolDown;
 class AMyChar;
 
 UCLASS()
-class UMyCharDataComp : public UActorComponent
+class UMyCharDataComp : public UMyBaseComp
 {
-	GENERATED_UCLASS_BODY()
+	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's 
+	UMyCharDataComp();
 	virtual ~UMyCharDataComp();
 
 public:

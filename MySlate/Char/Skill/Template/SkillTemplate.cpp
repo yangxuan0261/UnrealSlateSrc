@@ -2,6 +2,7 @@
 
 #include "MySlate.h"
 #include "SkillTemplate.h"
+#include "../Function/FunctionFactory.h"
 
 // Sets default values
 USkillTemplate::USkillTemplate() : Super()
@@ -12,12 +13,16 @@ USkillTemplate::USkillTemplate() : Super()
 	mCoolDown = 5.f;
 	mAttackDist = 10.f;
 	mSkillType = ESkillType::Normal;
-	mfilter = "";
+	mFilterStr = "";
+	mFilter = nullptr;
 }
 
 USkillTemplate::~USkillTemplate()
 {
-
+	if (mFilter != nullptr)
+	{
+		mFilter->RemoveFromRoot();
+	}
 }
 
 const TArray<UAbsPkEvent*>& USkillTemplate::GetBeforeSkill()
@@ -43,6 +48,30 @@ const TArray<UAbsPkEvent*>& USkillTemplate::GetEndEvns()
 const TArray<UAbsPkEvent*>& USkillTemplate::GetEndPk()
 {
 	return mEndPk;
+}
+
+UAbsFilter* USkillTemplate::GetFilter()
+{
+	if (mFilter == nullptr)
+	{
+		SetFilter(mFilterStr);
+	}
+	return mFilter;
+}
+
+void USkillTemplate::SetFilter(const FString& _filterStr)
+{
+	mFilterStr = _filterStr;
+	if (mFilter != nullptr)
+	{
+		mFilter->RemoveFromRoot();
+	}
+	if (mFilterStr.Len() == 0)
+	{
+		mFilterStr = Filter_Lock; //默认锁定目标
+	}
+	mFilter = UFunctionFactory::GetInstance()->createFilter(mFilterStr);
+	mFilter->AddToRoot();
 }
 
 const TArray<UAbsPkEvent*>& USkillTemplate::GetEndSkill()

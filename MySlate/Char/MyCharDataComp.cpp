@@ -7,8 +7,8 @@
 DECLARE_LOG_CATEGORY_EXTERN(UCharDataLogger, Log, All);
 DEFINE_LOG_CATEGORY(UCharDataLogger)
 
-// Sets default values
-UMyCharDataComp::UMyCharDataComp(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
+UMyCharDataComp::UMyCharDataComp()
+	: Super()
 {
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = false;

@@ -5,18 +5,20 @@
 #include "Tickable.h"
 #include "Char/Skill/SkillTypes.h"
 
+#include "Char/MyBaseComp.h"
 #include "CoolDownComp.generated.h"
 
 class UCoolDown;
 class AMyChar;
 
 UCLASS()
-class UCoolDownComp : public UActorComponent
+class UCoolDownComp : public UMyBaseComp
 {
-	GENERATED_UCLASS_BODY()
+	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's 
+	UCoolDownComp();
 	virtual ~UCoolDownComp();
 
 public:

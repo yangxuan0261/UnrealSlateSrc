@@ -30,6 +30,7 @@ public:
 	//	FString			GetDescr() { return mDescr; }
 	//UFUNCTION(BlueprintCallable, Category = "USkillTemplate")
 	//	float			GetCoolDown() { return mCoolDown; }
+
 public:
 	const TArray<UAbsPkEvent*>& GetBeforePk();
 	const TArray<UAbsPkEvent*>& GetBeforeSkill();
@@ -37,6 +38,8 @@ public:
 	const TArray<UAbsPkEvent*>& GetEndEvns();
 	const TArray<UAbsPkEvent*>& GetEndSkill();
 	const TArray<UAbsPkEvent*>& GetEndPk();
+
+
 
 public:
 	TArray<UAbsPkEvent*> mBeforeSkillEvns;
@@ -51,6 +54,9 @@ public:
 	FString pkBeforeStr;
 	FString pkEndStr;
 	FString endSkillStr;
+
+	UAbsFilter*		GetFilter();
+	void			SetFilter(const FString& _filterStr);
 
 public:
 	//∂¡±Ì Ù–‘
@@ -67,5 +73,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
 		ESkillType		mSkillType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
-		FString			mfilter;
+		FString			mFilterStr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+		UAbsFilter*		mFilter;
 };

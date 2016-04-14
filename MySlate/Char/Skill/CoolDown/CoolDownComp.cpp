@@ -14,7 +14,8 @@ DECLARE_LOG_CATEGORY_EXTERN(UCoolDownLogger, Log, All);
 DEFINE_LOG_CATEGORY(UCoolDownLogger)
 
 // Sets default values
-UCoolDownComp::UCoolDownComp(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
+UCoolDownComp::UCoolDownComp()
+	: Super()
 {
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;

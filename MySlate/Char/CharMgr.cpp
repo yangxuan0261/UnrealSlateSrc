@@ -6,6 +6,12 @@
 #include "MyChar.h"
 #include "MyCharDataComp.h"
 
+static int32 uuid = 1;
+static int32 IdGenerator()
+{
+	return uuid++;
+}
+
 UCharMgr::UCharMgr() : Super()
 {
 
@@ -17,6 +23,8 @@ UCharMgr::~UCharMgr()
 	mTeamCharArr.Empty();
 	mEnemyCharArr.Empty();
 }
+
+
 
 void UCharMgr::AddChar(AMyChar* _char)
 {
@@ -30,7 +38,7 @@ void UCharMgr::AddChar(AMyChar* _char)
 		{
 			mEnemyCharArr.AddUnique(_char);
 		}
-
+		_char->SetUuid(::IdGenerator());
 		mAllCharMap.Add(_char->mUuid, _char);
 	}
 }

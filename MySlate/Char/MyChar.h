@@ -28,7 +28,13 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 public:
-	void OnCDFinish(UCoolDown* _cd);
+	void	OnCDFinish(UCoolDown* _cd);
+
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		void	SetUuid(int32 _uuid) { mUuid = _uuid; }
+
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		int32	GetUuid() const { return mUuid; }
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		bool		IsAlive();
@@ -39,6 +45,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "MyChar")
 		void		OnDeath();
 
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		virtual void Reset();
 	//UFUNCTION(BlueprintCallable, Category = "MyChar")
 		//void FaceToTarget();
 public:

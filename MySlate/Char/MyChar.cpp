@@ -16,12 +16,6 @@
 DECLARE_LOG_CATEGORY_EXTERN(AMyCharLogger, Log, All);
 DEFINE_LOG_CATEGORY(AMyCharLogger)
 
-static int32 uuid = 1;
-static int32 IdGenerator()
-{
-	return uuid++;
-}
-
 // Sets default values
 AMyChar::AMyChar() : Super()
 {
@@ -33,7 +27,7 @@ AMyChar::AMyChar() : Super()
 	mDataComp = nullptr;
 	mUsingSkill = nullptr;
 	mCharState = CharState::IdleRun;
-	mUuid = ::IdGenerator();
+	mUuid = 0;
 
 	//设置ai控制类
 	AIControllerClass = AMyAIController::StaticClass();
@@ -89,4 +83,9 @@ void AMyChar::Death()
 
 
 	OnDeath(); //通知一下蓝图
+}
+
+void AMyChar::Reset()
+{
+
 }

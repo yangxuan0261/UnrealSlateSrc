@@ -99,13 +99,12 @@ public:
 	virtual ~UFunctionFactory();
 
 	void InitFuncAndFilters();
+	UAbsFilter* createFilter(const FString& _str);
+	UAbsPkEvent* createFunction(const FString& _str);
 
 private:
 	void registerFunction(UAbsPkEvent* _object);//×¢²áFunction
 	void registerFilter(UAbsFilter* _object);//×¢²áÑ¡ÈË
-
-	UAbsFilter* createFilter(const FString& _str);
-	UAbsPkEvent* createFunction(const FString& _str);
 
 private:
 	TMap<FString, UAbsPkEvent*>	mFunctionMap;

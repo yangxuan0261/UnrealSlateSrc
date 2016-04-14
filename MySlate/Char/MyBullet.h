@@ -66,14 +66,18 @@ public:
 		virtual void OnCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 public:
-
 	/** movement component */
-	UPROPERTY(VisibleDefaultsOnly, Category = "AMyBullet")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		UProjectileMovementComponent* MovementComp;
 
 	/** collisions */
-	UPROPERTY(VisibleDefaultsOnly, Category = "AMyBullet")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		USphereComponent* CollisionComp;
+
+	/** Mesh */
+	UPROPERTY(VisibleDefaultsOnly, Category = "AMyBullet")
+		USkeletalMeshComponent* MeshComp;
+public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		AMyChar*			mAttackActor; //¹¥»÷Õß

@@ -33,6 +33,9 @@ AMyBullet::AMyBullet()
 	MovementComp->MaxSpeed = 300.f;
 	MovementComp->InitialSpeed = 300.f;
 
+	//TODO: mesh component
+	//MeshComp->
+
 	bInitialized = false;
 	mAttackActor = nullptr;
 	mTargetActor = nullptr;
