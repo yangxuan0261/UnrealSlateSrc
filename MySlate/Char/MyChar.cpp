@@ -24,9 +24,6 @@ AMyChar::AMyChar() : Super()
 	mUsingSkill = nullptr;
 	mCharState = CharState::IdleRun;
 	mUuid = 0;
-
-	//设置ai控制类
-	AIControllerClass = AMyAIController::StaticClass();
 }
 
 AMyChar::~AMyChar()
@@ -45,13 +42,13 @@ void AMyChar::Tick( float DeltaTime )
 	}
 }
 
-// Called when the game starts or when spawned
 void AMyChar::BeginPlay()
 {
 	Super::BeginPlay();
 	gCharMgr = UCharMgr::GetInstance();
 
-	//生成ai控制类
+	//设置默认AI控制类，并生成一下
+	AIControllerClass = AMyAIController::StaticClass();
 	SpawnDefaultController();
 
 	//注册cd组件

@@ -7,6 +7,7 @@
 
 class USkillTemplate;
 class UPkMsg;
+class AMyBullet;
 
 UCLASS()
 class USkillFunction : public UObject
@@ -27,12 +28,26 @@ public:
 		void		SetSkillTemplate(USkillTemplate* _skillTemp);
 
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
-		void		ShootBegin(); //技能释放前运行
+		void		SkillBegin(); //技能释放前运行, 比如 瞬间移动 -> 攻击
 
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
-		void		ShootEnd(); //技能结束后运行
+		void		BulletCreate(); //子弹创建
+
+	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
+		void		BulletShoot(); //子弹发射
+
+	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
+		void		SkillEnd(); //技能结束后运行
+
+	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
+		void		SetAttacker(int32 _id) { mAttackerId = _id; }
+
+	void	SetDataNull();
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
+		int32			mAttackerId;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
 		int32			mSkillId;
 
@@ -44,4 +59,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
 		UPkMsg*			mPkMsg; //存放pk数据，这里创建主要原因是子弹飞行过程中，攻击者死亡的情况
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
+		AMyBullet*		mBullet;
 };

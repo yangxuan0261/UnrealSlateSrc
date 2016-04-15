@@ -10,7 +10,7 @@
 class AMyChar;
 class USkillTemplate;
 
-DECLARE_MULTICAST_DELEGATE(FSetNullDlg);
+DECLARE_DELEGATE(FSetNullDlg);
 
 UCLASS()
 class UParam : public UObject
@@ -40,7 +40,10 @@ public:
 	const TArray<UParam*>& GetTargets() const { return mTargetArr; }
 	void	AddTarget(AMyChar* _char);
 	USkillTemplate*	GetSkillTemp() const { return mSkillTemp; }
+
 	void	SetNullDlg(FSetNullDlg _dlg) { mSetNullDlg = _dlg; }
+	void	ExeNullDlg();
+
 
 private:
 	bool			mCanLog;

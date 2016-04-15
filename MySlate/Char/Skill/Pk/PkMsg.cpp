@@ -56,6 +56,12 @@ void UPkMsg::AddTarget(AMyChar* _char)
 	mTargetArr.Add(param);
 }
 
+void UPkMsg::ExeNullDlg()
+{
+	UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::ExeNullDlg"));
+	mSetNullDlg.ExecuteIfBound();
+}
+
 //-------------------------------- UParam Begin
 
 UParam::UParam()

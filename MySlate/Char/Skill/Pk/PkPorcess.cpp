@@ -3,9 +3,6 @@
 #include "MySlate.h"
 #include "PkPorcess.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(UPkPorcessLogger, Log, All);
-DEFINE_LOG_CATEGORY(UPkPorcessLogger)
-
 #include "PkMsg.h"
 #include "char/MyChar.h"
 #include "../Filter/AbsFilter.h"
@@ -22,6 +19,7 @@ UPkPorcess::~UPkPorcess()
 	UE_LOG(PkLogger, Warning, TEXT("--- UPkPorcess::~UPkPorcess"));
 	if (mPkMsg != nullptr)
 	{
+		mPkMsg->ExeNullDlg(); // 攻击者不死，这里释放，USkillFunction中就不释放了，重置指针为null 
 		mPkMsg->RemoveFromRoot();
 	}
 }

@@ -49,13 +49,7 @@ void UMyAnimInstance::AnimNotify_BulletShoot(UAnimNotify * Notify)
 	if (mOwnerChar)
 	{
 		//UE_LOG(MyAnimInstLogger, Warning, TEXT("--- AnimNotify_BulletShoot"));
-		
-		// spawn a bullet
-		//FActorSpawnParameters SpawnInfo;
-		//SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-		//AMyBullet* bullet = GetWorld()->SpawnActor<AMyBullet>(mOwnerChar->BulletClass, mOwnerChar->GetActorLocation(), mOwnerChar->GetActorRotation(), SpawnInfo);
-		//bullet->SetAttacker(mOwnerChar);
+	
 	}
 	
 }

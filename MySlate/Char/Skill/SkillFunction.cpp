@@ -5,14 +5,19 @@
 
 #include "Template/SkillTemplate.h"
 #include "Pk/PkMsg.h"
+#include "../MyBullet.h"
+#include "../CharMgr.h"
+#include "../MyChar.h"
 
 // Sets default values
 USkillFunction::USkillFunction() : Super()
 {
-	mSkillId = -1;
+	mSkillId = 0;
 	mSkillTemplate = nullptr;
 	mType = ESkillType::Normal;
 	mPkMsg = nullptr;
+	mBullet = nullptr;
+	mAttackerId = 0;
 }
 
 USkillFunction::~USkillFunction()
@@ -37,14 +42,49 @@ void USkillFunction::SetSkillTemplate(USkillTemplate* _skillTemp)
 
 }
 
-void USkillFunction::ShootBegin()
+void USkillFunction::SkillBegin()
 {
+	//TODO: 拷贝攻击数据，运行技能前置func
+
 	UPkMsg* pkMsg = NewObject<UPkMsg>(UPkMsg::StaticClass());
 	pkMsg->AddToRoot();
+	FSetNullDlg dlg;
+	dlg.BindUObject(this, &USkillFunction::SetDataNull);
+	pkMsg->SetNullDlg(dlg);
+
 }
 
-void USkillFunction::ShootEnd()
+
+
+void USkillFunction::BulletCreate()
+{
+	AMyChar* attacker = mAttackerId > 0 ? UCharMgr::GetInstance()->GetChar(mAttackerId) : nullptr;
+	if (attacker)
+	{
+		 //创建子弹并射击
+		FActorSpawnParameters SpawnInfo;
+		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		mBullet = GetWorld()->SpawnActor<AMyBullet>(attacker->BulletClass, attacker->GetActorLocation(), attacker->GetActorRotation(), SpawnInfo);
+		bullet->SetAttacker(mAttackerId);
+	}
+}
+
+void USkillFunction::BulletShoot()
+{
+	if (mBullet != nullptr)
+	{
+		//脱离绑定点，朝目标飞行
+	}
+}
+
+void USkillFunction::SkillEnd()
 {
 
+}
+
+void USkillFunction::SetDataNull()
+{
+	mPkMsg = nullptr;//其他地方销毁通知一下这里，防止析构时野指针奔溃
 }
 
