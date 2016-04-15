@@ -4,7 +4,6 @@
 #include "StandardHUD.h"
 
 #include "StandardSlateWidget.h"
-#include "Engine.h"
 
 AStandardHUD::AStandardHUD()
 {

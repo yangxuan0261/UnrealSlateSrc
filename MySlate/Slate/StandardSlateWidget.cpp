@@ -6,9 +6,6 @@
 #include "MenuStyles.h" 
 
 #define LOCTEXT_NAMESPACE "SStandardSlateWidget"
-#include "Engine.h"
-
-
 
 void SStandardSlateWidget::Construct(const FArguments& InArgs)
 {

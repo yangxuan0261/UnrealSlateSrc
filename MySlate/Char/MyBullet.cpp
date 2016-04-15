@@ -3,12 +3,10 @@
 #include "MySlate.h"
 #include "MyBullet.h"
 
-#include "GameFramework/ProjectileMovementComponent.h"
-#include "Components/SphereComponent.h"
+#include "AI/MyAIController.h"
 #include "Char/MyChar.h"
 #include "Char/Comp/MyCharDataComp.h"
 #include "Char/Skill/Template/SkillTemplate.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "CharMgr.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(BulletLogger, Log, All);
@@ -49,7 +47,7 @@ AMyBullet::AMyBullet()
 
 AMyBullet::~AMyBullet()
 {
-
+	UE_LOG(SkillLogger, Warning, TEXT("--- AMyBullet::~AMyBullet"));
 }
 
 // Called when the game starts

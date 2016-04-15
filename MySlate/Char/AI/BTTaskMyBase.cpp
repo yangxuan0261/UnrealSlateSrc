@@ -6,9 +6,6 @@
 #include "Char/Skill/CoolDown/CoolDownComp.h"
 #include "Char/Skill/Template/SkillTemplate.h"
 #include "Char/Skill/CoolDown/CoolDown.h"
-#include "BehaviorTree/BehaviorTreeComponent.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(BTDTaskLogger, Log, All);
 DEFINE_LOG_CATEGORY(BTDTaskLogger)
@@ -26,7 +23,7 @@ UBTTaskMyBase::UBTTaskMyBase()
 
 UBTTaskMyBase::~UBTTaskMyBase()
 {
-
+	UE_LOG(AILogger, Warning, TEXT("--- UBTTaskMyBase::~UBTTaskMyBase"));
 }
 
 void UBTTaskMyBase::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)

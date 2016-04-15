@@ -9,9 +9,6 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Char/Skill/Function/FunctionFactory.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(UGolbalFuncLogger, Log, All);
-DEFINE_LOG_CATEGORY(UGolbalFuncLogger)
-
 USkillDataMgr*	UGolbalFunc::gSkillDataMgr = nullptr;
 USkillMgr*		UGolbalFunc::gSkillMgr = nullptr;
 UCharMgr*		UGolbalFunc::gCharMgr = nullptr;
@@ -64,7 +61,7 @@ void UGolbalFunc::TestStrSplit()
 
 	for (int32 i = 0; i < params.Num(); ++i)
 	{
-		UE_LOG(UGolbalFuncLogger, Warning, TEXT("--- index:%d, value:%s"), i, *params[i]);
+		UE_LOG(GolbalFuncLogger, Warning, TEXT("--- index:%d, value:%s"), i, *params[i]);
 	}
 
 }
@@ -89,6 +86,6 @@ void UGolbalFunc::TestMapAdd()
 void UGolbalFunc::TestMapRemove(int32 _key)
 {
 	int32 num = mTestMap.Remove(_key);
-	UE_LOG(UGolbalFuncLogger, Warning, TEXT("--- remove key:%d, num:%d, mapSize:%d"), _key, num, mTestMap.Num());
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- remove key:%d, num:%d, mapSize:%d"), _key, num, mTestMap.Num());
 }
 

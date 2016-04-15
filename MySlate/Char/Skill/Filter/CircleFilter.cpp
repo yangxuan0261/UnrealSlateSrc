@@ -10,7 +10,7 @@ UCircleFilter::UCircleFilter() : Super()
 
 UCircleFilter::~UCircleFilter()
 {
-
+	UE_LOG(FilterLogger, Warning, TEXT("--- UCircleFilter::~UCircleFilter"));
 }
  
 void UCircleFilter::Filter(UPkMsg* msg)

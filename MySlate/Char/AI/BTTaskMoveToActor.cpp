@@ -3,9 +3,15 @@
 
 #include "MyAIController.h"
 
-UBTTaskMoveToActor::UBTTaskMoveToActor(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UBTTaskMoveToActor::UBTTaskMoveToActor()
+	: Super()
 {
+}
+
+
+UBTTaskMoveToActor::~UBTTaskMoveToActor()
+{
+	UE_LOG(AILogger, Warning, TEXT("--- UBTTaskMoveToActor::~UBTTaskMoveToActor"));
 }
 
 EBTNodeResult::Type UBTTaskMoveToActor::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)

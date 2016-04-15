@@ -11,5 +11,5 @@ UFightData::UFightData() : Super()
 
 UFightData::~UFightData()
 {
-	
+	UE_LOG(SkillLogger, Warning, TEXT("--- UFightData::~UFightData"));
 }

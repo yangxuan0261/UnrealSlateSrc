@@ -3,10 +3,6 @@
 #include "MySlate.h"
 #include "MyCharDataComp.h"
 
-
-DECLARE_LOG_CATEGORY_EXTERN(UCharDataLogger, Log, All);
-DEFINE_LOG_CATEGORY(UCharDataLogger)
-
 UMyCharDataComp::UMyCharDataComp()
 	: Super()
 {
@@ -21,24 +17,24 @@ UMyCharDataComp::UMyCharDataComp()
 
 UMyCharDataComp::~UMyCharDataComp()
 {
-
+	UE_LOG(CompLogger, Warning, TEXT("--- UMyCharDataComp::~UMyCharDataComp"));
 }
 
 void UMyCharDataComp::BeginPlay()
 {
 	Super::BeginPlay();
-	//UE_LOG(UCharDataLogger, Warning, TEXT("--- UMyCharDataComp::BeginPlay"));
+	//UE_LOG(CompLogger, Warning, TEXT("--- UMyCharDataComp::BeginPlay"));
 }
 
 void UMyCharDataComp::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	//UE_LOG(UCharDataLogger, Warning, TEXT("--- UMyCharDataComp::TickComponent"));
+	//UE_LOG(CompLogger, Warning, TEXT("--- UMyCharDataComp::TickComponent"));
 }
 
 void UMyCharDataComp::BeginDestroy()
 {
-	//UE_LOG(UCharDataLogger, Warning, TEXT("--- UMyCharDataComp::BeginDestroy"));
+	//UE_LOG(CompLogger, Warning, TEXT("--- UMyCharDataComp::BeginDestroy"));
 	Super::BeginDestroy();
 }
 

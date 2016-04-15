@@ -8,13 +8,8 @@
 #include "../Template/SkillTemplate.h"
 #include "../Utils/SkillDataMgr.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(UPkMsgLogger, Log, All);
-DEFINE_LOG_CATEGORY(UPkMsgLogger)
-
-// Sets default values
 UPkMsg::UPkMsg() : Super()
 {
-	//UE_LOG(SkillDataMgrLogger, Warning, TEXT("--- USkillDataMgr::Tick:%f"), 0.2f);
 	mCanLog = false;
 	mSkillId = 0;					
 	mSkillLogicType = ESkillAttackType::ATTACK_PHY;
@@ -27,6 +22,7 @@ UPkMsg::UPkMsg() : Super()
 
 UPkMsg::~UPkMsg()
 {
+	UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::~UPkMsg"));
 	if (mAttackerData != nullptr)
 	{
 		mAttackerData->RemoveFromRoot();

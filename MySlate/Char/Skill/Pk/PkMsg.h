@@ -10,6 +10,8 @@
 class AMyChar;
 class USkillTemplate;
 
+DECLARE_MULTICAST_DELEGATE(FSetNullDlg);
+
 UCLASS()
 class UParam : public UObject
 {
@@ -38,6 +40,7 @@ public:
 	const TArray<UParam*>& GetTargets() const { return mTargetArr; }
 	void	AddTarget(AMyChar* _char);
 	USkillTemplate*	GetSkillTemp() const { return mSkillTemp; }
+	void	SetNullDlg(FSetNullDlg _dlg) { mSetNullDlg = _dlg; }
 
 private:
 	bool			mCanLog;
@@ -51,4 +54,6 @@ private:
 	TArray<UParam*>	mTargetArr;						//目标集
 	UFightData*		mAttackerData;					//攻击者参数
 	FVector			mTargetLoc;						//目标位置
+
+	FSetNullDlg		mSetNullDlg;		//运用别处释放对象时，通知之前创建的地方set null
 };

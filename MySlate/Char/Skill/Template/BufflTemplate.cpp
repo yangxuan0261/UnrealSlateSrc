@@ -11,6 +11,6 @@ UBufflTemplate::UBufflTemplate() : Super()
 
 UBufflTemplate::~UBufflTemplate()
 {
-
+	UE_LOG(SkillLogger, Warning, TEXT("--- UBufflTemplate::~UBufflTemplate"));
 }
 

@@ -15,7 +15,7 @@ UEffectDataElement::UEffectDataElement()
 
 UEffectDataElement::~UEffectDataElement()
 {
-
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UEffectDataElement::~UEffectDataElement"));
 }
 
 UBehaviorData::UBehaviorData() : Super()

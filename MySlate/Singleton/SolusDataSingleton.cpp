@@ -1,7 +1,6 @@
 #include "MySlate.h"
 #include "SolusDataSingleton.h"
 
-#include "Engine.h"
 #include "Engine/StreamableManager.h"
 #include "Singleton/SolusDataSingleton.h"
 #include "Singleton/ItemInfoDatabase.h"

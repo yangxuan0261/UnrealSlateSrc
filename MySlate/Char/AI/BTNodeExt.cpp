@@ -2,7 +2,6 @@
 #include "BTNodeExt.h"
 
 #include "Char/MyChar.h"
-#include "BehaviorTree/BehaviorTreeComponent.h"
 #include "Char/AI/MyAIController.h"
 
 UBTNodeExt::UBTNodeExt() : Super()

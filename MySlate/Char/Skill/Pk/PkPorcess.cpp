@@ -19,6 +19,7 @@ UPkPorcess::UPkPorcess() : Super()
 
 UPkPorcess::~UPkPorcess()
 {
+	UE_LOG(PkLogger, Warning, TEXT("--- UPkPorcess::~UPkPorcess"));
 	if (mPkMsg != nullptr)
 	{
 		mPkMsg->RemoveFromRoot();

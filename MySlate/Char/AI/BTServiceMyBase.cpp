@@ -5,7 +5,6 @@
 #include "Char/CharMgr.h"
 #include "Char/Comp/MyCharDataComp.h"
 #include "Char/AI/MyAIController.h"
-#include "BehaviorTree/BehaviorTreeComponent.h"
 
 UBTServiceMyBase::UBTServiceMyBase() : Super()
 {
@@ -19,7 +18,7 @@ UBTServiceMyBase::UBTServiceMyBase() : Super()
 
 UBTServiceMyBase::~UBTServiceMyBase()
 {
-
+	UE_LOG(AILogger, Warning, TEXT("--- UBTServiceMyBase::~UBTServiceMyBase"));
 }
 
 void UBTServiceMyBase::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)

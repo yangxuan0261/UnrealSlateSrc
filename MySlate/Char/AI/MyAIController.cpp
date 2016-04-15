@@ -1,16 +1,7 @@
 #include "MySlate.h"
 #include "MyAIController.h"
 
-#include "BehaviorTree/BehaviorTree.h"
-#include "BehaviorTree/BehaviorTreeComponent.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "BehaviorTree/Blackboard/BlackboardKeyType_Bool.h"
-#include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
-#include "Engine.h"
 #include "../MyChar.h"
-
-DECLARE_LOG_CATEGORY_EXTERN(AMyAILogger, Log, All);
-DEFINE_LOG_CATEGORY(AMyAILogger)
 
 AMyAIController::AMyAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -19,7 +10,7 @@ AMyAIController::AMyAIController(const FObjectInitializer& ObjectInitializer) : 
 
 AMyAIController::~AMyAIController()
 {
-	UE_LOG(AMyAILogger, Warning, TEXT("--- UCoolDownComp::~AMyAIController"));
+	UE_LOG(AILogger, Warning, TEXT("--- AMyAIController::~AMyAIController"));
 }
 
 void AMyAIController::GameHasEnded(AActor * EndGameFocus, bool bIsWinner)

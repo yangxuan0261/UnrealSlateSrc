@@ -6,9 +6,6 @@
 #include "Char/Skill/CoolDown/CoolDownComp.h"
 #include "Char/Skill/Template/SkillTemplate.h"
 #include "Char/Skill/CoolDown/CoolDown.h"
-#include "BehaviorTree/BehaviorTreeComponent.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
 #include "Char/AI/MyAIController.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(BTDecorateLogger, Log, All);
@@ -27,7 +24,7 @@ UBTDecorateMyBase::UBTDecorateMyBase()
 
 UBTDecorateMyBase::~UBTDecorateMyBase()
 {
-
+	UE_LOG(AILogger, Warning, TEXT("--- UBTDecorateMyBase::~UBTDecorateMyBase"));
 }
 
 

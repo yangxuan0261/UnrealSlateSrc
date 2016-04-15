@@ -2,7 +2,6 @@
 
 #include "MySlate.h"
 #include "MyLevelScriptActor.h"
-#include "Engine.h"
 
 AMyLevelScriptActor::AMyLevelScriptActor()
 	: Counter(0)

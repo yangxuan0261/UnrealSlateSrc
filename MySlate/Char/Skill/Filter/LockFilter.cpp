@@ -9,7 +9,7 @@ ULockFilter::ULockFilter() : Super()
 
 ULockFilter::~ULockFilter()
 {
-
+	UE_LOG(FilterLogger, Warning, TEXT("--- ULockFilter::~ULockFilter"));
 }
 
 void ULockFilter::Filter(UPkMsg* msg)

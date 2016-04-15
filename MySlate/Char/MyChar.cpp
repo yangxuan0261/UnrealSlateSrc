@@ -4,18 +4,12 @@
 #include "MyChar.h"
 
 #include "MyGameInstance.h"
-#include "Engine.h"
 #include "Level/MyLevelScriptActor.h"
-#include "AI/MyAIController.h"
-#include "BlueprintNodeHelpers.h"
 #include "Skill/CoolDown/CoolDownComp.h"
 #include "Skill/CoolDown/CoolDown.h"
 #include "Skill/SkillFunction.h"
 #include "Comp/MyCharDataComp.h"
 #include "CharMgr.h"
-
-DECLARE_LOG_CATEGORY_EXTERN(AMyCharLogger, Log, All);
-DEFINE_LOG_CATEGORY(AMyCharLogger)
 
 // Sets default values
 AMyChar::AMyChar() : Super()
@@ -37,7 +31,7 @@ AMyChar::AMyChar() : Super()
 
 AMyChar::~AMyChar()
 {
-
+	UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::~AMyChar"));
 }
 
 // Called every frame
@@ -72,7 +66,7 @@ void AMyChar::BeginPlay()
 
 void AMyChar::OnCDFinish(UCoolDown* _cd)
 {
-	UE_LOG(AMyCharLogger, Warning, TEXT("--- AMyChar::OnCDFinish, skillId:%d"), _cd->GetSkillId());
+	UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::OnCDFinish, skillId:%d"), _cd->GetSkillId());
 	mCanUseSkillArr.AddUnique(_cd);
 }
 

@@ -19,6 +19,7 @@ USkillTemplate::USkillTemplate() : Super()
 
 USkillTemplate::~USkillTemplate()
 {
+	UE_LOG(SkillLogger, Warning, TEXT("--- UBufflTemplate::~UBufflTemplate"));
 	if (mFilter != nullptr)
 	{
 		mFilter->RemoveFromRoot();

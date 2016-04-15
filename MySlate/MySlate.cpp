@@ -28,4 +28,11 @@ class FSlateTutorialsGameModule : public FDefaultGameModuleImpl
 IMPLEMENT_PRIMARY_GAME_MODULE(FSlateTutorialsGameModule, MySlate, "MySlate");
 
 DEFINE_LOG_CATEGORY(LogMySlate)
- 
+DEFINE_LOG_CATEGORY(FilterLogger)
+DEFINE_LOG_CATEGORY(FuncLogger)
+DEFINE_LOG_CATEGORY(SkillLogger)
+DEFINE_LOG_CATEGORY(CompLogger)
+DEFINE_LOG_CATEGORY(PkLogger)
+DEFINE_LOG_CATEGORY(AILogger)
+DEFINE_LOG_CATEGORY(GolbalFuncLogger)
+DEFINE_LOG_CATEGORY(AnimLogger)

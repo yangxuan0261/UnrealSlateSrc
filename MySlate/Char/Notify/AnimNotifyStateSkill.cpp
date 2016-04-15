@@ -5,9 +5,6 @@
 
 #include "Char/MyChar.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(UAnimNotifyLogger, Log, All);
-DEFINE_LOG_CATEGORY(UAnimNotifyLogger)
-
 // Sets default values
 UAnimNotifyStateSkill::UAnimNotifyStateSkill(): Super()
 {
@@ -33,7 +30,7 @@ void UAnimNotifyStateSkill::NotifyBegin(USkeletalMeshComponent * MeshComp, UAnim
 	//}
 	//else
 	//{
-	//	UE_LOG(UAnimNotifyLogger, Warning, TEXT("--- UAnimNotifyStateSkill::NotifyBegin, mMyChar == nullptr"));
+	//	UE_LOG(AnimLogger, Warning, TEXT("--- UAnimNotifyStateSkill::NotifyBegin, mMyChar == nullptr"));
 
 	//}
 

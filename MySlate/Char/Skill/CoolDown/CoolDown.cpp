@@ -9,9 +9,6 @@
 #include "Char/Skill/Template/BufflTemplate.h"
 #include "Char/Skill/SkillFunction.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(UCoolDownLogger222, Log, All);
-DEFINE_LOG_CATEGORY(UCoolDownLogger222)
-
 UCoolDown::UCoolDown() : Super()
 {
 	mSkillId = -1;
@@ -26,7 +23,7 @@ UCoolDown::UCoolDown() : Super()
 
 UCoolDown::~UCoolDown()
 {
-	UE_LOG(UCoolDownLogger222, Warning, TEXT("--- UCoolDown::~UCoolDown, skillId:%d"), mSkillId);
+	UE_LOG(SkillLogger, Warning, TEXT("--- UCoolDown::~UCoolDown, skillId:%d"), mSkillId);
 	if (mSkillFunc)
 		mSkillFunc->RemoveFromRoot();
 }

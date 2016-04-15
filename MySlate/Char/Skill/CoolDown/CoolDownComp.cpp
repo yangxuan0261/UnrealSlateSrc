@@ -10,9 +10,6 @@
 #include "Char/Skill/Template/BufflTemplate.h"
 #include "Char/Skill/SkillFunction.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(UCoolDownLogger, Log, All);
-DEFINE_LOG_CATEGORY(UCoolDownLogger)
-
 // Sets default values
 UCoolDownComp::UCoolDownComp()
 	: Super()
@@ -25,7 +22,7 @@ UCoolDownComp::UCoolDownComp()
 
 UCoolDownComp::~UCoolDownComp()
 {
-	UE_LOG(UCoolDownLogger, Warning, TEXT("--- deconstruct ~UCoolDownComp"));
+	UE_LOG(CompLogger, Warning, TEXT("--- UCoolDownComp::~UCoolDownComp"));
 	for (UCoolDown* cd : mCDArr)
 		cd->RemoveFromRoot();
 	mCDArr.Empty();
@@ -123,6 +120,6 @@ void UCoolDownComp::AddCD(int32 _skillId, bool _isRestartCD)
 	}
 	else
 	{
-		UE_LOG(UCoolDownLogger222, Warning, TEXT("--- Error: No USkillTemplate, mSkillId:%d"), _skillId);
+		UE_LOG(CompLogger, Warning, TEXT("--- Error: No USkillTemplate, mSkillId:%d"), _skillId);
 	}
 }

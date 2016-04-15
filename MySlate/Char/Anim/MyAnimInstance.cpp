@@ -2,13 +2,9 @@
 
 #include "MySlate.h"
 #include "MyAnimInstance.h"
-#include "Engine.h"
 
 #include "../MyChar.h"
 #include "../MyBullet.h"
-
-DECLARE_LOG_CATEGORY_EXTERN(MyAnimInstLogger, Log, All);
-DEFINE_LOG_CATEGORY(MyAnimInstLogger)
 
 UMyAnimInstance::UMyAnimInstance()
 {
@@ -42,7 +38,7 @@ void UMyAnimInstance::AnimNotify_BulletCreate(UAnimNotify * Notify)
 	
 	if (mOwnerChar)
 	{
-		UE_LOG(MyAnimInstLogger, Warning, TEXT("--- AnimNotify_BulletCreate"));
+		UE_LOG(AnimLogger, Warning, TEXT("--- AnimNotify_BulletCreate"));
 
 
 	}

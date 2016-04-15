@@ -9,7 +9,7 @@ UPhyAttack::UPhyAttack() : Super()
 
 UPhyAttack::~UPhyAttack()
 {
-
+	UE_LOG(FuncLogger, Warning, TEXT("--- UPhyAttack::~UPhyAttack"));
 }
 
 UPhyAttack* UPhyAttack::CreateFunction(const FString& _key)

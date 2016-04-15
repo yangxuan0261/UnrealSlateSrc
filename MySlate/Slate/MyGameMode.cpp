@@ -6,8 +6,6 @@
 #include "StandardHUD.h"
 #include "MySlatePlayerController.h"
 
-#include "Engine.h"
-
 AMyGameMode::AMyGameMode() : Super()
 {
 	//Set the hud class to use our custom HUD by default.
