@@ -8,10 +8,11 @@
 #include "Char/Skill/Template/SkillTemplate.h"
 #include "Char/Skill/Template/BufflTemplate.h"
 #include "Char/Skill/SkillFunction.h"
+#include "Char/CharMgr.h"
 
 UCoolDown::UCoolDown() : Super()
 {
-	mSkillId = -1;
+	mSkillId = 0;
 	mSkillTemplate = nullptr;
 	mSkillFunc = nullptr;
 	mIsOK = true;
@@ -25,7 +26,10 @@ UCoolDown::~UCoolDown()
 {
 	UE_LOG(SkillLogger, Warning, TEXT("--- UCoolDown::~UCoolDown, skillId:%d"), mSkillId);
 	if (mSkillFunc)
+	{
 		mSkillFunc->RemoveFromRoot();
+		mSkillFunc = nullptr;
+	}
 }
 
 void UCoolDown::SetSkillTemplate(USkillTemplate* _skillTemp)
@@ -36,30 +40,46 @@ void UCoolDown::SetSkillTemplate(USkillTemplate* _skillTemp)
 	mTimer = mCDTime;
 	mIsOK = true;
 
-	USkillFunction* skillFunc = NewObject<USkillFunction>(UCoolDown::StaticClass()); //设置USkillFunction跟随UCoolDown销毁
-	skillFunc->AddToRoot();
+	USkillFunction* skillFunc = GetSkillFunc();
 	if (skillFunc)
 	{
-		mSkillFunc = skillFunc;
-		mSkillFunc->SetSkillTemplate(_skillTemp);
+		skillFunc->SetSkillTemplate(_skillTemp);
 	}
 }
 
-void UCoolDown::SetChar(AMyChar * _owner)
+USkillFunction* UCoolDown::GetSkillFunc()
 {
-	mOwnerChar = _owner;
-	mCDFinishDlg.Unbind();
-	mCDFinishDlg.BindUObject(_owner, &AMyChar::OnCDFinish);
+	if (mSkillFunc == nullptr)
+	{
+		USkillFunction* skillFunc = NewObject<USkillFunction>(UCoolDown::StaticClass()); //设置USkillFunction跟随UCoolDown销毁
+		skillFunc->AddToRoot();
+		mSkillFunc = skillFunc;
+	}
+	return mSkillFunc;
 }
 
-void UCoolDown::UseSkill(AMyChar * _attActor, int32 _targetId)
+void UCoolDown::SetChar(AMyChar* _char)
 {
-	if (!_attActor || IsNull())
-		return;
+	mOwnerChar = _char;
+	if (mOwnerChar != nullptr)
+	{
+		mCDFinishDlg.Unbind();
+		mCDFinishDlg.BindUObject(mOwnerChar, &AMyChar::OnCDFinish);
 
-	//技能任务
-	//_attActor->mUsingSkill = this; //设置当前使用着技能
-
+		USkillFunction* skillFunc = GetSkillFunc();
+		if (skillFunc)
+		{
+			skillFunc->SetAttacker(mOwnerChar);
+			if (mSkillTemplate)
+			{
+				skillFunc->SetSkillTemplate(mSkillTemplate);
+			}
+			else
+			{
+				UE_LOG(SkillLogger, Error, TEXT("--- UCoolDown::SetChar, must call UCoolDown::SetSkillTemplate before this"), mSkillId);
+			}
+		}
+	}
 }
 
 void UCoolDown::Restart()
@@ -77,11 +97,7 @@ void UCoolDown::Tick(float DeltaTime)
 		{
 			mTimer = mCDTime;
 			mIsOK = true;
-
-			if (mOwnerChar != nullptr)
-			{
-				mCDFinishDlg.ExecuteIfBound(this); //cd完通知char，可以释放技能了
-			}
+			mCDFinishDlg.ExecuteIfBound(this); //cd完通知char，可以释放技能了
 		}
 	}
 	else

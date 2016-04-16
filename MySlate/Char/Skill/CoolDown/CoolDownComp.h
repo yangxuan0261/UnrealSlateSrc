@@ -25,8 +25,10 @@ public:
 	// Begin UActorComponent Interface.
 	virtual void BeginPlay() override; //组件被new的时候立即调用
 	virtual void BeginDestroy() override; //引擎在gc的时候调用，并不是立即调用
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 	// End UActorComponent Interface.
+
+	void MyTick(float DeltaTime);
+
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDownComp")
 		void		SetOwner(AMyChar* _owner) { mOwner = _owner; }
@@ -35,7 +37,7 @@ public:
 		void		CreateCD(int32 _skillId, TSubclassOf<UCoolDown> _class); //可以把蓝图类传进来
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDownComp")
-		void		UseSkill(UCoolDown* _skill, int32 _targetId);
+		USkillFunction*	CanUseSkill(int32 _skillId);
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDownComp")
 		void		RestartCD(int32 _skillId);
@@ -48,7 +50,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCoolDownComp")
 		TArray<UCoolDown*>		mCDArr;
-	TArray<UCoolDown*>		mCDArr222;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCoolDownComp")
 		AMyChar*				mOwner;

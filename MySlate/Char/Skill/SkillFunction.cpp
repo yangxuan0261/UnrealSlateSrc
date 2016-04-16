@@ -17,7 +17,9 @@ USkillFunction::USkillFunction() : Super()
 	mType = ESkillType::Normal;
 	mPkMsg = nullptr;
 	mBullet = nullptr;
-	mAttackerId = 0;
+	mAttacker = nullptr;
+	mTargetId = 0;
+	mTargetLoc = FVector(0.f, 0.f, 0.f);
 }
 
 USkillFunction::~USkillFunction()
@@ -26,6 +28,7 @@ USkillFunction::~USkillFunction()
 	if (mPkMsg)
 	{
 		mPkMsg->RemoveFromRoot();
+		mPkMsg = nullptr;
 	}
 }
 
@@ -42,31 +45,48 @@ void USkillFunction::SetSkillTemplate(USkillTemplate* _skillTemp)
 
 }
 
+void USkillFunction::UseSkill(int32 _targetId, const FVector& _targetLoc)
+{
+	mTargetId = _targetId;
+	mTargetLoc = _targetLoc;
+}
+
+
+
+bool USkillFunction::CanAttack()
+{
+	AMyChar* target = mTargetId > 0 ? UCharMgr::GetInstance()->GetChar(mTargetId) : nullptr;
+	if (target)
+	{
+		float DistSq = (target->GetActorLocation() - mAttacker->GetActorLocation()).Size();
+		float atkDist = mSkillTemplate->mAttackDist;
+		return atkDist > DistSq ? true : false;
+	}
+	return false;
+}
+
 void USkillFunction::SkillBegin()
 {
-	//TODO: 拷贝攻击数据，运行技能前置func
-
-	UPkMsg* pkMsg = NewObject<UPkMsg>(UPkMsg::StaticClass());
-	pkMsg->AddToRoot();
-	FSetNullDlg dlg;
-	dlg.BindUObject(this, &USkillFunction::SetDataNull);
-	pkMsg->SetNullDlg(dlg);
-
+	//运行技能前置func
+	const TArray<UAbsPkEvent*>& functions =mSkillTemplate->GetBeforeSkill();
+	for (UAbsPkEvent* func : functions)
+	{
+		
+	}
 }
 
 
 
 void USkillFunction::BulletCreate()
 {
-	AMyChar* attacker = mAttackerId > 0 ? UCharMgr::GetInstance()->GetChar(mAttackerId) : nullptr;
-	if (attacker)
+	if (mAttacker)
 	{
-		 //创建子弹并射击
+		 //TODO: 创建子弹, 绑定到身体的某个socket部位上
 		FActorSpawnParameters SpawnInfo;
 		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		mBullet = GetWorld()->SpawnActor<AMyBullet>(mAttacker->BulletClass, mAttacker->GetActorLocation(), mAttacker->GetActorRotation(), SpawnInfo);
 
-		mBullet = GetWorld()->SpawnActor<AMyBullet>(attacker->BulletClass, attacker->GetActorLocation(), attacker->GetActorRotation(), SpawnInfo);
-		bullet->SetAttacker(mAttackerId);
+
 	}
 }
 
@@ -74,13 +94,28 @@ void USkillFunction::BulletShoot()
 {
 	if (mBullet != nullptr)
 	{
-		//脱离绑定点，朝目标飞行
+		//射击，脱离绑定点，朝目标飞行
+
+
+		//TODO: 创建pk信息，带上攻击者数据
+		UPkMsg* pkMsg = NewObject<UPkMsg>(UPkMsg::StaticClass());
+		pkMsg->AddToRoot();
+		FSetNullDlg dlg;
+		dlg.BindUObject(this, &USkillFunction::SetDataNull);
+		pkMsg->SetNullDlg(dlg);
+
+		mBullet = nullptr;//发射出去后子弹置空
 	}
 }
 
 void USkillFunction::SkillEnd()
 {
-
+	//切换状态，使用中的技能置空
+	if (mAttacker)
+	{
+		mAttacker->ChangeState(CharState::IdleRun);
+		mAttacker->SetUsingSkillNull();
+	}
 }
 
 void USkillFunction::SetDataNull()

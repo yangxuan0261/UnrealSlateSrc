@@ -32,32 +32,24 @@ public:
 	//	float			GetCoolDown() { return mCoolDown; }
 
 public:
-	const TArray<UAbsPkEvent*>& GetBeforePk();
 	const TArray<UAbsPkEvent*>& GetBeforeSkill();
+	const TArray<UAbsPkEvent*>& GetBeforePk();
 	const TArray<UAbsPkEvent*>& GetBeforeEvns();
 	const TArray<UAbsPkEvent*>& GetEndEvns();
-	const TArray<UAbsPkEvent*>& GetEndSkill();
 	const TArray<UAbsPkEvent*>& GetEndPk();
+	const TArray<UAbsPkEvent*>& GetEndSkill();
+	UAbsFilter*	GetFilter();
 
-
-
+	void ParseFuncStr(const FString& _funcStr, TArray<UAbsPkEvent*>& _funcArr);
+	void ParseFilterStr(const FString& _filterStr, UAbsFilter*& _filter);
 public:
-	TArray<UAbsPkEvent*> mBeforeSkillEvns;
+	TArray<UAbsPkEvent*> mBeforeSkill;
 	TArray<UAbsPkEvent*> mBeforePk;
 	TArray<UAbsPkEvent*> mBeforeEvns;
 	TArray<UAbsPkEvent*> mEndEvns;
 	TArray<UAbsPkEvent*> mEndPk;
-	TArray<UAbsPkEvent*> mEndSkillEvns;
-	FString beforeSkillStr;
-	FString beforeEvnsStr;
-	FString endEvnsStr;
-	FString pkBeforeStr;
-	FString pkEndStr;
-	FString endSkillStr;
-
-	UAbsFilter*		GetFilter();
-	void			SetFilter(const FString& _filterStr);
-
+	TArray<UAbsPkEvent*> mEndSkill;
+	UAbsFilter*		mFilter;
 public:
 	//∂¡±Ì Ù–‘
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
@@ -72,8 +64,13 @@ public:
 		float			mAttackDist;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
 		ESkillType		mSkillType;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
-		FString			mFilterStr;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
-		UAbsFilter*		mFilter;
+
+	FString	mFilterStr;
+	FString mBeforeSkillStr;
+	FString mBeforePkStr;
+	FString mBeforeEvnsStr;
+	FString mEndEvnsStr;
+	FString mEndPkStr;
+	FString mEndSkillStr;
+
 };

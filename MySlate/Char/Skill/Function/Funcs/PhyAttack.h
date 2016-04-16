@@ -2,7 +2,7 @@
 ÎïÀí¹¥»÷
 */
 #pragma once
-#include "../Base/AbsPkEvent.h"
+#include "AbsPkEvent.h"
 #include "PhyAttack.generated.h"
 
 UCLASS()

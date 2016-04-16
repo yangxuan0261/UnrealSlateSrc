@@ -35,6 +35,11 @@ AMyChar::~AMyChar()
 void AMyChar::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
+	
+	if (mCDComp != nullptr)
+	{
+		mCDComp->MyTick(DeltaTime);
+	}
 
 	if (mUsingSkill != nullptr)
 	{
@@ -67,9 +72,21 @@ void AMyChar::OnCDFinish(UCoolDown* _cd)
 	mCanUseSkillArr.AddUnique(_cd);
 }
 
-bool AMyChar::IsAlive()
+bool AMyChar::IsAlive() const
 {
 	return mDataComp->mHealth > 0.f ? true : false;
+}
+
+bool AMyChar::UseSkill(int32 _skillId, int32 _targetId, FVector _targetLoc)
+{
+	USkillFunction* skillFunc = mCDComp->CanUseSkill(_skillId);
+	if (skillFunc != nullptr)
+	{
+		skillFunc->UseSkill(_targetId, _targetLoc);
+		mUsingSkill = skillFunc;
+		return true;
+	}
+	return false;
 }
 
 void AMyChar::Death()

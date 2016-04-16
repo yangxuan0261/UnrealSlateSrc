@@ -17,12 +17,13 @@ AMyBullet::AMyBullet()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
-	CollisionComp->InitSphereRadius(1.0f);
+	USphereComponent* sphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
+	sphereComp->InitSphereRadius(1.0f);
+	CollisionComp = sphereComp;
 	CollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	//CollisionComp->SetCollisionObjectType(COLLISION_PROJECTILE);
-	CollisionComp->SetCollisionResponseToAllChannels(ECR_Ignore);
-	CollisionComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	//CollisionComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+	//CollisionComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	CollisionComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	RootComponent = CollisionComp;
 
@@ -30,16 +31,15 @@ AMyBullet::AMyBullet()
 	MovementComp->UpdatedComponent = CollisionComp;
 	MovementComp->ProjectileGravityScale = 0.0f;
 	MovementComp->MaxSpeed = 300.f;
-	MovementComp->InitialSpeed = 300.f;
+	MovementComp->InitialSpeed = 0.f;
 
 	//TODO: mesh component
-	//MeshComp->
+	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
+	MeshComp->AttachTo(CollisionComp);
 
 	bInitialized = false;
-	mAttackerId = 0;
 	mTargetId = 0;
 	mSkillTemp = nullptr;
-	MovementComp->InitialSpeed = 0.f;
 	mTargetLoc = FVector(0.f, 0.f, 0.f);
 	mLastTargetLoc = FVector(0.f, 0.f, 0.f);
 	RemainingDamage = 50.f;
@@ -61,14 +61,6 @@ void AMyBullet::BeginPlay()
 void AMyBullet::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
-	//TODO: 可以考虑攻击者死亡，但子弹仍然有效，需要子弹创建时带上，攻击者数据
-	AMyChar* attacker = UCharMgr::GetInstance()->GetChar(mAttackerId);
-	if (attacker == nullptr) //攻击者死亡，销毁子弹
-	{
-		DestroyBullet();
-		return;
-	}
 
 	if (mTargetId > 0) //有目标，每帧修正到目标的飞行方向
 	{

@@ -25,7 +25,6 @@ public:
 	UCoolDown();
 	virtual ~UCoolDown();
 
-
 public:
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
 		bool		IsOK() const { return mIsOK; }
@@ -36,18 +35,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
 		int32		GetSkillId() const { return mSkillId; }
 
-	void			SetSkillTemplate(USkillTemplate* _skillTemp);
-
-	void			SetChar(AMyChar* _owner);
+	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
+		void		SetSkillTemplate(USkillTemplate* _skillTemp);
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
-		void		UseSkill(AMyChar* _attActor, int32 _targetId);
+		USkillFunction*	GetSkillFunc();
+
+	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
+		void		SetChar(AMyChar* _char);
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
 		void		SetRatio(float _ratio) { mRatio = _ratio; }
 
+
+
 	void			Restart();
-	bool			IsNull() const { return mSkillId == -1 ? true : false; }
+	bool			IsNull() const { return mSkillId == 0 ? true : false; }
 
 	virtual void Tick(float DeltaTime);
 
@@ -60,7 +63,7 @@ public:
 
 	USkillTemplate*		mSkillTemplate;
 	USkillFunction*		mSkillFunc;
-	AMyChar*	mOwnerChar;
+	AMyChar*			mOwnerChar;
 
 	FCDFinishDlg				mCDFinishDlg;//通知代理
 };

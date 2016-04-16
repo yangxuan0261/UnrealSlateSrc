@@ -63,7 +63,7 @@ void UBTDecorateMyBase::UseSkill()
 {
 	if (mOwnerChar->mCanUseSkillArr.Num() > 0)
 	{
-		mOwnerChar->mCDComp->UseSkill(mOwnerChar->mCanUseSkillArr[0], 0);
+		//mOwnerChar->mCDComp->UseSkill(mOwnerChar->mCanUseSkillArr[0], 0);
 	}
 }
 
@@ -71,6 +71,7 @@ bool UBTDecorateMyBase::IsAttackRange()
 {
 	if (mOwnerChar->mUsingSkill != nullptr)
 	{
+
 		/*
 		USkillTemplate* skillTemp = mOwnerChar->mUsingSkill->mSkillTemplate;
 

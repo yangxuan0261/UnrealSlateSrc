@@ -3,16 +3,12 @@
 #include "MySlate.h"
 #include "FunctionFactory.h"
 #include "../Utils/CommonDef.h"
-#include "Base/AbsPkEvent.h"
+#include "Funcs/AbsPkEvent.h"
 #include "Funcs/PhyAttack.h"
 #include "../Filter/AbsFilter.h"
 #include "../Filter/LockFilter.h"
 #include "../Filter/CircleFilter.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(UFunctionFactoryLogger, Log, All);
-DEFINE_LOG_CATEGORY(UFunctionFactoryLogger)
-
-// Sets default values
 UFunctionFactory::UFunctionFactory() : Super()
 {
 
@@ -78,16 +74,18 @@ UAbsFilter* UFunctionFactory::createFilter(const FString& _str)
 	paramStr.ParseIntoArray(params, Split_Line, true);
 	if (params.Num() > 0)
 	{
-		FString clsName = params[0];
+		const FString clsName = params[0];
 		UAbsFilter** filter = mFilterMap.Find(clsName);
 		if (filter == nullptr)
 		{
+			UE_LOG(SkillLogger, Error, TEXT("--- Error: UFunctionFactory::createFilter, return null"));
 			return nullptr;
 		}
 
 		*filter = (*filter)->Clone();
 		if (*filter == nullptr)
 		{
+			UE_LOG(SkillLogger, Error, TEXT("--- Error: UFunctionFactory::createFilter, clone null"));
 			return nullptr;
 		}
 
@@ -95,12 +93,34 @@ UAbsFilter* UFunctionFactory::createFilter(const FString& _str)
 		(*filter)->Paser(params);
 		return *filter;
 	}
-
 	return nullptr;
 }
 
 UAbsPkEvent* UFunctionFactory::createFunction(const FString& _str)
 {
+	FString paramStr = _str.ToLower();
+	TArray<FString> params;
+	paramStr.ParseIntoArray(params, Split_Line, true);
+	if (params.Num() > 0)
+	{
+		const FString clsName = params[0];
+		UAbsPkEvent** func = mFunctionMap.Find(clsName);
+		if (func == nullptr)
+		{
+			UE_LOG(SkillLogger, Error, TEXT("--- Error: UFunctionFactory::createFunction, return null"));
+			return nullptr;
+		}
 
+		*func = (*func)->Clone();
+		if (*func == nullptr)
+		{
+			UE_LOG(SkillLogger, Error, TEXT("--- Error: UFunctionFactory::createFunction, clone null"));
+			return nullptr;
+		}
+
+		params.RemoveAt(0); //ÒÆ³ýµôÀàÃû
+		(*func)->Paser(params);
+		return *func;
+	}
 	return nullptr;
 }

@@ -32,10 +32,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void InitProjectile(const FVector& ShootDirection, uint8 InTeamNum, int32 ImpactDamage, float InLifeSpan);
 
-
-	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void SetAttackerId(int32 _attackerId) { mAttackerId = _attackerId; }
-
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		virtual void SetTargetId(int32 _targetId) { mTargetId = _targetId; }
 
@@ -68,17 +64,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		UProjectileMovementComponent* MovementComp;
 
-	/** collisions */
+	//TODO: 这几个组件暂时由蓝图中编辑，后期动态生成碰撞形状、Mesh、粒子
+	/** collisions root*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
-		USphereComponent* CollisionComp;
+		UShapeComponent* CollisionComp;
 
 	/** Mesh */
-	UPROPERTY(VisibleDefaultsOnly, Category = "AMyBullet")
-		USkeletalMeshComponent* MeshComp;
-public:
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
-		int32				mAttackerId; //攻击者
+		UStaticMeshComponent* MeshComp;
+
+	/** Mesh */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
+		TArray<UParticleSystemComponent*> Particles;
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		int32				mTargetId; //受击者
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")

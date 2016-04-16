@@ -27,6 +27,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		void		SetSkillTemplate(USkillTemplate* _skillTemp);
 
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		void		UseSkill(int32 _targetId, const FVector& _targetLoc);
+
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		bool		CanAttack();
+
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		void		SkillBegin(); //技能释放前运行, 比如 瞬间移动 -> 攻击
 
@@ -40,13 +46,19 @@ public:
 		void		SkillEnd(); //技能结束后运行
 
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
-		void		SetAttacker(int32 _id) { mAttackerId = _id; }
+		void		SetAttacker(AMyChar* _char) { mAttacker = _char; }
 
 	void	SetDataNull();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
-		int32			mAttackerId;
+		AMyChar*		mAttacker;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
+		int32			mTargetId;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
+		FVector			mTargetLoc;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
 		int32			mSkillId;

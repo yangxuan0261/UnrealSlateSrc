@@ -15,7 +15,7 @@ UCoolDownComp::UCoolDownComp()
 	: Super()
 {
 	bWantsBeginPlay = true;
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 	bAllowAnyoneToDestroyMe = true;
 	mOwner = nullptr;
 }
@@ -38,13 +38,17 @@ void UCoolDownComp::BeginDestroy()
 	Super::BeginDestroy();
 }
 
-void UCoolDownComp::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
+void UCoolDownComp::MyTick(float DeltaTime)
 {
-	//UE_LOG(UCoolDownLogger, Warning, TEXT("--- UCoolDownComp::TickComponent:%f"), DeltaTime);
 	for (UCoolDown* cd : mCDArr)
 	{
 		if (!cd->IsNull())
-			cd->Tick(DeltaTime);
+		{
+			if (!cd->IsOK())
+			{
+				cd->Tick(DeltaTime);
+			}
+		}
 	}
 }
 
@@ -56,23 +60,24 @@ void UCoolDownComp::CreateCD(int32 _skillId, TSubclassOf<UCoolDown> _class)
 	//mCDArr.Add(cd);
 }
 
-void UCoolDownComp::UseSkill(UCoolDown* _skill, int32 _targetId)
+USkillFunction* UCoolDownComp::CanUseSkill(int32 _skillId)
 {
-	//bool noCD = true;
 	for (UCoolDown* cd : mCDArr)
 	{
-		if (cd == _skill)
+		if (cd->GetSkillId() == _skillId)
 		{
 			if (!cd->IsNull())
 			{
 				if (cd->IsOK())
 				{
-					cd->UseSkill(mOwner, _targetId);
-					return;
+					return cd->GetSkillFunc();
 				}
 			}
 		}
 	}
+
+	UE_LOG(CompLogger, Warning, TEXT("--- UCoolDownComp::CanUseSkill, nullptr"));
+	return nullptr;
 }
 
 void UCoolDownComp::RestartCD(int32 _skillId)
@@ -95,6 +100,7 @@ void UCoolDownComp::RemoveCDById(int32 _skillId)
 		{
 			mCDArr[i]->RemoveFromRoot(); //cd对象丢给gc系统
 			mCDArr.RemoveAt(i);
+			UE_LOG(CompLogger, Error, TEXT("--- UCoolDownComp::RemoveCDById, skillId:%d"), _skillId);
 			return;
 		}
 	}
@@ -111,7 +117,7 @@ void UCoolDownComp::AddCD(int32 _skillId, bool _isRestartCD)
 		UCoolDown* cd = NewObject<UCoolDown>(UCoolDown::StaticClass());
 		cd->AddToRoot();
 		mCDArr.Add(cd);
-		cd->SetSkillTemplate(skillTemp);
+		cd->SetSkillTemplate(skillTemp); 
 		cd->SetChar(mOwner);
 		if (_isRestartCD) {
 			cd->Restart();
@@ -120,6 +126,6 @@ void UCoolDownComp::AddCD(int32 _skillId, bool _isRestartCD)
 	}
 	else
 	{
-		UE_LOG(CompLogger, Warning, TEXT("--- Error: No USkillTemplate, mSkillId:%d"), _skillId);
+		UE_LOG(CompLogger, Error, TEXT("--- Error: No USkillTemplate, mSkillId:%d"), _skillId);
 	}
 }

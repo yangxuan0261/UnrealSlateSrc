@@ -38,7 +38,19 @@ public:
 		int32	GetUuid() const { return mUuid; }
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
-		bool		IsAlive();
+		bool		IsAlive() const;
+
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		bool		UseSkill(int32 _skillId, int32 _targetId, FVector _targetLoc);
+
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		void		SetUsingSkillNull() { mUsingSkill = nullptr; }
+
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		USkillFunction*	GetUsingSkill() const { return mUsingSkill; }
+
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		void		ChangeState(CharState _state) { mCharState = _state; }
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void		Death();
@@ -48,11 +60,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		virtual void Reset();
+
 	//UFUNCTION(BlueprintCallable, Category = "MyChar")
 		//void FaceToTarget();
 public:
-	/** The class of minion to spawn. */
-	UPROPERTY(EditDefaultsOnly, Category = Category = "MyChar")
+	/* …Ë÷√◊”µØ¿∂Õº¿‡ */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		TSubclassOf<AMyBullet> BulletClass;
 
 public:
