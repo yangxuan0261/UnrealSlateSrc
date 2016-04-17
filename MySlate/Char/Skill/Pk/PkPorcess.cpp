@@ -36,7 +36,17 @@ void UPkPorcess::SetMsg(UPkMsg* _pkMsg)
 
 void UPkPorcess::Run()
 {
+	AMyChar* targetActor = nullptr;
+	
+	Filter();
+	const TArray<UParam*>& targets = mPkMsg->GetTargets();
+	for (int32 i = 0; i < targets.Num(); ++i)
+	{
+		//targetActor = targets[i].
+	}
 
+	RunEndPk(); //¸ø¹¥»÷Õß¼Óbuff
+	PkPrice();
 }
 
 bool UPkPorcess::CheckCanPk()
@@ -44,7 +54,7 @@ bool UPkPorcess::CheckCanPk()
 	return false;
 }
 
-void UPkPorcess::FilterVS()
+void UPkPorcess::Filter()
 {
 	UAbsFilter* filter = nullptr;
 	USkillTemplate* skillTemp = mPkMsg->GetSkillTemp();

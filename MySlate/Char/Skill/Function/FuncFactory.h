@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Common/ISingleton.h"
-#include "FunctionFactory.generated.h"
+#include "FuncFactory.generated.h"
 
 //== —°»À A ==
 #define Filter_Lock			TEXT("lock")
@@ -89,14 +89,14 @@ class UAbsPkEvent;
 class UAbsFilter;
 
 UCLASS()
-class UFunctionFactory : public UObject, public USingleton<UFunctionFactory>
+class UFuncFactory : public UObject, public USingleton<UFuncFactory>
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	UFunctionFactory();
-	virtual ~UFunctionFactory();
+	UFuncFactory();
+	virtual ~UFuncFactory();
 
 	void InitFuncAndFilters();
 	UAbsFilter* createFilter(const FString& _str);

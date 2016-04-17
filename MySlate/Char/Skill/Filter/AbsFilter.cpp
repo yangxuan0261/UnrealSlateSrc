@@ -12,18 +12,3 @@ UAbsFilter::~UAbsFilter()
 {
 
 }
-
-void UAbsFilter::Filter(UPkMsg* msg)
-{
-
-}
-
-UAbsFilter * UAbsFilter::Clone()
-{
-	return nullptr;
-}
-
-void UAbsFilter::Paser(const TArray<FString>& _params)
-{
-
-}

@@ -39,7 +39,7 @@ public:
 
 private:
 	bool CheckCanPk();//判断能否pk
-	void FilterVS();//选取攻击对象逻辑
+	void Filter();//选取攻击对象逻辑
 
 	void RunBeforePk();// 第一个循环 运行buff前置事件 一般用于放技能前要buff
 	void RunBeforeSkill(); //pk逻辑完成前技能逻辑

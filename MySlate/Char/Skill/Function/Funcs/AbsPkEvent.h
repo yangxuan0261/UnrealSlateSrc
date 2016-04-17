@@ -34,7 +34,7 @@ public:
 	UAbsPkEvent();
 	virtual ~UAbsPkEvent();
 
-	virtual UAbsPkEvent* Clone();
+	virtual UAbsPkEvent* Clone() { return nullptr; }
 
 	virtual void RunBeforeSkill(UPkMsg* msg) {}
 	virtual void RunBeforePk(UPkMsg* msg) {}
@@ -43,13 +43,15 @@ public:
 	virtual void RunEndPk(UPkMsg* msg) {}
 	virtual void RunEndSkill(UPkMsg* msg) {}
 
-	virtual void Paser(const TArray<FString>& _params) {}//解释数据
+	virtual void Parser(const TArray<FString>& _params) {}//解释数据
 
 	FString		GetKey() const { return mKey; }
 	void		SetKey(const FString& _key) { mKey = _key; }
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UAbsFilter")
-		FString		mKey;
+protected:
+	bool CheckPercent(const FString& _value);
 
+protected:
+	FString		mKey;
+	bool		mIsPercent;
 };

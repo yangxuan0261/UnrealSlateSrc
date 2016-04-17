@@ -10,6 +10,8 @@
 #include "Skill/SkillFunction.h"
 #include "Comp/MyCharDataComp.h"
 #include "CharMgr.h"
+#include "BaseDatas/BaseDataMgr.h"
+#include "BaseDatas/Datas/CharData.h"
 
 // Sets default values
 AMyChar::AMyChar() : Super()
@@ -24,6 +26,7 @@ AMyChar::AMyChar() : Super()
 	mUsingSkill = nullptr;
 	mCharState = CharState::IdleRun;
 	mUuid = 0;
+	mCharData = nullptr;
 }
 
 AMyChar::~AMyChar()
@@ -70,6 +73,12 @@ void AMyChar::OnCDFinish(UCoolDown* _cd)
 {
 	UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::OnCDFinish, skillId:%d"), _cd->GetSkillId());
 	mCanUseSkillArr.AddUnique(_cd);
+}
+
+void AMyChar::SetCharData(int32 _id)
+{
+	UCharData* data = UBaseDataMgr::GetInstance()->GetCharData(_id);
+	mDataComp->SetCharData(data);
 }
 
 bool AMyChar::IsAlive() const

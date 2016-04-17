@@ -7,7 +7,8 @@
 class USkillDataMgr;
 class USkillMgr;
 class UCharMgr;
-class UFunctionFactory;
+class UFuncFactory;
+class UBaseDataMgr;
 
 UCLASS()
 class UGolbalFunc : public UBlueprintFunctionLibrary
@@ -44,15 +45,13 @@ public:
 		static void					TestForceGC();
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static void					TestMapAdd();
-
-	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static void					TestMapRemove(int32 _key);
+		static void					TestStrContains(FString _str);
 
 private:
 	static USkillDataMgr*			gSkillDataMgr;
 	static USkillMgr*				gSkillMgr;
 	static UCharMgr*				gCharMgr;
-	static UFunctionFactory*		gFunctionMgr;
+	static UFuncFactory*		gFunctionMgr;
+	static UBaseDataMgr*			gBaseDataMgr;
 
 };

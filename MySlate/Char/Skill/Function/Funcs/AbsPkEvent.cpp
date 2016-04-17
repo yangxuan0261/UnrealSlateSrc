@@ -3,16 +3,19 @@
 #include "MySlate.h"
 #include "AbsPkEvent.h"
 
-// Sets default values
 UAbsPkEvent::UAbsPkEvent() : Super()
 {
+	mKey = "";
+	mIsPercent = false;
 }
+
 UAbsPkEvent::~UAbsPkEvent()
 {
 
 }
 
-UAbsPkEvent* UAbsPkEvent::Clone()
+bool UAbsPkEvent::CheckPercent(const FString& _value)
 {
-	return nullptr;
+	mIsPercent = _value.Contains(TEXT("%"));
+	return mIsPercent;
 }

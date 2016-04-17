@@ -8,6 +8,8 @@
 #include "../MyBullet.h"
 #include "../CharMgr.h"
 #include "../MyChar.h"
+#include "../Comp/MyCharDataComp.h"
+#include "Function/Funcs/AbsPkEvent.h"
 
 // Sets default values
 USkillFunction::USkillFunction() : Super()
@@ -67,11 +69,26 @@ bool USkillFunction::CanAttack()
 
 void USkillFunction::SkillBegin()
 {
-	//运行技能前置func
-	const TArray<UAbsPkEvent*>& functions =mSkillTemplate->GetBeforeSkill();
+	if (mPkMsg != nullptr)
+	{
+		UE_LOG(SkillLogger, Error, TEXT("--- USkillFunction::BulletCreate, mPkMsg != nullptr before"));
+	}
+
+	UPkMsg* pkMsg = NewObject<UPkMsg>(UPkMsg::StaticClass());
+	pkMsg->AddToRoot();
+
+	//step1 - 运行给攻击者自己加buff的func
+	const TArray<UAbsPkEvent*>& functions = mSkillTemplate->GetBeforePk();
 	for (UAbsPkEvent* func : functions)
 	{
-		
+		func->RunBeforePk(mPkMsg);
+	}
+
+	//step2 - 运行技能前置func, 比如瞬间移动
+	const TArray<UAbsPkEvent*>& functions2 =mSkillTemplate->GetBeforeSkill();
+	for (UAbsPkEvent* func : functions2)
+	{
+		func->RunBeforeSkill(mPkMsg);
 	}
 }
 
@@ -79,14 +96,17 @@ void USkillFunction::SkillBegin()
 
 void USkillFunction::BulletCreate()
 {
+	if (mBullet != nullptr)
+	{
+		UE_LOG(SkillLogger, Error, TEXT("--- USkillFunction::BulletCreate, mBullet != nullptr before"));
+	}
+
 	if (mAttacker)
 	{
 		 //TODO: 创建子弹, 绑定到身体的某个socket部位上
 		FActorSpawnParameters SpawnInfo;
 		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		mBullet = GetWorld()->SpawnActor<AMyBullet>(mAttacker->BulletClass, mAttacker->GetActorLocation(), mAttacker->GetActorRotation(), SpawnInfo);
-
-
 	}
 }
 
@@ -94,17 +114,21 @@ void USkillFunction::BulletShoot()
 {
 	if (mBullet != nullptr)
 	{
-		//射击，脱离绑定点，朝目标飞行
+		//TODO: 射击，脱离绑定点，朝目标飞行
 
 
 		//TODO: 创建pk信息，带上攻击者数据
-		UPkMsg* pkMsg = NewObject<UPkMsg>(UPkMsg::StaticClass());
-		pkMsg->AddToRoot();
-		FSetNullDlg dlg;
-		dlg.BindUObject(this, &USkillFunction::SetDataNull);
-		pkMsg->SetNullDlg(dlg);
+		UFightData* attackerData = NewObject<UFightData>(UFightData::StaticClass());
+		attackerData->AddToRoot();//在pkMsg的析构函数中释放这个对象
 
-		mBullet = nullptr;//发射出去后子弹置空
+		UPkMsg* pkMsg = mPkMsg;
+		UFightData* dataComp = mAttacker->GetDataComp()->GetFigthData();
+		dataComp->Clone(*attackerData);//将攻击者的战斗数据拷贝到 新建的战斗数据对象中
+		pkMsg->SetAttackerData(attackerData);
+		mBullet->SetPkMsg(pkMsg);
+
+		mBullet = nullptr;//发射出去后子弹、pkmsg置空
+		mPkMsg = nullptr;
 	}
 }
 
@@ -116,10 +140,5 @@ void USkillFunction::SkillEnd()
 		mAttacker->ChangeState(CharState::IdleRun);
 		mAttacker->SetUsingSkillNull();
 	}
-}
-
-void USkillFunction::SetDataNull()
-{
-	mPkMsg = nullptr;//其他地方销毁通知一下这里，防止析构时野指针奔溃
 }
 

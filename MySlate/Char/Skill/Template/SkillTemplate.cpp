@@ -2,7 +2,7 @@
 
 #include "MySlate.h"
 #include "SkillTemplate.h"
-#include "../Function/FunctionFactory.h"
+#include "../Function/FuncFactory.h"
 #include "../Filter/AbsFilter.h"
 #include "../Utils/CommonDef.h"
 
@@ -106,7 +106,7 @@ void USkillTemplate::ParseFuncStr(const FString& _funcStr, TArray<UAbsPkEvent*>&
 	paramStr.ParseIntoArray(params, Split_Line, true);
 	for (TArray<FString>::TConstIterator iter = params.CreateConstIterator(); iter; ++iter)
 	{
-		UAbsPkEvent* func = UFunctionFactory::GetInstance()->createFunction(*iter);
+		UAbsPkEvent* func = UFuncFactory::GetInstance()->createFunction(*iter);
 		if (func != nullptr)
 		{
 			_funcArr.Add(func);
@@ -116,5 +116,5 @@ void USkillTemplate::ParseFuncStr(const FString& _funcStr, TArray<UAbsPkEvent*>&
 
 void USkillTemplate::ParseFilterStr(const FString& _filterStr, UAbsFilter*& _filter)
 {
-	_filter = UFunctionFactory::GetInstance()->createFilter(_filterStr.ToLower());
+	_filter = UFuncFactory::GetInstance()->createFilter(_filterStr.ToLower());
 }

@@ -3,13 +3,19 @@
 #include "MySlate.h"
 #include "FightData.h"
 
-// Sets default values
 UFightData::UFightData() : Super()
 {
-	//UE_LOG(SkillDataMgrLogger, Warning, TEXT("--- USkillDataMgr::Tick:%f"), 0.2f);
+	mAttackPhy = 0.f;
+	mLv = 1;
 }
 
 UFightData::~UFightData()
 {
 	UE_LOG(SkillLogger, Warning, TEXT("--- UFightData::~UFightData"));
+}
+
+void UFightData::Clone(UFightData& _fightData)
+{
+	_fightData.mAttackPhy = this->mAttackPhy;
+	_fightData.mLv = this->mLv;
 }

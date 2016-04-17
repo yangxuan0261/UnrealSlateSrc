@@ -4,6 +4,7 @@
 
 #include "Char/Skill/SkillTypes.h"
 #include "FightData.h"
+#include "Char/GameTypes.h"
 
 #include "PkMsg.generated.h"
 
@@ -22,7 +23,8 @@ public:
 	void Init();
 
 	UFightData*		mFightData;			//战斗数据
-	int32			mTargetId;
+	AMyChar*		mTarget;			//目标
+
 };
 
 UCLASS()
@@ -35,15 +37,14 @@ public:
 	UPkMsg();
 	virtual ~UPkMsg();
 
-	void	Init();
-	void	SetData(int32 _skillId, const FVector& _targetLoc, int32 _attackerId, int32 _targetId = 0);
+	void	SetData(USkillTemplate* _skillTemp, const FVector& _targetLoc, int32 _attackerId, int32 _targetId = 0);
 	const TArray<UParam*>& GetTargets() const { return mTargetArr; }
 	void	AddTarget(AMyChar* _char);
 	USkillTemplate*	GetSkillTemp() const { return mSkillTemp; }
 
 	void	SetNullDlg(FSetNullDlg _dlg) { mSetNullDlg = _dlg; }
 	void	ExeNullDlg();
-
+	void	SetAttackerData(UFightData* _data) { mAttackerData = _data; }
 
 private:
 	bool			mCanLog;
@@ -52,11 +53,11 @@ private:
 	ESkillAttackType	mSkillLogicType;				//技能逻辑类型 SKILL_ATTACK_TYPE
 	int32			mAttackerId;					//攻击者 唯一id
 	int32			mTargetId;						//锁定目标者 唯一id
-	AMyChar*		mAttacker;
 	AMyChar*		mTarget;
 	TArray<UParam*>	mTargetArr;						//目标集
 	UFightData*		mAttackerData;					//攻击者参数
 	FVector			mTargetLoc;						//目标位置
+	ETeam			mTeamType;						//敌友标记
 
 	FSetNullDlg		mSetNullDlg;		//运用别处释放对象时，通知之前创建的地方set null
 };

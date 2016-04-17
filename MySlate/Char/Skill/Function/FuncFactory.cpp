@@ -1,20 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
-#include "FunctionFactory.h"
+#include "FuncFactory.h"
 #include "../Utils/CommonDef.h"
 #include "Funcs/AbsPkEvent.h"
-#include "Funcs/PhyAttack.h"
+#include "Funcs/AttackPhy.h"
 #include "../Filter/AbsFilter.h"
 #include "../Filter/LockFilter.h"
 #include "../Filter/CircleFilter.h"
 
-UFunctionFactory::UFunctionFactory() : Super()
+UFuncFactory::UFuncFactory() : Super()
 {
 
 }
 
-UFunctionFactory::~UFunctionFactory()
+UFuncFactory::~UFuncFactory()
 {
 	//数据丢回给gc
 	for (auto iter = mFunctionMap.CreateConstIterator(); iter; ++iter)
@@ -31,7 +31,7 @@ UFunctionFactory::~UFunctionFactory()
 }
 
 //各种注册模板
-void UFunctionFactory::InitFuncAndFilters()
+void UFuncFactory::InitFuncAndFilters()
 {
 	//------------ 选人 Start ------------
 	registerFilter(ULockFilter::CreateFilter(Filter_Lock));
@@ -39,11 +39,11 @@ void UFunctionFactory::InitFuncAndFilters()
 	//------------ 选人 End ------------
 
 	//------------ 技能 Start ------------
-	registerFunction(UPhyAttack::CreateFunction(Func_Phyattack));
+	registerFunction(UAttackPhy::CreateFunction(Func_Phyattack));
 	//------------ 技能 End ------------
 }
 
-void UFunctionFactory::registerFunction(UAbsPkEvent* _object)
+void UFuncFactory::registerFunction(UAbsPkEvent* _object)
 {
 	FString key = _object->GetKey();
 	UAbsPkEvent** func = mFunctionMap.Find(key);
@@ -55,7 +55,7 @@ void UFunctionFactory::registerFunction(UAbsPkEvent* _object)
 	mFunctionMap.Add(key, _object);
 }
 
-void UFunctionFactory::registerFilter(UAbsFilter* _object)
+void UFuncFactory::registerFilter(UAbsFilter* _object)
 {
 	FString key = _object->GetKey();
 	UAbsFilter** filter = mFilterMap.Find(key);
@@ -67,7 +67,7 @@ void UFunctionFactory::registerFilter(UAbsFilter* _object)
 	mFilterMap.Add(key, _object);
 }
 
-UAbsFilter* UFunctionFactory::createFilter(const FString& _str)
+UAbsFilter* UFuncFactory::createFilter(const FString& _str)
 {
 	FString paramStr = _str.ToLower();
 	TArray<FString> params;
@@ -78,25 +78,25 @@ UAbsFilter* UFunctionFactory::createFilter(const FString& _str)
 		UAbsFilter** filter = mFilterMap.Find(clsName);
 		if (filter == nullptr)
 		{
-			UE_LOG(SkillLogger, Error, TEXT("--- Error: UFunctionFactory::createFilter, return null"));
+			UE_LOG(SkillLogger, Error, TEXT("--- Error: UFuncFactory::createFilter, return null"));
 			return nullptr;
 		}
 
 		*filter = (*filter)->Clone();
 		if (*filter == nullptr)
 		{
-			UE_LOG(SkillLogger, Error, TEXT("--- Error: UFunctionFactory::createFilter, clone null"));
+			UE_LOG(SkillLogger, Error, TEXT("--- Error: UFuncFactory::createFilter, clone null"));
 			return nullptr;
 		}
 
 		params.RemoveAt(0); //移除掉类名
-		(*filter)->Paser(params);
+		(*filter)->Parser(params);
 		return *filter;
 	}
 	return nullptr;
 }
 
-UAbsPkEvent* UFunctionFactory::createFunction(const FString& _str)
+UAbsPkEvent* UFuncFactory::createFunction(const FString& _str)
 {
 	FString paramStr = _str.ToLower();
 	TArray<FString> params;
@@ -107,19 +107,19 @@ UAbsPkEvent* UFunctionFactory::createFunction(const FString& _str)
 		UAbsPkEvent** func = mFunctionMap.Find(clsName);
 		if (func == nullptr)
 		{
-			UE_LOG(SkillLogger, Error, TEXT("--- Error: UFunctionFactory::createFunction, return null"));
+			UE_LOG(SkillLogger, Error, TEXT("--- Error: UFuncFactory::createFunction, return null"));
 			return nullptr;
 		}
 
 		*func = (*func)->Clone();
 		if (*func == nullptr)
 		{
-			UE_LOG(SkillLogger, Error, TEXT("--- Error: UFunctionFactory::createFunction, clone null"));
+			UE_LOG(SkillLogger, Error, TEXT("--- Error: UFuncFactory::createFunction, clone null"));
 			return nullptr;
 		}
 
 		params.RemoveAt(0); //移除掉类名
-		(*func)->Paser(params);
+		(*func)->Parser(params);
 		return *func;
 	}
 	return nullptr;

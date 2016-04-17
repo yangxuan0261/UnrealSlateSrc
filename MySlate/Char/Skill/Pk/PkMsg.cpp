@@ -26,33 +26,31 @@ UPkMsg::~UPkMsg()
 	if (mAttackerData != nullptr)
 	{
 		mAttackerData->RemoveFromRoot();
+		mAttackerData = nullptr;
 	}
+	for (int32 i = 0; i < mTargetArr.Num(); ++i)
+	{
+		mTargetArr[i]->RemoveFromRoot();
+	}
+	mTargetArr.Empty();
 }
 
-void UPkMsg::Init()
+void UPkMsg::SetData(USkillTemplate* _skillTemp, const FVector& _targetLoc, int32 _attackerId, int32 _targetId /* = 0 */)
 {
-	mAttackerData = NewObject<UFightData>(UFightData::StaticClass());
-	mAttackerData->AddToRoot();
-}
-
-void UPkMsg::SetData(int32 _skillId, const FVector& _targetLoc, int32 _attackerId, int32 _targetId /* = 0 */)
-{
-	USkillTemplate* skillTemp = USkillDataMgr::GetInstance()->GetSkillTemplate(_skillId);
-	mSkillTemp = skillTemp != nullptr ? skillTemp : nullptr;
+	mSkillTemp = _skillTemp;
 	if (mSkillTemp)
 	{
-		mSkillId = _skillId;
+		mSkillId = mSkillTemp->mId;
 		mTargetLoc = _targetLoc;
-		mAttacker = UCharMgr::GetInstance()->GetChar(_attackerId);
 		mTarget = UCharMgr::GetInstance()->GetChar(_targetId);
-
 	}
 }
 
 void UPkMsg::AddTarget(AMyChar* _char)
 {
 	UParam* param = NewObject<UParam>(UParam::StaticClass());
-	param->mTargetId = _char->GetUuid();
+	param->AddToRoot();
+	param->mTarget = _char;
 	mTargetArr.Add(param);
 }
 
@@ -67,7 +65,7 @@ void UPkMsg::ExeNullDlg()
 UParam::UParam()
 {
 	mFightData = nullptr;
-	mTargetId = 0;
+	mTarget = nullptr;
 }
 
 UParam::~UParam()
@@ -75,6 +73,7 @@ UParam::~UParam()
 	if (mFightData)
 	{
 		mFightData->RemoveFromRoot();
+		mFightData = nullptr;
 	}
 }
 

@@ -8,6 +8,8 @@
 
 class UCoolDown;
 class AMyChar;
+class UFightData;
+class UCharData;
 
 UCLASS()
 class UMyCharDataComp : public UMyBaseComp
@@ -25,8 +27,17 @@ public:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 	// End UActorComponent Interface.
 
-public:
+	void		SetFightData(UFightData* _data) { mFightData = _data; }
+	UFightData*	GetFigthData() const { return mFightData; }
 
+	void		SetCharData(UCharData* _data);
+	UCharData*	GetCharhData() const { return mCharData; }
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
+		UFightData*		mFightData;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
+		UCharData*		mCharData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
 		EGroup			mGroup;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")

@@ -4,6 +4,13 @@
 
 #include "AbsFilter.generated.h"
 
+/*
+一般定义：
+float		mValue; //数值
+int32		mOwner; //所属者 -- 1:攻击者，-1:受击者
+int32		mLimitId; //技能限制
+*/
+
 class AMyChar;
 class UPkMsg;
 
@@ -16,9 +23,9 @@ public:
 	UAbsFilter();
 	virtual ~UAbsFilter();
 
-	virtual void Filter(UPkMsg* msg);//过虑可选actor
-	virtual UAbsFilter* Clone();
-	virtual void Paser(const TArray<FString>& _params);//解释数据
+	virtual void Filter(UPkMsg* msg) {}//过虑可选actor
+	virtual UAbsFilter* Clone() { return nullptr; }
+	virtual void Parser(const TArray<FString>& _params) {}//解释数据
 
 	FString		GetKey() const { return mKey; }
 	void		SetKey(const FString& _key) { mKey = _key; }

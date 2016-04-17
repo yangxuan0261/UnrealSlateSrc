@@ -8,6 +8,7 @@
 #include "Char/Comp/MyCharDataComp.h"
 #include "Char/Skill/Template/SkillTemplate.h"
 #include "CharMgr.h"
+#include "Skill/Pk/PkMsg.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(BulletLogger, Log, All);
 DEFINE_LOG_CATEGORY(BulletLogger)
@@ -43,11 +44,17 @@ AMyBullet::AMyBullet()
 	mTargetLoc = FVector(0.f, 0.f, 0.f);
 	mLastTargetLoc = FVector(0.f, 0.f, 0.f);
 	RemainingDamage = 50.f;
+	mPkMsg = nullptr;
 }
 
 AMyBullet::~AMyBullet()
 {
 	UE_LOG(SkillLogger, Warning, TEXT("--- AMyBullet::~AMyBullet"));
+	if (mPkMsg != nullptr)
+	{
+		mPkMsg->RemoveFromRoot();
+		mPkMsg = nullptr;
+	}
 }
 
 // Called when the game starts
@@ -143,6 +150,8 @@ void AMyBullet::DestroyBullet()
 
 void AMyBullet::OnCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+	//TODO: 子弹飞往目的地过程中，碰撞款撞到的敌人都应该做一次战斗结算，
+
 	if (mTargetId == 0)//没用受击者，不做碰撞检测
 	{
 		return;

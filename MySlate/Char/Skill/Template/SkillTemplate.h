@@ -4,6 +4,7 @@
 
 #include "Common/CommonHeader.h"
 #include "Char/Skill/SkillTypes.h"
+#include "../Utils/CommonDef.h"
 
 #include "SkillTemplate.generated.h"
 
@@ -32,6 +33,8 @@ public:
 	//	float			GetCoolDown() { return mCoolDown; }
 
 public:
+
+
 	const TArray<UAbsPkEvent*>& GetBeforeSkill();
 	const TArray<UAbsPkEvent*>& GetBeforePk();
 	const TArray<UAbsPkEvent*>& GetBeforeEvns();
@@ -72,5 +75,4 @@ public:
 	FString mEndEvnsStr;
 	FString mEndPkStr;
 	FString mEndSkillStr;
-
 };

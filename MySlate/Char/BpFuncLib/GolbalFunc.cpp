@@ -7,12 +7,14 @@
 #include "Char/Skill/SkillMgr.h"
 #include "Char/CharMgr.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Char/Skill/Function/FunctionFactory.h"
+#include "Char/Skill/Function/FuncFactory.h"
+#include "BaseDatas/BaseDataMgr.h"
 
 USkillDataMgr*	UGolbalFunc::gSkillDataMgr = nullptr;
 USkillMgr*		UGolbalFunc::gSkillMgr = nullptr;
 UCharMgr*		UGolbalFunc::gCharMgr = nullptr;
-UFunctionFactory*	UGolbalFunc::gFunctionMgr = nullptr;
+UFuncFactory*	UGolbalFunc::gFunctionMgr = nullptr;
+UBaseDataMgr*	UGolbalFunc::gBaseDataMgr = nullptr;
 
 // Sets default values
 //UGolbalFunc::UGolbalFunc(const UGolbalFunc& ObjectInitializer) : Super(ObjectInitializer)
@@ -29,10 +31,13 @@ UGolbalFunc::~UGolbalFunc()
 void UGolbalFunc::InitMgrs()
 {
 	gSkillDataMgr = USkillDataMgr::GetInstance();
+	gSkillDataMgr->InitFakeDate();
 	gSkillMgr = USkillMgr::GetInstance();
 	gCharMgr = UCharMgr::GetInstance();
-	gFunctionMgr = UFunctionFactory::GetInstance();
+	gFunctionMgr = UFuncFactory::GetInstance();
 	gFunctionMgr->InitFuncAndFilters();
+	gBaseDataMgr = UBaseDataMgr::GetInstance();
+	gBaseDataMgr->InitFakeData();
 }
 
 void UGolbalFunc::DestroyMgrs()
@@ -40,11 +45,13 @@ void UGolbalFunc::DestroyMgrs()
 	USkillDataMgr::ReleaseInstance();
 	USkillMgr::ReleaseInstance();
 	UCharMgr::ReleaseInstance();
-	UFunctionFactory::ReleaseInstance();
+	UFuncFactory::ReleaseInstance();
+	UBaseDataMgr::ReleaseInstance();
 	gSkillDataMgr = nullptr;
 	gSkillMgr = nullptr;
 	gCharMgr = nullptr;
 	gFunctionMgr = nullptr;
+	gBaseDataMgr = nullptr;
 }
 
 void UGolbalFunc::TurnForward(AActor* _actor, const FVector& _targetLoc)
@@ -57,7 +64,7 @@ void UGolbalFunc::TestStrSplit()
 {
 	FString str = TEXT("aaa,bbb,,ccc,ddd");
 	TArray<FString> params;
-	str.ParseIntoArray(params, TEXT(","), false);
+	str.ParseIntoArray(params, TEXT(","), true);
 
 	for (int32 i = 0; i < params.Num(); ++i)
 	{
@@ -71,21 +78,9 @@ void UGolbalFunc::TestForceGC()
 	GWorld->GetWorld()->ForceGarbageCollection(true);
 }
 
-static TMap<int32, FString> mTestMap;
-void UGolbalFunc::TestMapAdd()
+void UGolbalFunc::TestStrContains(FString _str)
 {
-	mTestMap.Add(1, TEXT("aaa"));
-	mTestMap.Add(3, TEXT("bbb"));
-	mTestMap.Add(2, TEXT("ccc"));
-	mTestMap.Add(5, TEXT("ddd"));
-	mTestMap.Add(4, TEXT("eee"));
-	mTestMap.Add(2, TEXT("eee"));
-	mTestMap.Add(2, TEXT("eee"));
-}
-
-void UGolbalFunc::TestMapRemove(int32 _key)
-{
-	int32 num = mTestMap.Remove(_key);
-	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- remove key:%d, num:%d, mapSize:%d"), _key, num, mTestMap.Num());
+	bool b = _str.Contains(TEXT("%"));
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- TestStrContains result:%d"), (int32)b);
 }
 

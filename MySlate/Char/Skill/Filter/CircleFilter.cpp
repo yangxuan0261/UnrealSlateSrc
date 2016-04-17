@@ -23,7 +23,7 @@ UAbsFilter* UCircleFilter::Clone()
 	return CreateFilter(mKey);
 }
 
-void UCircleFilter::Paser(const TArray<FString>& _params)
+void UCircleFilter::Parser(const TArray<FString>& _params)
 {
 	mType = -1;
 	mCount = -1;

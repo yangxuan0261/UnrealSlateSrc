@@ -8,6 +8,7 @@ class UProjectileMovementComponent;
 class USphereComponent;
 class AMyChar;
 class USkillTemplate;
+class UPkMsg;
 
 /*
 set target order
@@ -43,6 +44,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void SetSkillTemplate(USkillTemplate* _skillTemp);
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		void SetPkMsg(UPkMsg* _pkMsg) { mPkMsg = _pkMsg; }
 
 	UFUNCTION()
 		virtual void OnHit(const FHitResult& HitResult);
@@ -83,6 +87,8 @@ public:
 		USkillTemplate*		mSkillTemp; //技能模板
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		FVector				mTargetLoc; //目标地点
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
+		UPkMsg*				mPkMsg; //
 
 protected:
 	void DealDamage(FHitResult const& HitResult);

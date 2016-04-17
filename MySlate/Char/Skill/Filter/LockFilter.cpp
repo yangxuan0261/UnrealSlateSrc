@@ -22,7 +22,7 @@ UAbsFilter* ULockFilter::Clone()
 	return CreateFilter(mKey);
 }
 
-void ULockFilter::Paser(const TArray<FString>& _params)
+void ULockFilter::Parser(const TArray<FString>& _params)
 {
 	mType = -1; //Ä¬ÈÏµÐ·½
 	if (_params.Num() > 0)

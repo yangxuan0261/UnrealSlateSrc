@@ -14,6 +14,7 @@ class UMyCharDataComp;
 class AMyBullet;
 class USkillFunction;
 class UCharMgr;
+class UCharData;
 
 UCLASS()
 class AMyChar : public ACharacter
@@ -33,6 +34,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void	SetUuid(int32 _uuid) { mUuid = _uuid; }
+
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		void	SetCharData(int32 _id);
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		int32	GetUuid() const { return mUuid; }
@@ -61,6 +65,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		virtual void Reset();
 
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		virtual UMyCharDataComp* GetDataComp() const { return mDataComp; }
+
 	//UFUNCTION(BlueprintCallable, Category = "MyChar")
 		//void FaceToTarget();
 public:
@@ -86,6 +93,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		int32				mUuid;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
+		UCharData*			mCharData;
+
 private:
 	UCharMgr*	gCharMgr; //char π‹¿Ì∆˜
 };

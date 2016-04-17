@@ -48,8 +48,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		void		SetAttacker(AMyChar* _char) { mAttacker = _char; }
 
-	void	SetDataNull();
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
 		AMyChar*		mAttacker;

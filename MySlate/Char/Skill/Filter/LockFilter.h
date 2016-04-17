@@ -19,7 +19,7 @@ public:
 
 	virtual void Filter(UPkMsg* msg) override;
 	virtual UAbsFilter* Clone() override;
-	virtual void Paser(const TArray<FString>& _params);
+	virtual void Parser(const TArray<FString>& _params);
 
 	static ULockFilter* CreateFilter(const FString& _key);
 
