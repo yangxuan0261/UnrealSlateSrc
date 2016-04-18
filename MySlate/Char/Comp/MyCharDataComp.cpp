@@ -46,7 +46,7 @@ void UMyCharDataComp::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 void UMyCharDataComp::SetCharData(UCharData* _data)
 {
 	mCharData = _data;
-	mCharData->GetFightData()->Clone(*mFightData);//角色模板中的基础数据拷到 战斗数据对象中
+	mFightData->Copy(mCharData->GetFightData());//角色模板中的基础数据拷到 战斗数据对象中
 }
 
 void UMyCharDataComp::BeginDestroy()

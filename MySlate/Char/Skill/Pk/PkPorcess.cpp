@@ -6,12 +6,13 @@
 #include "PkMsg.h"
 #include "char/MyChar.h"
 #include "../Filter/AbsFilter.h"
+#include "../Function/Funcs/AbsPkEvent.h"
 #include "../Template/SkillTemplate.h"
+#include "../Buff/BuffMgr.h"
 
-// Sets default values
 UPkPorcess::UPkPorcess() : Super()
 {
-	//UE_LOG(SkillDataMgrLogger, Warning, TEXT("--- USkillDataMgr::Tick:%f"), 0.2f);
+
 }
 
 UPkPorcess::~UPkPorcess()
@@ -42,7 +43,7 @@ void UPkPorcess::Run()
 	const TArray<UParam*>& targets = mPkMsg->GetTargets();
 	for (int32 i = 0; i < targets.Num(); ++i)
 	{
-		//targetActor = targets[i].
+		targetActor = targets[i]->mTarget;
 	}
 
 	RunEndPk(); //给攻击者加buff
@@ -79,6 +80,9 @@ void UPkPorcess::RunBeforeSkill()
 
 void UPkPorcess::PkLogic()
 {
+	//战斗伤害值
+	float dmg = mPkMsg->GetAttackerData()->GetAttackPhy();
+	mPkMsg->SetAttackDmgValue(dmg, -1, false);
 }
 
 void UPkPorcess::RunEndSkill()
@@ -88,7 +92,14 @@ void UPkPorcess::RunEndSkill()
 
 void UPkPorcess::RunEndPk()
 {
+	USkillTemplate* skillTemp = mPkMsg->GetSkillTemp();
+	const TArray<UAbsPkEvent*> functions = skillTemp->GetEndPk();
+	for (UAbsPkEvent* func : functions)
+	{
+		func->RunEndPk(mPkMsg);
+	}
 
+	UBuffMgr::GetInstance()->RunEndPkBuffs(mPkMsg->GetAttackerId(), mPkMsg);
 }
 
 void UPkPorcess::PkPrice()

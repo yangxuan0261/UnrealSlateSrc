@@ -9,6 +9,7 @@ class USkillMgr;
 class UCharMgr;
 class UFuncFactory;
 class UBaseDataMgr;
+class UBuffMgr;
 
 UCLASS()
 class UGolbalFunc : public UBlueprintFunctionLibrary
@@ -51,7 +52,8 @@ private:
 	static USkillDataMgr*			gSkillDataMgr;
 	static USkillMgr*				gSkillMgr;
 	static UCharMgr*				gCharMgr;
-	static UFuncFactory*		gFunctionMgr;
+	static UFuncFactory*			gFunctionMgr;
 	static UBaseDataMgr*			gBaseDataMgr;
+	static UBuffMgr*				gBuffMgr;
 
 };

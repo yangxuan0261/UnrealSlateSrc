@@ -9,12 +9,14 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Char/Skill/Function/FuncFactory.h"
 #include "BaseDatas/BaseDataMgr.h"
+#include "Char/Skill/Buff/BuffMgr.h"
 
-USkillDataMgr*	UGolbalFunc::gSkillDataMgr = nullptr;
-USkillMgr*		UGolbalFunc::gSkillMgr = nullptr;
-UCharMgr*		UGolbalFunc::gCharMgr = nullptr;
-UFuncFactory*	UGolbalFunc::gFunctionMgr = nullptr;
-UBaseDataMgr*	UGolbalFunc::gBaseDataMgr = nullptr;
+USkillDataMgr*	UGolbalFunc::gSkillDataMgr	= nullptr;
+USkillMgr*		UGolbalFunc::gSkillMgr		= nullptr;
+UCharMgr*		UGolbalFunc::gCharMgr		= nullptr;
+UFuncFactory*	UGolbalFunc::gFunctionMgr	= nullptr;
+UBaseDataMgr*	UGolbalFunc::gBaseDataMgr	= nullptr;
+UBuffMgr*		UGolbalFunc::gBuffMgr		= nullptr;
 
 // Sets default values
 //UGolbalFunc::UGolbalFunc(const UGolbalFunc& ObjectInitializer) : Super(ObjectInitializer)
@@ -38,6 +40,7 @@ void UGolbalFunc::InitMgrs()
 	gFunctionMgr->InitFuncAndFilters();
 	gBaseDataMgr = UBaseDataMgr::GetInstance();
 	gBaseDataMgr->InitFakeData();
+	gBuffMgr = UBuffMgr::GetInstance();
 }
 
 void UGolbalFunc::DestroyMgrs()
@@ -47,11 +50,13 @@ void UGolbalFunc::DestroyMgrs()
 	UCharMgr::ReleaseInstance();
 	UFuncFactory::ReleaseInstance();
 	UBaseDataMgr::ReleaseInstance();
+	UBuffMgr::ReleaseInstance();
 	gSkillDataMgr = nullptr;
 	gSkillMgr = nullptr;
 	gCharMgr = nullptr;
 	gFunctionMgr = nullptr;
 	gBaseDataMgr = nullptr;
+	gBuffMgr = nullptr;
 }
 
 void UGolbalFunc::TurnForward(AActor* _actor, const FVector& _targetLoc)

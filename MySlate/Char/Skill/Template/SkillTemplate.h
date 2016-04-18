@@ -33,8 +33,7 @@ public:
 	//	float			GetCoolDown() { return mCoolDown; }
 
 public:
-
-
+	//before类 都是给攻击者提升攻击力、加buff、做动作的func
 	const TArray<UAbsPkEvent*>& GetBeforeSkill();
 	const TArray<UAbsPkEvent*>& GetBeforePk();
 	const TArray<UAbsPkEvent*>& GetBeforeEvns();

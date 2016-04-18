@@ -9,11 +9,13 @@ class USphereComponent;
 class AMyChar;
 class USkillTemplate;
 class UPkMsg;
+class UPkPorcess;
 
 /*
 set target order
-SetSkillTemplate or SetSpeed
+SetSkillTemplate
 SetTargetLoc
+SetSpeed
 */
 
 UCLASS()
@@ -31,16 +33,13 @@ public:
 	// End Actor interface
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void InitProjectile(const FVector& ShootDirection, uint8 InTeamNum, int32 ImpactDamage, float InLifeSpan);
-
-	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		virtual void SetTargetId(int32 _targetId) { mTargetId = _targetId; }
-
-	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		virtual void SetSpeed(float _speed);
+		void SetTargetId(int32 _targetId); 
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void SetTargetLoc(UPARAM(ref) const FVector& _targetLoc);
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		void SetSpeed(float _speed) { mSpeed = _speed; }
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void SetSkillTemplate(USkillTemplate* _skillTemp);
@@ -48,8 +47,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void SetPkMsg(UPkMsg* _pkMsg) { mPkMsg = _pkMsg; }
 
-	UFUNCTION()
-		virtual void OnHit(const FHitResult& HitResult);
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		void SetFly(bool _fly);
+
+	//UFUNCTION()
+	//	virtual void OnHit(const FHitResult& HitResult);
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		virtual void CreatePk();
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		virtual void DestroyBullet();
@@ -61,7 +66,7 @@ public:
 		void OnProjectileHit(AActor* HitActor, const FVector& HitLocation, const FVector& HitNormal);
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		virtual void OnCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+		virtual void OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 public:
 	/** movement component */
@@ -89,12 +94,10 @@ public:
 		FVector				mTargetLoc; //目标地点
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		UPkMsg*				mPkMsg; //
-
-protected:
-	void DealDamage(FHitResult const& HitResult);
-	FVector		mLastTargetLoc;
-
-	bool		bInitialized;
-	int32		RemainingDamage;
-	float		mDist; //攻击距离
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
+		UPkPorcess*			mPkPorcess; 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
+		bool				mFlying;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
+		float				mSpeed;
 };

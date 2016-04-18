@@ -9,11 +9,8 @@
 #include "Char/Skill/Template/SkillTemplate.h"
 #include "CharMgr.h"
 #include "Skill/Pk/PkMsg.h"
+#include "Skill/Pk/PkPorcess.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(BulletLogger, Log, All);
-DEFINE_LOG_CATEGORY(BulletLogger)
-
-// Sets default values for this component's properties
 AMyBullet::AMyBullet()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -38,23 +35,18 @@ AMyBullet::AMyBullet()
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	MeshComp->AttachTo(CollisionComp);
 
-	bInitialized = false;
 	mTargetId = 0;
 	mSkillTemp = nullptr;
 	mTargetLoc = FVector(0.f, 0.f, 0.f);
-	mLastTargetLoc = FVector(0.f, 0.f, 0.f);
-	RemainingDamage = 50.f;
 	mPkMsg = nullptr;
+	mPkPorcess = nullptr;
+	mFlying = false;
+	mSpeed = 0.f;
 }
 
 AMyBullet::~AMyBullet()
 {
-	UE_LOG(SkillLogger, Warning, TEXT("--- AMyBullet::~AMyBullet"));
-	if (mPkMsg != nullptr)
-	{
-		mPkMsg->RemoveFromRoot();
-		mPkMsg = nullptr;
-	}
+	UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::~AMyBullet"));
 }
 
 // Called when the game starts
@@ -62,70 +54,58 @@ void AMyBullet::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AMyBullet::OnCollisionCompBeginOverlap);//绑定碰撞组件碰撞事件
 }
 
 void AMyBullet::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (mTargetId > 0) //有目标，每帧修正到目标的飞行方向
+	if (!mFlying)
+	{
+		return;
+	}
+
+	if (mTargetId > 0) //锁定目标
 	{
 		AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
-		if (target != nullptr)
+		if (target != nullptr) //目标未死亡，每帧修正到目标的飞行方向
 		{
 			FVector targetLoc = target->GetActorLocation();
-			if (mLastTargetLoc != targetLoc)
+			if (mTargetLoc != targetLoc)
 			{
 				FVector bulletLoc = GetActorLocation();
 				FRotator rota = UKismetMathLibrary::FindLookAtRotation(bulletLoc, targetLoc);
 				SetActorRotation(rota);
 				MovementComp->Velocity = MovementComp->GetMaxSpeed() * (targetLoc - bulletLoc).GetSafeNormal(); //子弹移动方向
-				mLastTargetLoc = targetLoc;
+				mTargetLoc = targetLoc;
 			}
-		}
-		else//受击者死亡，销毁子弹
-		{
-			UE_LOG(BulletLogger, Warning, TEXT("--- Bullet flying, but target death, destroy bullet"));
-			DestroyBullet();
-			return;
 		}
 	}
 
+	//到达到Loc，结算
+	if (mTargetLoc == GetActorLocation())
+	{
+		CreatePk();
+		DestroyBullet();
+	}
 }
 
-void AMyBullet::InitProjectile(const FVector& Direction, uint8 InTeamNum, int32 ImpactDamage, float InLifeSpan)
+void AMyBullet::SetTargetId(int32 _targetId)
 {
-	MovementComp->OnProjectileStop.AddDynamic(this, &AMyBullet::OnHit);
-	MovementComp->Velocity = MovementComp->InitialSpeed * Direction;
+	mTargetId = _targetId;
 
-
-	RemainingDamage = ImpactDamage;
-	bInitialized = true;
-}
-
-void AMyBullet::SetSpeed(float _speed)
-{
-	MovementComp->InitialSpeed = _speed;
-	MovementComp->MaxSpeed = _speed;
+	AMyChar* target = UCharMgr::GetInstance()->GetChar(_targetId);
+	if (target != nullptr)
+	{
+		mTargetLoc = target->GetActorLocation();
+		SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), mTargetLoc));
+	}
 }
 
 void AMyBullet::SetTargetLoc(UPARAM(ref) const FVector& _targetLoc)
 {
-	SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), _targetLoc));
-
-	//设置目标点，计算生命周期t = s / v;
 	mTargetLoc = _targetLoc;
-	
-	if (mSkillTemp)
-		mDist = mSkillTemp->mAttackDist;
-
-	if (MovementComp->MaxSpeed > 0.f && mDist > 0.f)
-		SetLifeSpan(mDist / MovementComp->MaxSpeed);
-	else
-	{
-		UE_LOG(BulletLogger, Warning, TEXT("--- MovementComp->MaxSpeed or mDist , == 0"));
-	}
+	SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), _targetLoc));
 }
 
 void AMyBullet::SetSkillTemplate(USkillTemplate* _skillTemp)
@@ -133,84 +113,86 @@ void AMyBullet::SetSkillTemplate(USkillTemplate* _skillTemp)
 	mSkillTemp = _skillTemp;
 }
 
-void AMyBullet::OnHit(const FHitResult& HitResult)
+void AMyBullet::SetFly(bool _fly)
 {
-	DealDamage(HitResult);
-	OnProjectileHit(HitResult.Actor.Get(), HitResult.ImpactPoint, HitResult.ImpactNormal);
+	mFlying = mFlying;
 
-	if (RemainingDamage <= 0)
-		DestroyBullet();
+	if (mSpeed > 0.f)
+	{
+		MovementComp->InitialSpeed = mSpeed;
+		MovementComp->MaxSpeed = mSpeed;
+		MovementComp->Velocity = MovementComp->GetMaxSpeed() * (mTargetLoc - GetActorLocation()).GetSafeNormal(); //子弹移动方向
+	}
+	else
+	{
+		UE_LOG(BulletLogger, Error, TEXT("--- AMyBullet::SetFly, mSpeed == 0.f"));
+	}
 }
+
+void AMyBullet::CreatePk()
+{
+	//TODO: 做技能表现， 技编数据
+
+	//结算
+	mPkPorcess = NewObject<UPkPorcess>(UPkPorcess::StaticClass());
+	mPkPorcess->AddToRoot();
+	mPkPorcess->SetMsg(mPkMsg);
+	mPkPorcess->Run();
+}
+
+//void AMyBullet::OnHit(const FHitResult& HitResult)
+//{
+//	DealDamage(HitResult);
+//	OnProjectileHit(HitResult.Actor.Get(), HitResult.ImpactPoint, HitResult.ImpactNormal);
+//
+//	if (RemainingDamage <= 0)
+//		DestroyBullet();
+//}
 
 void AMyBullet::DestroyBullet()
 {
+
+	if (mPkPorcess != nullptr)
+	{
+		mPkPorcess->RemoveFromRoot();
+		mPkPorcess = nullptr;
+	}
+	if (mPkMsg != nullptr)
+	{
+		mPkMsg->RemoveFromRoot();
+		mPkMsg = nullptr;
+	}
+
 	OnProjectileDestroyed();
 	Destroy();
 }
 
-void AMyBullet::OnCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+void AMyBullet::OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	//TODO: 子弹飞往目的地过程中，碰撞款撞到的敌人都应该做一次战斗结算，
-
-	if (mTargetId == 0)//没用受击者，不做碰撞检测
-	{
-		return;
-	}
-
-	AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
-	if (target == nullptr)
-	{
-		UE_LOG(BulletLogger, Error, TEXT("--- Bullet Overlap, mTargetId > 0, but target ptr == null"));
-		return;
-	}
-
 	AMyChar* OtherChar = Cast<AMyChar>(OtherActor);
-
-	if (target != nullptr) //如果有目标对象，且碰撞到的对象为目标对象，开始结算
+	if (mTargetId > 0)//锁定目标，碰撞检测只检测是否为目标
 	{
-		if (target == OtherChar)
+		AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
+		if (target != nullptr) //如果有目标对象，且碰撞到的对象为目标对象，开始结算
+		{
+			if (target == OtherChar)
 
-			//TODO: 这里做受击表现，结算，销毁子弹
-			DestroyBullet();
+				//TODO: 这里做受击表现，结算，销毁子弹
+				DestroyBullet();
+		}
+	}
+	else
+	{
+		//TODO: 锁定目标，子弹飞往目的地过程中，碰撞款撞到的敌人都应该做一次战斗结算，
+		if (mPkMsg->GetAttackerTeam() != OtherChar->GetDataComp()->GetTeamType()) //不是同一队的
+		{
+			//
+		}
 	}
 
-	//if (!bInitialized)
+	//if (target == nullptr)
+	//{
+	//	UE_LOG(BulletLogger, Error, TEXT("--- Bullet Overlap, mTargetId > 0, but target ptr == null"));
 	//	return;
-
-	//AMyChar* OtherChar = Cast<AMyChar>(OtherActor);
-	////if (!OtherChar || !mAttackActor)
-	////	return;
-
-	//if (mTargetActor != nullptr) //如果有目标对象，碰撞到非目标对象直接返回
-	//{
-	//	if (OtherChar == mTargetActor)
-	//		DestroyBullet();
-	//}
-
-
-	////add enemy
-	//if (mAttackActor->mDataComp->mTeam != OtherChar->mDataComp->mTeam)
-	//{
-	//	FHitResult PawnHit;
-	//	PawnHit.Actor = OtherChar;
-	//	PawnHit.Component = OtherChar->GetCapsuleComponent();
-	//	PawnHit.bBlockingHit = true;
-	//	PawnHit.Location = PawnHit.ImpactPoint = GetActorLocation();
-	//	PawnHit.Normal = PawnHit.ImpactNormal = -MovementComp->Velocity.GetSafeNormal();
-
-	//	OnHit(PawnHit);
-	//}
-}
-
-void AMyBullet::DealDamage(FHitResult const& HitResult)
-{
-	//const AStrategyChar* HitChar = Cast<AStrategyChar>(HitResult.Actor.Get());
-	//const float PrevHealth = HitChar ? HitChar->Health : 0.0f;
-
-	////UGameplayStatics::ApplyPointDamage(HitResult.Actor.Get(), RemainingDamage, -HitResult.ImpactNormal, HitResult, NULL, this, UDamageType::StaticClass());
-
-	//if (HitChar && !ConstantDamage)
-	//{
-	//	RemainingDamage -= FMath::TruncToInt(PrevHealth - HitChar->Health);
 	//}
 }

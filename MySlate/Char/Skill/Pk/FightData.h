@@ -13,7 +13,10 @@ public:
 	// Sets default values for this character's properties
 	UFightData();
 	virtual ~UFightData();
-	void Clone(UFightData& _fightData);
+
+	UFightData* Clone();
+	void Copy(UFightData* _fightData);
+	void Reset();
 
 	float GetAttackPhy() const { return mAttackPhy; }
 	float GetLv() const { return mLv; }

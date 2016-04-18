@@ -6,10 +6,6 @@
 #include "Common/CommonHeader.h"
 #include "Effect/BehaviorData.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(SkillMgrLogger, Log, All);
-DEFINE_LOG_CATEGORY(SkillMgrLogger)
-
-// Sets default values
 USkillMgr::USkillMgr() : Super()
 {
 	mCounter = 0.f;

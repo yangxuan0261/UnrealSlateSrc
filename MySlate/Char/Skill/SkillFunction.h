@@ -46,6 +46,9 @@ public:
 		void		SkillEnd(); //技能结束后运行
 
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
+		void		ReleaseData();
+
+	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		void		SetAttacker(AMyChar* _char) { mAttacker = _char; }
 
 public:

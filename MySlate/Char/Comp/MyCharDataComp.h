@@ -33,6 +33,8 @@ public:
 	void		SetCharData(UCharData* _data);
 	UCharData*	GetCharhData() const { return mCharData; }
 
+	const ETeam& GetTeamType() const { return mTeam; }
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
 		UFightData*		mFightData;
