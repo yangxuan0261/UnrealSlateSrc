@@ -20,7 +20,7 @@ UPkPorcess::~UPkPorcess()
 	UE_LOG(PkLogger, Warning, TEXT("--- UPkPorcess::~UPkPorcess"));
 	if (mPkMsg != nullptr)
 	{
-		mPkMsg->ExeNullDlg(); // 攻击者不死，这里释放，USkillFunction中就不释放了，重置指针为null 
+		//mPkMsg->ExeNullDlg(); // 攻击者不死，这里释放，USkillFunction中就不释放了，重置指针为null 
 		mPkMsg->RemoveFromRoot();
 	}
 }
@@ -44,6 +44,9 @@ void UPkPorcess::Run()
 	for (int32 i = 0; i < targets.Num(); ++i)
 	{
 		targetActor = targets[i]->mTarget;
+
+		//step4 - 运行对目标集中的每个个体的func
+
 	}
 
 	RunEndPk(); //给攻击者加buff
@@ -70,12 +73,9 @@ void UPkPorcess::Filter()
 	}
 }
 
-void UPkPorcess::RunBeforePk()
+void UPkPorcess::RunEndEvns()
 {
-}
 
-void UPkPorcess::RunBeforeSkill()
-{
 }
 
 void UPkPorcess::PkLogic()
@@ -85,13 +85,9 @@ void UPkPorcess::PkLogic()
 	mPkMsg->SetAttackDmgValue(dmg, -1, false);
 }
 
-void UPkPorcess::RunEndSkill()
-{
-
-}
-
 void UPkPorcess::RunEndPk()
 {
+	//step4 - 运行对目标集中的每个个体的func
 	USkillTemplate* skillTemp = mPkMsg->GetSkillTemp();
 	const TArray<UAbsPkEvent*> functions = skillTemp->GetEndPk();
 	for (UAbsPkEvent* func : functions)
@@ -104,5 +100,8 @@ void UPkPorcess::RunEndPk()
 
 void UPkPorcess::PkPrice()
 {
+	TArray<FDamageInfo> dmgArr;
 
+
+	mCallBack.ExecuteIfBound(dmgArr);
 }

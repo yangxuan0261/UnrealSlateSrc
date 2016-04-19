@@ -9,7 +9,7 @@
 #include "Char/Skill/Template/SkillTemplate.h"
 #include "CharMgr.h"
 #include "Skill/Pk/PkMsg.h"
-#include "Skill/Pk/PkPorcess.h"
+//#include "Skill/Pk/PkPorcess.h"
 
 AMyBullet::AMyBullet()
 {
@@ -129,15 +129,22 @@ void AMyBullet::SetFly(bool _fly)
 	}
 }
 
+void AMyBullet::PkOverCallback(TArray<FDamageInfo>& _dmgArr)
+{
+	UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::PkOverCallback, _dmgArr size:%d"), _dmgArr.Num());
+
+}
+
 void AMyBullet::CreatePk()
 {
 	//TODO: 做技能表现， 技编数据
 
-	//结算
-	mPkPorcess = NewObject<UPkPorcess>(UPkPorcess::StaticClass());
-	mPkPorcess->AddToRoot();
-	mPkPorcess->SetMsg(mPkMsg);
-	mPkPorcess->Run();
+	//TODO: 结算
+	//mPkPorcess = NewObject<UPkPorcess>(UPkPorcess::StaticClass());
+	//mPkPorcess->AddToRoot();
+	//mPkPorcess->GetPkOverDlg().BindUObject(this, &AMyBullet::PkOverCallback);
+	//mPkPorcess->SetMsg(mPkMsg);
+	//mPkPorcess->Run();
 }
 
 //void AMyBullet::OnHit(const FHitResult& HitResult)
@@ -176,9 +183,11 @@ void AMyBullet::OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UP
 		if (target != nullptr) //如果有目标对象，且碰撞到的对象为目标对象，开始结算
 		{
 			if (target == OtherChar)
-
+			{
 				//TODO: 这里做受击表现，结算，销毁子弹
+				CreatePk();
 				DestroyBullet();
+			}
 		}
 	}
 	else
@@ -187,6 +196,7 @@ void AMyBullet::OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UP
 		if (mPkMsg->GetAttackerTeam() != OtherChar->GetDataComp()->GetTeamType()) //不是同一队的
 		{
 			//
+
 		}
 	}
 

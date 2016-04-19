@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "Skill/Pk/PkPorcess.h"
 
 #include "MyBullet.generated.h"
 
@@ -10,6 +11,8 @@ class AMyChar;
 class USkillTemplate;
 class UPkMsg;
 class UPkPorcess;
+//struct FDamageInfo;
+
 
 /*
 set target order
@@ -49,6 +52,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void SetFly(bool _fly);
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		void PkOverCallback(TArray<FDamageInfo>& _dmgArr);
 
 	//UFUNCTION()
 	//	virtual void OnHit(const FHitResult& HitResult);

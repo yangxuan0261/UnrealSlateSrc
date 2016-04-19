@@ -32,13 +32,13 @@ DECLARE_LOG_CATEGORY_EXTERN(LogMySlate, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(FilterLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(FuncLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(SkillLogger, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(AnimLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(BuffLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(BulletLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(CompLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(PkLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(AILogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(GolbalFuncLogger, Log, All);
-DECLARE_LOG_CATEGORY_EXTERN(AnimLogger, Log, All);
 
 //use logger
 //UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::~USkillFunction:%d"), mSkillId);

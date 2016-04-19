@@ -13,7 +13,6 @@ class UAnimNotifyStateSkill : public UAnimNotifyState
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's 
 	UAnimNotifyStateSkill();
 	virtual ~UAnimNotifyStateSkill();
 
@@ -23,6 +22,6 @@ public:
 	virtual void NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation) override;
 
 public:
-	AMyChar*		mMyChar;
+	AMyChar*		mOwnerChar;
 
 };

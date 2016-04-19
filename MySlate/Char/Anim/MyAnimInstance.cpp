@@ -5,6 +5,7 @@
 
 #include "../MyChar.h"
 #include "../MyBullet.h"
+#include "../Skill/SkillFunction.h"
 
 UMyAnimInstance::UMyAnimInstance()
 {
@@ -35,33 +36,17 @@ AMyChar* UMyAnimInstance::GetOwnerChar()
 
 void UMyAnimInstance::AnimNotify_BulletCreate(UAnimNotify * Notify)
 {
-	
-	if (mOwnerChar)
+	if (mOwnerChar != nullptr)
 	{
-		UE_LOG(AnimLogger, Warning, TEXT("--- AnimNotify_BulletCreate"));
-
-
+		mOwnerChar->GetUsingSkill()->BulletCreate();
 	}
 }
 
 void UMyAnimInstance::AnimNotify_BulletShoot(UAnimNotify * Notify)
 {
-	if (mOwnerChar)
+	if (mOwnerChar != nullptr)
 	{
-		//UE_LOG(MyAnimInstLogger, Warning, TEXT("--- AnimNotify_BulletShoot"));
-	
-	}
-	
-}
-
-void UMyAnimInstance::AnimNotify_AttackOver(UAnimNotify * Notify)
-{
-	if (mOwnerChar) //攻击完切回正常状态
-	{
-		if (mOwnerChar->mCharState == CharState::Attack)
-		{
-			mOwnerChar->mCharState = CharState::IdleRun;
-		}
+		mOwnerChar->GetUsingSkill()->BulletCreate();
 	}
 }
 
@@ -69,12 +54,12 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	if (!mOwnerChar)
+	if (mOwnerChar == nullptr)
 	{
 		mOwnerChar = GetOwnerChar();
 	}
 
-	if (mOwnerChar)
+	if (mOwnerChar != nullptr)
 	{
 		mSpeed = mOwnerChar->GetVelocity().Size(); //设置速度
 		mCharState = mOwnerChar->mCharState; //设置动画状态

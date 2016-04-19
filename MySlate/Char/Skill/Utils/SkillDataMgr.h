@@ -15,7 +15,6 @@ class USkillDataMgr : public UObject, public USingleton<USkillDataMgr>
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	USkillDataMgr();
 	virtual ~USkillDataMgr();
 

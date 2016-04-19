@@ -66,11 +66,11 @@ void UPkMsg::AddTarget(AMyChar* _char)
 	mTargetArr.Add(param);
 }
 
-void UPkMsg::ExeNullDlg()
-{
-	UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::ExeNullDlg"));
-	mSetNullDlg.ExecuteIfBound();
-}
+//void UPkMsg::ExeNullDlg()
+//{
+//	UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::ExeNullDlg"));
+//	mSetNullDlg.ExecuteIfBound();
+//}
 
 void UPkMsg::SetAttackerData(UFightData* _data)
 {

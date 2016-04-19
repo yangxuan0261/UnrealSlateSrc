@@ -12,6 +12,7 @@
 #include "CharMgr.h"
 #include "BaseDatas/BaseDataMgr.h"
 #include "BaseDatas/Datas/CharData.h"
+#include "Skill/Buff/BuffMgr.h"
 
 // Sets default values
 AMyChar::AMyChar() : Super()
@@ -67,6 +68,9 @@ void AMyChar::BeginPlay()
 	//注册data组件
 	mDataComp = NewObject<UMyCharDataComp>(this, TEXT("CharDataComponent"));
 	mDataComp->RegisterComponent();
+
+	//绑定buff管理器
+	mDeathDlg.AddDynamic(UBuffMgr::GetInstance(), &UBuffMgr::CharDeathNotify);
 }
 
 void AMyChar::OnCDFinish(UCoolDown* _cd)
@@ -100,8 +104,10 @@ bool AMyChar::UseSkill(int32 _skillId, int32 _targetId, FVector _targetLoc)
 
 void AMyChar::Death()
 {
+	mDeathDlg.Broadcast(this); //通知所有绑定了的代理
+
 	//TODO: 从管理器中移除，这里应该做回收，而不是销毁，暂时先销毁
-	gCharMgr->RemoveChar(mUuid); 
+	gCharMgr->RemoveChar(mUuid);
 
 	OnDeath(); //通知一下蓝图
 	Destroy();

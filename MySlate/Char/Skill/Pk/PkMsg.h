@@ -11,8 +11,6 @@
 class AMyChar;
 class USkillTemplate;
 
-DECLARE_DELEGATE(FSetNullDlg);
-
 UCLASS()
 class UParam : public UObject
 {
@@ -45,8 +43,7 @@ public:
 	void	AddTarget(AMyChar* _char);
 	USkillTemplate*	GetSkillTemp() const { return mSkillTemp; }
 
-	void	SetNullDlg(const FSetNullDlg& _dlg) { mSetNullDlg = _dlg; }
-	void	ExeNullDlg();
+	//void	ExeNullDlg();
 	void	SetAttackerData(UFightData* _data);
 	UFightData*	GetAttackerData() const { return mAttackerData; }
 	void	SetAttackerId(int32 _id) { mAttackerId = _id; }
@@ -73,6 +70,4 @@ private:
 	UFightData*		mAttackerDataForCacul;			//攻击者参数,用于计算
 	FVector			mTargetLoc;						//目标位置
 	ETeam			mTeamType;						//攻击者队伍标记
-
-	FSetNullDlg		mSetNullDlg;		//运用别处释放对象时，通知之前创建的地方set null
 };

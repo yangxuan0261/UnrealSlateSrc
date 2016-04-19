@@ -16,6 +16,8 @@ class USkillFunction;
 class UCharMgr;
 class UCharData;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeathDlg,  AMyChar*, MyCharBp);
+
 UCLASS()
 class AMyChar : public ACharacter
 {
@@ -31,6 +33,7 @@ public:
 
 public:
 	void	OnCDFinish(UCoolDown* _cd);
+	FDeathDlg&	GetDeathDlg() { return mDeathDlg; }
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void	SetUuid(int32 _uuid) { mUuid = _uuid; }
@@ -96,6 +99,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		UCharData*			mCharData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
+		FDeathDlg		mDeathDlg; //绑定： buff管理器、
 
 private:
 	UCharMgr*	gCharMgr; //char 管理器

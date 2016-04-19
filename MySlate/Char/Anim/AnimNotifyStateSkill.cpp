@@ -4,11 +4,11 @@
 #include "AnimNotifyStateSkill.h"
 
 #include "Char/MyChar.h"
+#include "../Skill/SkillFunction.h"
 
-// Sets default values
 UAnimNotifyStateSkill::UAnimNotifyStateSkill(): Super()
 {
-	mMyChar = nullptr;
+	mOwnerChar = nullptr;
 }
 
 UAnimNotifyStateSkill::~UAnimNotifyStateSkill()
@@ -20,26 +20,23 @@ void UAnimNotifyStateSkill::NotifyBegin(USkeletalMeshComponent * MeshComp, UAnim
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
 
-	//if (mMyChar == nullptr)
-	//	mMyChar = Cast<AMyChar>(MeshComp->GetOwner());
+	if (mOwnerChar == nullptr)
+		mOwnerChar = Cast<AMyChar>(MeshComp->GetOwner());
 
-	//if (mMyChar != nullptr)
-	//{
-	//	//create bullet
-
-	//}
-	//else
-	//{
-	//	UE_LOG(AnimLogger, Warning, TEXT("--- UAnimNotifyStateSkill::NotifyBegin, mMyChar == nullptr"));
-
-	//}
-
+	if (mOwnerChar != nullptr)
+	{
+		mOwnerChar->GetUsingSkill()->SkillBegin();
+	}
+	else
+	{
+		UE_LOG(AnimLogger, Error, TEXT("--- UAnimNotifyStateSkill::NotifyBegin, mOwnerChar == nullptr"));
+	}
 }
 
 void UAnimNotifyStateSkill::NotifyTick(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float FrameDeltaTime)
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
-	if (mMyChar != nullptr)
+	if (mOwnerChar != nullptr)
 	{
 
 	}
@@ -48,9 +45,8 @@ void UAnimNotifyStateSkill::NotifyTick(USkeletalMeshComponent * MeshComp, UAnimS
 void UAnimNotifyStateSkill::NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation)
 {
 	Super::NotifyEnd(MeshComp, Animation);
-	if (mMyChar != nullptr)
+	if (mOwnerChar != nullptr)
 	{
-		//begin shoot
-
+		mOwnerChar->GetUsingSkill()->SkillEnd();
 	}
 }

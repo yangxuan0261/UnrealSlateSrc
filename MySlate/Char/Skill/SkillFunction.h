@@ -15,7 +15,6 @@ class USkillFunction : public UObject
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	USkillFunction();
 	virtual ~USkillFunction();
 
