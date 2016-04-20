@@ -10,6 +10,7 @@
 #include "Char/Skill/Function/FuncFactory.h"
 #include "BaseDatas/BaseDataMgr.h"
 #include "Char/Skill/Buff/BuffMgr.h"
+#include "Char/MyChar.h"
 
 USkillDataMgr*	UGolbalFunc::gSkillDataMgr	= nullptr;
 USkillMgr*		UGolbalFunc::gSkillMgr		= nullptr;
@@ -87,5 +88,32 @@ void UGolbalFunc::TestStrContains(FString _str)
 {
 	bool b = _str.Contains(TEXT("%"));
 	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- TestStrContains result:%d"), (int32)b);
+}
+
+void UGolbalFunc::TestFilter(AMyChar* _actor, float _radius)
+{
+	TArray<AActor*> ignoreChars; //不忽略任何Actor，一般会忽略自身
+	TArray<TEnumAsByte<EObjectTypeQuery>>  destObjectTypes; //目的类型集合
+	destObjectTypes.Add((EObjectTypeQuery)ECollisionChannel::ECC_Pawn); //这里强转一下，一一对应的
+	TArray<AActor*> destActors;
+	UKismetSystemLibrary::SphereOverlapActors_NEW(
+		GWorld
+		,_actor->GetActorLocation()
+		, _radius
+		, destObjectTypes
+		, AMyChar::StaticClass() //只要这种类的Actor
+		, ignoreChars, destActors);
+
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- destActors length:%d"), destActors.Num());
+	for (auto elem : destActors)
+	{
+		AMyChar* mychar = Cast<AMyChar>(elem);
+		if (mychar)
+		{
+			UE_LOG(GolbalFuncLogger, Warning, TEXT("--- mychar uuid:%d"), mychar->GetUuid());
+			//这里绘制一下，才能看出半径究竟有多长
+			::DrawDebugLine(GWorld, _actor->GetActorLocation(), mychar->GetActorLocation(), FColor::Red, true, 5.f);
+		}
+	}
 }
 

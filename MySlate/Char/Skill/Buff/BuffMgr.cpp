@@ -17,7 +17,7 @@ UBuffMgr::~UBuffMgr()
 
 void UBuffMgr::Tick(float DeltaTime)
 {
-	UE_LOG(BuffLogger, Warning, TEXT("--- UBuffMgr::Tick"));
+	//UE_LOG(BuffLogger, Warning, TEXT("--- UBuffMgr::Tick"));
 
 }
 

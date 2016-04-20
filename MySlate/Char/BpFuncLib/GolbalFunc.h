@@ -10,6 +10,7 @@ class UCharMgr;
 class UFuncFactory;
 class UBaseDataMgr;
 class UBuffMgr;
+class AMyChar;
 
 UCLASS()
 class UGolbalFunc : public UBlueprintFunctionLibrary
@@ -47,6 +48,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TestStrContains(FString _str);
+
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static void					TestFilter(AMyChar* _actor, float _radius);
 
 private:
 	static USkillDataMgr*			gSkillDataMgr;
