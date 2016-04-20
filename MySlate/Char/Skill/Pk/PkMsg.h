@@ -50,6 +50,8 @@ public:
 	int32	GetAttackerId() const { return mAttackerId;}
 	void	SetTarget(AMyChar* _char) {  mTargetLocked = _char; } //设置被锁定的目标
 	AMyChar*	GetTarget() const { return mTargetLocked; }
+	const FVector&	GetTargetLoc() const { return mTargetLoc; }
+	int32	GetTargetId() const { return mTargetId; }
 	void	SetAttackerTeam(const ETeam& _type) { mTeamType = _type; }
 	const ETeam&	GetAttackerTeam() const { return mTeamType; }
 	void	SetCurrTarget(UParam* _target);

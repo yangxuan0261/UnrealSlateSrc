@@ -52,8 +52,15 @@ void UPkMsg::SetData(USkillTemplate* _skillTemp, int32 _attackerId, int32 _targe
 	if (mSkillTemp)
 	{
 		mSkillId = mSkillTemp->mId;
-		mTargetLoc = _targetLoc;
-		mTargetLocked = UCharMgr::GetInstance()->GetChar(_targetId);
+		mTargetLocked = _targetId > 0 ? UCharMgr::GetInstance()->GetChar(_targetId) : nullptr;
+		if (mTargetLocked != nullptr) //防止，发动技能过程中，目标死亡的情况
+		{
+			mTargetLoc = mTargetLocked->GetActorLocation();
+		}
+		else
+		{
+			mTargetLoc = _targetLoc;
+		}
 	}
 }
 

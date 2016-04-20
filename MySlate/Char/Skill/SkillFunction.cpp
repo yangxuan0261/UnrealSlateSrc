@@ -84,7 +84,7 @@ void USkillFunction::SkillBegin()
 	UFightData* attackerData = mAttacker->GetDataComp()->GetFigthData()->Clone();//将攻击者的战斗数据拷贝到 新建的战斗数据对象中
 	attackerData->AddToRoot();//在pkMsg的析构函数中释放这个对象
 	pkMsg->SetAttackerData(attackerData);
-
+	pkMsg->SetAttackerTeam(mAttacker->GetDataComp()->GetTeamType());
 	//step1 - 运行技能前置func, 比如瞬间移动
 	const TArray<UAbsPkEvent*>& functions2 = mSkillTemplate->GetBeforeSkill();
 	for (UAbsPkEvent* func : functions2)

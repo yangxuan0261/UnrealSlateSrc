@@ -29,7 +29,16 @@ public:
 		void		RemoveChar(int32 _id);
 
 	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
-		void		GetIgnoreCharsByTeam(ETeam _type, UPARAM(ref) TArray<AMyChar*> _chars) const;
+		ETeam		GetDestTeam(const ETeam& _atkTeam, int32 _flag);//根据标记获取目的队伍标记
+
+	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
+		ETeam		GetIgnoreTeam(const ETeam& _atkTeam, int32 _flag);//根据标记获取目的队伍标记
+
+	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
+		void		GetIgnoreCharsByTeam(ETeam _type, UPARAM(ref) TArray<AMyChar*> _outChars) const;
+
+	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
+		TArray<AActor*>		ConvertCharsToActors(const TArray<AMyChar*> _srcChars);
 
 	const TMap<int32, AMyChar*>&	GetAllChars() const { return mAllCharMap; }
 
