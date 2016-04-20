@@ -77,6 +77,8 @@ void AMyBullet::Tick(float DeltaSeconds)
 				FRotator rota = UKismetMathLibrary::FindLookAtRotation(bulletLoc, targetLoc);
 				SetActorRotation(rota);
 				MovementComp->Velocity = MovementComp->GetMaxSpeed() * (targetLoc - bulletLoc).GetSafeNormal(); //子弹移动方向
+				
+				mPkMsg->SetTargetLoc(targetLoc); // 调整Loc都是为了结算时目标死亡，影响选人逻辑
 				mTargetLoc = targetLoc;
 			}
 		}

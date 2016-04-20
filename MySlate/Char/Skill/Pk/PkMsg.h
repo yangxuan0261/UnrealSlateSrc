@@ -50,6 +50,7 @@ public:
 	int32	GetAttackerId() const { return mAttackerId;}
 	void	SetTarget(AMyChar* _char) {  mTargetLocked = _char; } //设置被锁定的目标
 	AMyChar*	GetTarget() const { return mTargetLocked; }
+	void	SetTargetLoc(const FVector& _Loc) { mTargetLoc = _Loc; } //设置被锁定的Loc
 	const FVector&	GetTargetLoc() const { return mTargetLoc; }
 	int32	GetTargetId() const { return mTargetId; }
 	void	SetAttackerTeam(const ETeam& _type) { mTeamType = _type; }
