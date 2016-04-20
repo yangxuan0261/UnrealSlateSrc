@@ -4,6 +4,9 @@
 #include "StandardHUD.h"
 
 #include "StandardSlateWidget.h"
+#include "Char/CharMgr.h"
+#include "Char/MyChar.h"
+#include "Char/Comp/MyCharDataComp.h"
 
 AStandardHUD::AStandardHUD()
 {
@@ -60,13 +63,21 @@ void AStandardHUD::DrawHUD()
 
 void AStandardHUD::DrawActorsHealth()
 {
-	float counter = 30.f;
-	for (FConstPawnIterator Iterator = GetWorld()->GetPawnIterator(); Iterator; ++Iterator)
+	const TMap<int32, AMyChar*>& allChars = UCharMgr::GetInstance()->GetAllChars();
+	for (TMap<int32, AMyChar*>::TConstIterator Iter = allChars.CreateConstIterator(); Iter; ++Iter)
 	{
-		AActor* TestChar = Cast<AActor>(*Iterator);
-		DrawHealthBar(TestChar, counter/100.f, 18 * mUIScale, -20.f);
-		counter = counter > 100.f ? 98.f : counter += 20.f;
+		float health = Iter->Value->GetDataComp()->GetHealth();
+		float healthMax = Iter->Value->GetDataComp()->GetHealthMax();
+		DrawHealthBar(Iter->Value, health / healthMax, 18 * mUIScale, -20.f);
 	}
+
+	//float counter = 30.f;
+	//for (FConstPawnIterator Iterator = GetWorld()->GetPawnIterator(); Iterator; ++Iterator)
+	//{
+	//	AActor* TestChar = Cast<AActor>(*Iterator);
+	//	DrawHealthBar(TestChar, counter/100.f, 18 * mUIScale, -20.f);
+	//	counter = counter > 100.f ? 98.f : counter += 20.f;
+	//}
 }
 
 void AStandardHUD::DrawHealthBar(AActor * ForActor, float HealthPercentage, int32 BarHeight, int32 OffsetY) const

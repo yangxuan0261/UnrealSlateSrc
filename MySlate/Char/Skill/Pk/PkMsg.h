@@ -38,7 +38,7 @@ public:
 	UPkMsg();
 	virtual ~UPkMsg();
 
-	void	SetData(USkillTemplate* _skillTemp, const FVector& _targetLoc, int32 _attackerId, int32 _targetId = 0);
+	void	SetData(USkillTemplate* _skillTemp, int32 _attackerId, int32 _targetId, const FVector& _targetLoc);
 	const TArray<UParam*>& GetTargets() const { return mTargetArr; }
 	void	AddTarget(AMyChar* _char);
 	USkillTemplate*	GetSkillTemp() const { return mSkillTemp; }
@@ -48,9 +48,12 @@ public:
 	UFightData*	GetAttackerData() const { return mAttackerData; }
 	void	SetAttackerId(int32 _id) { mAttackerId = _id; }
 	int32	GetAttackerId() const { return mAttackerId;}
+	void	SetTarget(AMyChar* _char) {  mTargetLocked = _char; } //设置被锁定的目标
+	AMyChar*	GetTarget() const { return mTargetLocked; }
 	void	SetAttackerTeam(const ETeam& _type) { mTeamType = _type; }
 	const ETeam&	GetAttackerTeam() const { return mTeamType; }
 	void	SetCurrTarget(UParam* _target);
+
 
 	//--------------- Begin
 	void SetAttackDmgValue(float _value, int _limitId = -1, bool _isAdd = true);			//伤害增加(数值)(受击者)
@@ -60,10 +63,10 @@ private:
 	bool			mCanLog;
 	int32			mSkillId;						//技能id
 	USkillTemplate*	mSkillTemp;		
-	ESkillAttackType	mSkillLogicType;				//技能逻辑类型 SKILL_ATTACK_TYPE
+	ESkillAttackType	mSkillLogicType;			//技能逻辑类型 SKILL_ATTACK_TYPE
 	int32			mAttackerId;					//攻击者 唯一id
 	int32			mTargetId;						//锁定目标者 唯一id
-	AMyChar*		mTarget;
+	AMyChar*		mTargetLocked;					//锁定目标者
 	TArray<UParam*>	mTargetArr;						//目标集
 	UParam*			mCurrTarget;					//目标集的每个个体临时指针
 	UFightData*		mAttackerData;					//攻击者参数

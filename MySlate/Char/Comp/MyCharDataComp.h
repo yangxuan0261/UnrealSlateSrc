@@ -35,6 +35,11 @@ public:
 
 	const ETeam& GetTeamType() const { return mTeam; }
 
+	void		SetHealth(float _value) { mHealth = _value; }
+	float		GetHealth() const { return mHealth; }
+	void		SetHealthMax(float _value) { mHealthMax = _value; }
+	float		GetHealthMax() const { return mHealthMax; }
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
 		UFightData*		mFightData;
@@ -46,4 +51,6 @@ public:
 		ETeam			mTeam;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
 		float			mHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
+		float			mHealthMax;
 };

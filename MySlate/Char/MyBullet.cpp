@@ -82,46 +82,51 @@ void AMyBullet::Tick(float DeltaSeconds)
 		}
 	}
 
-	//到达到Loc，结算
+	//到达到Loc，结算，子弹弹射
 	if (mTargetLoc == GetActorLocation())
 	{
 		CreatePk();
-		DestroyBullet();
+		BulletJump();
 	}
 }
 
 void AMyBullet::SetTargetId(int32 _targetId)
 {
 	mTargetId = _targetId;
-
-	AMyChar* target = UCharMgr::GetInstance()->GetChar(_targetId);
-	if (target != nullptr)
-	{
-		mTargetLoc = target->GetActorLocation();
-		SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), mTargetLoc));
-	}
 }
 
 void AMyBullet::SetTargetLoc(UPARAM(ref) const FVector& _targetLoc)
 {
 	mTargetLoc = _targetLoc;
-	SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), _targetLoc));
 }
 
-void AMyBullet::SetSkillTemplate(USkillTemplate* _skillTemp)
+void AMyBullet::SetTargetAndLoc(int32 _targetId, UPARAM(ref) const FVector& _targetLoc)
 {
-	mSkillTemp = _skillTemp;
+	mTargetId = _targetId;
+	mTargetLoc = _targetLoc;
 }
 
 void AMyBullet::SetFly(bool _fly)
 {
+	//开始飞行，设置移动组件的的速度矢量，并朝向目标 or Loc
 	mFlying = mFlying;
 
 	if (mSpeed > 0.f)
 	{
+		if (mTargetId > 0)
+		{
+			AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
+			if (target != nullptr)
+			{
+				mTargetLoc = target->GetActorLocation();
+			}
+		}
 		MovementComp->InitialSpeed = mSpeed;
 		MovementComp->MaxSpeed = mSpeed;
 		MovementComp->Velocity = MovementComp->GetMaxSpeed() * (mTargetLoc - GetActorLocation()).GetSafeNormal(); //子弹移动方向
+
+		//朝向目标
+		SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), mTargetLoc));
 	}
 	else
 	{
@@ -129,9 +134,9 @@ void AMyBullet::SetFly(bool _fly)
 	}
 }
 
-void AMyBullet::PkOverCallback(TArray<FDamageInfo>& _dmgArr)
+void AMyBullet::CallbackPkOver(TArray<FDamageInfo>& _dmgArr)
 {
-	UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::PkOverCallback, _dmgArr size:%d"), _dmgArr.Num());
+	UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CallbackPkOver, _dmgArr size:%d"), _dmgArr.Num());
 
 }
 
@@ -139,12 +144,44 @@ void AMyBullet::CreatePk()
 {
 	//TODO: 做技能表现， 技编数据
 
+
 	//TODO: 结算
-	//mPkPorcess = NewObject<UPkPorcess>(UPkPorcess::StaticClass());
-	//mPkPorcess->AddToRoot();
-	//mPkPorcess->GetPkOverDlg().BindUObject(this, &AMyBullet::PkOverCallback);
-	//mPkPorcess->SetMsg(mPkMsg);
-	//mPkPorcess->Run();
+	if (mPkPorcess == nullptr)
+	{
+		mPkPorcess = NewObject<UPkPorcess>(UPkPorcess::StaticClass());
+		mPkPorcess->AddToRoot();
+		mPkPorcess->GetPkOverDlg().BindUObject(this, &AMyBullet::CallbackPkOver);
+
+		//设置本次结算被锁定的目标
+		AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
+		if (target != nullptr)
+		{
+			UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CreatePk, target lock != null, id:%d"), target->GetUuid());
+		}
+		else
+		{
+			UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CreatePk, target lock is null"));
+		}
+		mPkMsg->SetTarget(target);
+		mPkPorcess->SetMsg(mPkMsg);
+		mPkPorcess->Run();
+
+		mPkPorcess->RemoveFromRoot();
+		mPkPorcess = nullptr;
+	}
+}
+
+//子弹跳跃
+void AMyBullet::BulletJump()
+{
+	int32 count = 0; //getBulletFunc->getcount();暂时不弹射
+	if (count > 0)
+	{
+	}
+	else //不弹射直接销毁子弹
+	{
+		DestroyBullet();
+	}
 }
 
 //void AMyBullet::OnHit(const FHitResult& HitResult)
@@ -177,28 +214,30 @@ void AMyBullet::DestroyBullet()
 void AMyBullet::OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	AMyChar* OtherChar = Cast<AMyChar>(OtherActor);
-	if (mTargetId > 0)//锁定目标，碰撞检测只检测是否为目标
-	{
-		AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
-		if (target != nullptr) //如果有目标对象，且碰撞到的对象为目标对象，开始结算
-		{
-			if (target == OtherChar)
-			{
-				//TODO: 这里做受击表现，结算，销毁子弹
-				CreatePk();
-				DestroyBullet();
-			}
-		}
-	}
-	else
-	{
+	//TODO：这里不针对锁定目标做结算，因为到达锁定目标的Loc后会做结算
+	//		只针对飞行过程中碰撞框碰撞到的目标，即时结算
+	//if (mTargetId > 0)//锁定目标，碰撞检测只检测是否为目标
+	//{
+	//	AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
+	//	if (target != nullptr) //如果有目标对象，且碰撞到的对象为目标对象，开始结算
+	//	{
+	//		if (target == OtherChar)
+	//		{
+	//			//TODO: 这里做受击表现，结算，销毁子弹
+	//			CreatePk();
+	//			DestroyBullet();
+	//		}
+	//	}
+	//}
+	//else
+	//{
 		//TODO: 锁定目标，子弹飞往目的地过程中，碰撞款撞到的敌人都应该做一次战斗结算，
 		if (mPkMsg->GetAttackerTeam() != OtherChar->GetDataComp()->GetTeamType()) //不是同一队的
 		{
 			//
 
 		}
-	}
+	//}
 
 	//if (target == nullptr)
 	//{

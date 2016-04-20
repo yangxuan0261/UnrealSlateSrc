@@ -42,10 +42,10 @@ public:
 		void SetTargetLoc(UPARAM(ref) const FVector& _targetLoc);
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void SetSpeed(float _speed) { mSpeed = _speed; }
+		void SetTargetAndLoc(int32 _targetId, UPARAM(ref) const FVector& _targetLoc);
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void SetSkillTemplate(USkillTemplate* _skillTemp);
+		void SetSpeed(float _speed) { mSpeed = _speed; }
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void SetPkMsg(UPkMsg* _pkMsg) { mPkMsg = _pkMsg; }
@@ -54,13 +54,16 @@ public:
 		void SetFly(bool _fly);
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void PkOverCallback(TArray<FDamageInfo>& _dmgArr);
+		void CallbackPkOver(TArray<FDamageInfo>& _dmgArr);
 
 	//UFUNCTION()
 	//	virtual void OnHit(const FHitResult& HitResult);
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		virtual void CreatePk();
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		virtual void BulletJump();
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		virtual void DestroyBullet();

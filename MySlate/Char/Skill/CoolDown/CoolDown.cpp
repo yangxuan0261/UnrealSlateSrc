@@ -70,14 +70,6 @@ void UCoolDown::SetChar(AMyChar* _char)
 		if (skillFunc)
 		{
 			skillFunc->SetAttacker(mOwnerChar);
-			if (mSkillTemplate)
-			{
-				skillFunc->SetSkillTemplate(mSkillTemplate);
-			}
-			else
-			{
-				UE_LOG(SkillLogger, Error, TEXT("--- UCoolDown::SetChar, must call UCoolDown::SetSkillTemplate before this"), mSkillId);
-			}
 		}
 	}
 }

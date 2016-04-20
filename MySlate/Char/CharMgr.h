@@ -28,6 +28,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
 		void		RemoveChar(int32 _id);
 
+	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
+		void		GetIgnoreCharsByTeam(ETeam _type, UPARAM(ref) TArray<AMyChar*> _chars) const;
+
+	const TMap<int32, AMyChar*>&	GetAllChars() const { return mAllCharMap; }
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharManager")
 		TArray<AMyChar*>		mSelfCharArr;

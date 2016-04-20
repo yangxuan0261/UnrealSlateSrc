@@ -56,6 +56,7 @@ private:
 	bool CheckCanPk();//判断能否pk
 	void Filter();//选取攻击对象逻辑
 	void RunEndEvns(); 
+
 	void PkLogic();// pk逻辑运算，之前的方法已把对象消耗的值算好，这里不用再计算，直接进行逻辑运算即可
 	void RunEndPk();//
 	void PkPrice();//奖历分配，组织协议，是否战斗已结束

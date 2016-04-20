@@ -53,3 +53,17 @@ void UCharMgr::RemoveChar(int32 _id)
 {
 	mAllCharMap.Remove(_id);
 }
+
+void UCharMgr::GetIgnoreCharsByTeam(ETeam _type, UPARAM(ref) TArray<AMyChar*> _chars) const
+{
+	AMyChar* target = nullptr;
+	for (TMap<int32, AMyChar*>::TConstIterator Iter = mAllCharMap.CreateConstIterator(); Iter; ++Iter)
+	{
+		target = Iter->Value;
+		if (target->GetDataComp()->GetTeamType() == _type)
+		{
+			_chars.Add(target);
+		}
+	}
+}
+

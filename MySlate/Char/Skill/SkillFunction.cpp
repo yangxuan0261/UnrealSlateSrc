@@ -52,18 +52,20 @@ void USkillFunction::UseSkill(int32 _targetId, const FVector& _targetLoc)
 	mTargetLoc = _targetLoc;
 }
 
-
-
 bool USkillFunction::CanAttack()
 {
 	AMyChar* target = mTargetId > 0 ? UCharMgr::GetInstance()->GetChar(mTargetId) : nullptr;
-	if (target)
+	float DistSq = 0.f;
+	if (target) //锁定目标
 	{
-		float DistSq = (target->GetActorLocation() - mAttacker->GetActorLocation()).Size();
-		float atkDist = mSkillTemplate->mAttackDist;
-		return atkDist > DistSq ? true : false;
+		DistSq = (target->GetActorLocation() - mAttacker->GetActorLocation()).SizeSquared();
 	}
-	return false;
+	else //锁定地点
+	{
+		DistSq = (mTargetLoc - mAttacker->GetActorLocation()).SizeSquared();
+	}
+	float atkDist = mSkillTemplate->mAttackDist;
+	return FMath::Pow(atkDist, 2) > DistSq ? true : false;
 }
 
 void USkillFunction::SkillBegin()
@@ -76,6 +78,8 @@ void USkillFunction::SkillBegin()
 	UPkMsg* pkMsg = NewObject<UPkMsg>(UPkMsg::StaticClass());
 	pkMsg->AddToRoot();
 	mPkMsg = pkMsg;
+
+	pkMsg->SetData(mSkillTemplate, mAttacker->GetUuid(), mTargetId, mTargetLoc);
 
 	UFightData* attackerData = mAttacker->GetDataComp()->GetFigthData()->Clone();//将攻击者的战斗数据拷贝到 新建的战斗数据对象中
 	attackerData->AddToRoot();//在pkMsg的析构函数中释放这个对象
@@ -112,6 +116,7 @@ void USkillFunction::BulletCreate()
 		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		mBullet = GetWorld()->SpawnActor<AMyBullet>(mAttacker->BulletClass, mAttacker->GetActorLocation(), mAttacker->GetActorRotation(), SpawnInfo);
 		mBullet->SetPkMsg(mPkMsg);
+		mBullet->SetTargetAndLoc(mTargetId, mTargetLoc);  
 	}
 }
 
@@ -130,6 +135,7 @@ void USkillFunction::BulletShoot()
 
 		//子弹射击时，才绑定碰撞组件碰撞事件
 		mBullet->SetFly(true);
+
 		mBullet->CollisionComp->OnComponentBeginOverlap.AddDynamic(mBullet, &AMyBullet::OnMyCollisionCompBeginOverlap);
 
 		mBullet = nullptr;//发射出去后子弹、pkmsg置空

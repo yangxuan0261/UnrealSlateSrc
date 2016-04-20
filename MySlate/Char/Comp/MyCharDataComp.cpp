@@ -16,6 +16,7 @@ UMyCharDataComp::UMyCharDataComp()
 	mGroup = EGroup::None;
 	mTeam = ETeam::None;
 	mHealth = 100.f;
+	mHealthMax = 150.f;
 	mFightData = nullptr;
 	mCharData = nullptr;
 }

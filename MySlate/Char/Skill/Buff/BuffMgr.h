@@ -29,8 +29,11 @@ public:
 	void RunEndPkBuffs(int32 _charId, UPkMsg* msg);//buffer∫Û÷√
 	//=== buffer‘À–– end   ===
 
-	void RemoveBuff(int32 _charId);
-	void CharDeathNotify(AMyChar* _char);
+	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
+		void RemoveBuff(int32 _charId);
+
+	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
+		void CharDeathNotify(AMyChar* _char);
 
 public:
 	

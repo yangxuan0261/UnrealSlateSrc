@@ -22,6 +22,7 @@ UPkPorcess::~UPkPorcess()
 	{
 		//mPkMsg->ExeNullDlg(); // 攻击者不死，这里释放，USkillFunction中就不释放了，重置指针为null 
 		mPkMsg->RemoveFromRoot();
+		mPkMsg = nullptr;
 	}
 }
 
@@ -45,8 +46,7 @@ void UPkPorcess::Run()
 	{
 		targetActor = targets[i]->mTarget;
 
-		//step4 - 运行对目标集中的每个个体的func
-
+		RunEndEvns();
 	}
 
 	RunEndPk(); //给攻击者加buff
@@ -75,7 +75,12 @@ void UPkPorcess::Filter()
 
 void UPkPorcess::RunEndEvns()
 {
-
+	//step5 - 运行对目标集中的每个个体的func，pk逻辑完成后技能逻辑，如吸血，加蓝等
+	const TArray<UAbsPkEvent*>& functions2 = mPkMsg->GetSkillTemp()->GetEndEvns();
+	for (UAbsPkEvent* func : functions2)
+	{
+		func->RunEndEvns(mPkMsg);
+	}
 }
 
 void UPkPorcess::PkLogic()
@@ -101,7 +106,6 @@ void UPkPorcess::RunEndPk()
 void UPkPorcess::PkPrice()
 {
 	TArray<FDamageInfo> dmgArr;
-
 
 	mCallBack.ExecuteIfBound(dmgArr);
 }

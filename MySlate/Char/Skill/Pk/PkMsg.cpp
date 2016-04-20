@@ -23,6 +23,7 @@ UPkMsg::UPkMsg()
 	mTargetLoc = FVector(0.f, 0.f, 0.f);
 	mSkillTemp = nullptr;
 	mCurrTarget = nullptr;
+	mTargetLocked = nullptr;
 }
 
 UPkMsg::~UPkMsg()
@@ -45,14 +46,14 @@ UPkMsg::~UPkMsg()
 	mTargetArr.Empty();
 }
 
-void UPkMsg::SetData(USkillTemplate* _skillTemp, const FVector& _targetLoc, int32 _attackerId, int32 _targetId /* = 0 */)
+void UPkMsg::SetData(USkillTemplate* _skillTemp, int32 _attackerId, int32 _targetId, const FVector& _targetLoc)
 {
 	mSkillTemp = _skillTemp;
 	if (mSkillTemp)
 	{
 		mSkillId = mSkillTemp->mId;
 		mTargetLoc = _targetLoc;
-		mTarget = UCharMgr::GetInstance()->GetChar(_targetId);
+		mTargetLocked = UCharMgr::GetInstance()->GetChar(_targetId);
 	}
 }
 
