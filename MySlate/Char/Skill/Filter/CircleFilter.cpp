@@ -65,16 +65,16 @@ UAbsFilter* UCircleFilter::Clone()
 
 void UCircleFilter::Parser(const TArray<FString>& _params)
 {
-	mCenterType = -1;
+	//mCenterType = -1;
 	mSelectType = -1;
 	mCount = -1;
 	mRadius = 100;
-	if (_params.Num() > 3)
+	if (_params.Num() > 2)
 	{
-		mCenterType = FCString::Atoi(*_params[0]);
-		mSelectType = FCString::Atoi(*_params[1]);
-		mCount = FCString::Atoi(*_params[2]);
-		mRadius = FCString::Atoi(*_params[3]);
+		//mCenterType = FCString::Atoi(*_params[0]);
+		mSelectType = FCString::Atoi(*_params[0]);
+		mCount = FCString::Atoi(*_params[1]);
+		mRadius = FCString::Atoi(*_params[2]);
 	}
 	else
 	{

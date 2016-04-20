@@ -24,7 +24,7 @@ public:
 	static UCircleFilter* CreateFilter(const FString& _key);
 
 public:
-	int32		mCenterType;	//中心点 -- 1:攻击者，-1:受击着
+	//int32		mCenterType;	//中心点 -- 1:攻击者，-1:受击着
 	int32		mSelectType;	//选人 -- 1:攻击方，-1:受击方
 	int32		mCount;			//选人数量
 	int32		mRadius;		//选人半径
