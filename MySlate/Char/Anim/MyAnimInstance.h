@@ -25,8 +25,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
 		void AnimNotify_BulletCreate(UAnimNotify* Notify);
+
 	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
 		void AnimNotify_BulletShoot(UAnimNotify* Notify);
+
+	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
+		void AnimNotify_Test(UAnimNotify* Notify);
 
 	virtual	void NativeUpdateAnimation(float DeltaSeconds) override;
 public:

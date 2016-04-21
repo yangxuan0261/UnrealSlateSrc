@@ -50,6 +50,15 @@ void UMyAnimInstance::AnimNotify_BulletShoot(UAnimNotify * Notify)
 	}
 }
 
+void UMyAnimInstance::AnimNotify_Test(UAnimNotify* Notify)
+{
+	if (mOwnerChar != nullptr)
+	{
+		mSpeed = mOwnerChar->GetVelocity().Size(); //设置速度
+		mCharState = mOwnerChar->mCharState; //设置动画状态
+	}
+}
+
 void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);

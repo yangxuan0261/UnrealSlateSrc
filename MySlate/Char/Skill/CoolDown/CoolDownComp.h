@@ -15,9 +15,7 @@ UCLASS()
 class UCoolDownComp : public UMyBaseComp
 {
 	GENERATED_BODY()
-
 public:
-	// Sets default values for this character's 
 	UCoolDownComp();
 	virtual ~UCoolDownComp();
 

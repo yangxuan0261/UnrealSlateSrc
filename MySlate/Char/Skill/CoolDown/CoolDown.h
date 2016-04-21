@@ -21,7 +21,6 @@ class UCoolDown : public UObject
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	UCoolDown();
 	virtual ~UCoolDown();
 	virtual void BeginDestroy() override; //调用ConditionalBeginDestroy();会立即调用，这个函数不允许外部调用
