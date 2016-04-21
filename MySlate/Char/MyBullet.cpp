@@ -178,7 +178,7 @@ void AMyBullet::CreatePk()
 	}
 }
 
-//子弹跳跃
+//子弹弹射
 void AMyBullet::BulletJump()
 {
 	int32 count = 0; //getBulletFunc->getcount();暂时不弹射
@@ -210,7 +210,7 @@ void AMyBullet::DestroyBullet()
 		mPkPorcess = nullptr;
 	}
 	if (mPkMsg != nullptr)
-	{
+	{	//如果子弹发射出去了， pkMsg应该跟随子弹释放
 		mPkMsg->RemoveFromRoot();
 		mPkMsg->ConditionalBeginDestroy();
 		mPkMsg = nullptr;

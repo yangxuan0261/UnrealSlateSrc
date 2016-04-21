@@ -35,10 +35,13 @@ public:
 		ETeam		GetIgnoreTeam(const ETeam& _atkTeam, int32 _flag);//根据标记获取目的队伍标记
 
 	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
-		void		GetIgnoreCharsByTeam(ETeam _type, UPARAM(ref) TArray<AMyChar*> _outChars) const;
+		void		GetIgnoreCharsByTeam(ETeam _type, UPARAM(ref) TArray<AMyChar*>& _outChars) const;
 
 	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
-		TArray<AActor*>		ConvertCharsToActors(const TArray<AMyChar*> _srcChars);
+		void		ConvertCharsToActors(UPARAM(ref) const TArray<AMyChar*>& _srcChars, TArray<AActor*>& _outActors);
+
+	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
+		void		ConvertActorsToChars(UPARAM(ref) const TArray<AActor*>& _srcActors, TArray<AMyChar*>& _outChars);
 
 	const TMap<int32, AMyChar*>&	GetAllChars() const { return mAllCharMap; }
 

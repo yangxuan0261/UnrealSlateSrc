@@ -22,13 +22,7 @@ UPkPorcess::~UPkPorcess()
 
 void UPkPorcess::BeginDestroy()
 {
-	if (mPkMsg != nullptr)
-	{
-		//mPkMsg->ExeNullDlg(); // 攻击者不死，这里释放，USkillFunction中就不释放了，重置指针为null 
-		mPkMsg->RemoveFromRoot();
-		mPkMsg->ConditionalBeginDestroy();
-		mPkMsg = nullptr;
-	}
+
 
 	UE_LOG(PkLogger, Warning, TEXT("--- UPkPorcess::BeginDestroy"));
 	Super::BeginDestroy();

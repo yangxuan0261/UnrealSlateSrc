@@ -94,7 +94,7 @@ ETeam UCharMgr::GetIgnoreTeam(const ETeam& _atkTeam, int32 _flag)
 	}
 }
 
-void UCharMgr::GetIgnoreCharsByTeam(ETeam _type, UPARAM(ref) TArray<AMyChar*> _outChars) const
+void UCharMgr::GetIgnoreCharsByTeam(ETeam _type, UPARAM(ref) TArray<AMyChar*>& _outChars) const
 {
 	AMyChar* target = nullptr;
 	for (TMap<int32, AMyChar*>::TConstIterator Iter = mAllCharMap.CreateConstIterator(); Iter; ++Iter)
@@ -107,13 +107,24 @@ void UCharMgr::GetIgnoreCharsByTeam(ETeam _type, UPARAM(ref) TArray<AMyChar*> _o
 	}
 }
 
-TArray<AActor*> UCharMgr::ConvertCharsToActors(const TArray<AMyChar*> _srcChars)
+void UCharMgr::ConvertCharsToActors(UPARAM(ref) const TArray<AMyChar*>& _srcChars, TArray<AActor*>& _outActors)
 {
-	TArray<AActor*> retActors;
 	for (AMyChar* tmpChar : _srcChars)
 	{
-		retActors.Add(tmpChar);
+		_outActors.Add(tmpChar);
 	}
-	return retActors;
+}
+
+void UCharMgr::ConvertActorsToChars(UPARAM(ref) const TArray<AActor*>& _srcActors, TArray<AMyChar*>& _outChars)
+{
+	AMyChar* target = nullptr;
+	for (AActor* tmpActor : _srcActors)
+	{
+		target = Cast<AMyChar>(tmpActor);
+		if (target != nullptr)
+		{
+			_outChars.Add(target);
+		}
+	}
 }
 

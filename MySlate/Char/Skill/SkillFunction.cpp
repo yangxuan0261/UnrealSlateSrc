@@ -146,8 +146,12 @@ void USkillFunction::BulletShoot()
 
 		mBullet->CollisionComp->OnComponentBeginOverlap.AddDynamic(mBullet, &AMyBullet::OnMyCollisionCompBeginOverlap);
 
-		mBullet = nullptr;//发射出去后子弹、pkmsg置空
+		mBullet = nullptr;//发射出去后子弹、pkMsg置空，由子弹去释放pkMsg
 		mPkMsg = nullptr;
+	}
+	else
+	{
+		UE_LOG(SkillLogger, Error, TEXT("--- USkillFunction::BulletShoot, mBullet or mPkMsg is nullptr"));
 	}
 }
 

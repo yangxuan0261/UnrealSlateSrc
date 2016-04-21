@@ -1,7 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
+#include "AbsFilter.h"
 #include "CircleFilter.generated.h"
 
 class AMyChar;
@@ -17,15 +16,12 @@ public:
 	virtual ~UCircleFilter();
 	virtual void BeginDestroy() override;
 
-	virtual void Filter(UPkMsg* msg) override;
+	virtual void Filter(UPkMsg* _msg, EFilterType _filterType = EFilterType::Locked, float _radius = 0.f, const FVector& _boxSize = FVector(0.f, 0.f, 0.f)) override;
 	virtual UAbsFilter* Clone() override;
 	virtual void Parser(const TArray<FString>& _params);
 
 	static UCircleFilter* CreateFilter(const FString& _key);
 
 public:
-	//int32		mCenterType;	//中心点 -- 1:攻击者，-1:受击着
-	int32		mSelectType;	//选人 -- 1:攻击方，-1:受击方
-	int32		mCount;			//选人数量
 	int32		mRadius;		//选人半径
 };

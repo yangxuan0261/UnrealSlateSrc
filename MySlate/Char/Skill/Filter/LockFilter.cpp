@@ -19,9 +19,9 @@ void ULockFilter::BeginDestroy()
 	Super::BeginDestroy();
 }
 
-void ULockFilter::Filter(UPkMsg* msg)
+void ULockFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::Locked */, float _radius /* = 0.f */, const FVector& _boxSize /* = FVector(0.f, 0.f, 0.f) */)
 {
-
+	Super::Filter(_msg, EFilterType::Locked);
 }
 
 UAbsFilter* ULockFilter::Clone()

@@ -16,7 +16,7 @@ class USkillFunction;
 class UCharMgr;
 class UCharData;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeathDlg,  AMyChar*, MyCharBp);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeathDlg, AMyChar*, MyCharBp);
 
 UCLASS()
 class AMyChar : public ACharacter
