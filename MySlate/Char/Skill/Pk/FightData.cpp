@@ -13,6 +13,13 @@ UFightData::~UFightData()
 	UE_LOG(SkillLogger, Warning, TEXT("--- UFightData::~UFightData"));
 }
 
+void UFightData::BeginDestroy()
+{
+
+	UE_LOG(SkillLogger, Warning, TEXT("--- UFightData::BeginDestroy"));
+	Super::BeginDestroy();
+}
+
 UFightData* UFightData::Clone()
 {
 	UFightData* data = NewObject<UFightData>(UFightData::StaticClass());

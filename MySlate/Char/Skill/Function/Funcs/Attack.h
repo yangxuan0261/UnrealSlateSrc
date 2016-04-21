@@ -11,9 +11,9 @@ class UAttack : public UAbsPkEvent
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	UAttack();
 	virtual ~UAttack();
+	virtual void BeginDestroy() override;
 
 	static UAttack* CreateFunction(const FString& _key);
 	virtual UAbsPkEvent* Clone() override;

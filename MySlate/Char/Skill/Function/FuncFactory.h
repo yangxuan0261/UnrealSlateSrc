@@ -97,6 +97,7 @@ public:
 	// Sets default values for this character's properties
 	UFuncFactory();
 	virtual ~UFuncFactory();
+	virtual void BeginDestroy() override;
 
 	void InitFuncAndFilters();
 	UAbsFilter* createFilter(const FString& _str);

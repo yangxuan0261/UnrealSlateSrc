@@ -30,9 +30,9 @@ public:
 	};
 
 public:
-	// Sets default values for this character's properties
 	UAbsPkEvent();
 	virtual ~UAbsPkEvent();
+	virtual void BeginDestroy() override;
 
 	virtual UAbsPkEvent* Clone() { return nullptr; }
 

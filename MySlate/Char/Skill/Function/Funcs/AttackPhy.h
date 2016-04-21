@@ -14,6 +14,7 @@ public:
 	// Sets default values for this character's properties
 	UAttackPhy();
 	virtual ~UAttackPhy();
+	virtual void BeginDestroy() override;
 
 	static UAttackPhy* CreateFunction(const FString& _key);
 	virtual UAbsPkEvent* Clone() override;

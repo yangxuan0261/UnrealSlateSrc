@@ -15,6 +15,12 @@ UAttackPhy::~UAttackPhy()
 	UE_LOG(FuncLogger, Warning, TEXT("--- UAttackPhy::~UAttackPhy"));
 }
 
+void UAttackPhy::BeginDestroy()
+{
+	UE_LOG(FuncLogger, Warning, TEXT("--- UAttackPhy::BeginDestroy"));
+	Super::BeginDestroy();
+}
+
 UAttackPhy* UAttackPhy::CreateFunction(const FString& _key)
 {
 	UAttackPhy* func = NewObject<UAttackPhy>(UAttackPhy::StaticClass());

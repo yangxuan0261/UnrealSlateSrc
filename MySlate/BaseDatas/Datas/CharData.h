@@ -15,6 +15,7 @@ class UCharData : public UObject
 public:
 	UCharData();
 	virtual ~UCharData();
+	virtual void BeginDestroy() override;
 
 	UFightData*	GetFightData() const { return mFightData; }
 

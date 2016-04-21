@@ -5,6 +5,7 @@
 #include "../Function/FuncFactory.h"
 #include "../Filter/AbsFilter.h"
 #include "../Utils/CommonDef.h"
+#include "../Function/Funcs/AbsPkEvent.h"
 
 // Sets default values
 USkillTemplate::USkillTemplate() : Super()
@@ -29,11 +30,36 @@ USkillTemplate::USkillTemplate() : Super()
 USkillTemplate::~USkillTemplate()
 {
 	UE_LOG(SkillLogger, Warning, TEXT("--- UBufflTemplate::~UBufflTemplate"));
+}
+
+void USkillTemplate::BeginDestroy()
+{
 	if (mFilter != nullptr)
 	{
 		mFilter->RemoveFromRoot();
+		mFilter->ConditionalBeginDestroy();
 		mFilter = nullptr;
 	}
+
+	ReleaseArray(mBeforeSkill);
+	ReleaseArray(mBeforePk);
+	ReleaseArray(mBeforeEvns);
+	ReleaseArray(mEndEvns);
+	ReleaseArray(mEndPk);
+	ReleaseArray(mEndSkill);
+
+	UE_LOG(SkillLogger, Warning, TEXT("--- USkillTemplate::BeginDestroy"));
+	Super::BeginDestroy();
+}
+
+void USkillTemplate::ReleaseArray(TArray<UAbsPkEvent*>& _arr)
+{
+	for (UAbsPkEvent* func : _arr)
+	{
+		func->RemoveFromRoot();
+		func->ConditionalBeginDestroy();
+	}
+	_arr.Empty();
 }
 
 const TArray<UAbsPkEvent*>& USkillTemplate::GetBeforeSkill()
@@ -109,6 +135,7 @@ void USkillTemplate::ParseFuncStr(const FString& _funcStr, TArray<UAbsPkEvent*>&
 		UAbsPkEvent* func = UFuncFactory::GetInstance()->createFunction(*iter);
 		if (func != nullptr)
 		{
+			func->AddToRoot();
 			_funcArr.Add(func);
 		}
 	}
@@ -117,4 +144,8 @@ void USkillTemplate::ParseFuncStr(const FString& _funcStr, TArray<UAbsPkEvent*>&
 void USkillTemplate::ParseFilterStr(const FString& _filterStr, UAbsFilter*& _filter)
 {
 	_filter = UFuncFactory::GetInstance()->createFilter(_filterStr.ToLower());
+	if (_filter != nullptr)
+	{
+		_filter->AddToRoot();
+	}
 }

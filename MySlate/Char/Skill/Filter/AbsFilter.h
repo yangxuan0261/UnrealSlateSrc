@@ -14,7 +14,7 @@ int32		mLimitId; //技能限制
 class AMyChar;
 class UPkMsg;
 
-UCLASS(Abstract)
+UCLASS()
 class UAbsFilter : public UObject
 {
 	GENERATED_BODY()
@@ -22,6 +22,7 @@ class UAbsFilter : public UObject
 public:
 	UAbsFilter();
 	virtual ~UAbsFilter();
+	virtual void BeginDestroy() override;
 
 	virtual void Filter(UPkMsg* msg) {}//过虑可选actor
 	virtual UAbsFilter* Clone() { return nullptr; }

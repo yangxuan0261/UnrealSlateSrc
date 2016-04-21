@@ -17,7 +17,7 @@ class USkillFunction : public UObject
 public:
 	USkillFunction();
 	virtual ~USkillFunction();
-
+	virtual void BeginDestroy() override;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")

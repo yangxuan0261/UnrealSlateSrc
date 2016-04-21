@@ -66,6 +66,13 @@ void UGolbalFunc::TurnForward(AActor* _actor, const FVector& _targetLoc)
 	_actor->SetActorRotation(rota);
 }
 
+void UGolbalFunc::DrawSegment(const FVector& _start, const FVector& _end, float _time /* = 5.f */)
+{
+	::DrawDebugLine(GWorld, _start, _end, FColor::Red, true, _time);
+	::DrawDebugSolidBox(GWorld, _start, FVector(5.f, 5.f, 5.f), FColor::Green, true, _time);
+	::DrawDebugSolidBox(GWorld, _end, FVector(5.f, 5.f, 5.f), FColor::Green, true, _time);
+}
+
 void UGolbalFunc::TestStrSplit()
 {
 	FString str = TEXT("aaa,bbb,,ccc,ddd");
@@ -93,6 +100,7 @@ void UGolbalFunc::TestStrContains(FString _str)
 void UGolbalFunc::TestFilter(AMyChar* _actor, float _radius)
 {
 	TArray<AActor*> ignoreChars; //不忽略任何Actor，一般会忽略自身
+	ignoreChars.Add(_actor);
 	TArray<TEnumAsByte<EObjectTypeQuery>>  destObjectTypes; //目的类型集合
 	destObjectTypes.Add((EObjectTypeQuery)ECollisionChannel::ECC_Pawn); //这里强转一下，一一对应的
 	TArray<AActor*> destActors;
@@ -104,15 +112,15 @@ void UGolbalFunc::TestFilter(AMyChar* _actor, float _radius)
 		, AMyChar::StaticClass() //只要这种类的Actor
 		, ignoreChars, destActors);
 
-	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- destActors length:%d"), destActors.Num());
+	//UE_LOG(GolbalFuncLogger, Warning, TEXT("--- destActors length:%d"), destActors.Num());
 	for (auto elem : destActors)
 	{
 		AMyChar* mychar = Cast<AMyChar>(elem);
 		if (mychar)
 		{
-			UE_LOG(GolbalFuncLogger, Warning, TEXT("--- mychar uuid:%d"), mychar->GetUuid());
+			//UE_LOG(GolbalFuncLogger, Warning, TEXT("--- mychar uuid:%d"), mychar->GetUuid());
 			//这里绘制一下，才能看出半径究竟有多长
-			::DrawDebugLine(GWorld, _actor->GetActorLocation(), mychar->GetActorLocation(), FColor::Red, true, 5.f);
+			UGolbalFunc::DrawSegment(_actor->GetActorLocation(), mychar->GetActorLocation());
 		}
 	}
 }

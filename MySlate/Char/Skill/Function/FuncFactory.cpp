@@ -16,18 +16,28 @@ UFuncFactory::UFuncFactory() : Super()
 
 UFuncFactory::~UFuncFactory()
 {
+	UE_LOG(SkillLogger, Warning, TEXT("--- UFuncFactory::~UFuncFactory"));
+}
+
+void UFuncFactory::BeginDestroy()
+{
 	//数据丢回给gc
 	for (auto iter = mFunctionMap.CreateConstIterator(); iter; ++iter)
 	{
 		iter->Value->RemoveFromRoot();
+		iter->Value->ConditionalBeginDestroy();
 	}
 	mFunctionMap.Empty();
-	
+
 	for (auto iter = mFilterMap.CreateConstIterator(); iter; ++iter)
 	{
 		iter->Value->RemoveFromRoot();
+		iter->Value->ConditionalBeginDestroy();
 	}
 	mFilterMap.Empty();
+
+	UE_LOG(SkillLogger, Warning, TEXT("--- UFuncFactory::BeginDestroy"));
+	Super::BeginDestroy();
 }
 
 //各种注册模板

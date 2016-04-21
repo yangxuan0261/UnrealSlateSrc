@@ -23,9 +23,6 @@ UCoolDownComp::UCoolDownComp()
 UCoolDownComp::~UCoolDownComp()
 {
 	UE_LOG(CompLogger, Warning, TEXT("--- UCoolDownComp::~UCoolDownComp"));
-	for (UCoolDown* cd : mCDArr)
-		cd->RemoveFromRoot();
-	mCDArr.Empty();
 }
 
 void UCoolDownComp::BeginPlay()
@@ -36,6 +33,19 @@ void UCoolDownComp::BeginPlay()
 void UCoolDownComp::BeginDestroy()
 {
 	Super::BeginDestroy();
+}
+
+void UCoolDownComp::DestroyComponent(bool bPromoteChildren /*= false*/)
+{
+	for (UCoolDown* cd : mCDArr)
+	{
+		cd->RemoveFromRoot();
+		cd->ConditionalBeginDestroy();
+	}
+	mCDArr.Empty();
+
+	UE_LOG(CompLogger, Warning, TEXT("--- UCoolDownComp::DestroyComponent"));
+	Super::DestroyComponent(bPromoteChildren);
 }
 
 void UCoolDownComp::MyTick(float DeltaTime)
@@ -98,7 +108,8 @@ void UCoolDownComp::RemoveCDById(int32 _skillId)
 	{
 		if (mCDArr[i]->mSkillId == _skillId)
 		{
-			mCDArr[i]->RemoveFromRoot(); //cd对象丢给gc系统
+			mCDArr[i]->RemoveFromRoot();
+			mCDArr[i]->ConditionalBeginDestroy(); //cd对象丢给gc系统
 			mCDArr.RemoveAt(i);
 			UE_LOG(CompLogger, Error, TEXT("--- UCoolDownComp::RemoveCDById, skillId:%d"), _skillId);
 			return;

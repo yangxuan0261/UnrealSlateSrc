@@ -12,10 +12,12 @@ AStandardHUD::AStandardHUD()
 {
 	static ConstructorHelpers::FObjectFinder<UTexture2D> EnemyTeamHPObj(TEXT("/Game/Slate/EnemyTeamHealthBar"));
 	static ConstructorHelpers::FObjectFinder<UTexture2D> BarFillObj(TEXT("/Game/Slate/BarFill"));
+	static ConstructorHelpers::FObjectFinder<UFont> customFontObj(TEXT("/Game/Slate/Fonts/simhei"));
 
 
 	EnemyTeamHPTexture = EnemyTeamHPObj.Object;
 	BarFillTexture = BarFillObj.Object;
+	customFont = customFontObj.Object;
 }
 
 void AStandardHUD::BeginPlay()
@@ -68,7 +70,7 @@ void AStandardHUD::DrawActorsHealth()
 	{
 		float health = Iter->Value->GetDataComp()->GetHealth();
 		float healthMax = Iter->Value->GetDataComp()->GetHealthMax();
-		DrawHealthBar(Iter->Value, health / healthMax, 18 * mUIScale, -20.f);
+		DrawHealthBar(Iter->Value, health, health / healthMax, 18 * mUIScale, -20.f);
 	}
 
 	//float counter = 30.f;
@@ -80,7 +82,7 @@ void AStandardHUD::DrawActorsHealth()
 	//}
 }
 
-void AStandardHUD::DrawHealthBar(AActor * ForActor, float HealthPercentage, int32 BarHeight, int32 OffsetY) const
+void AStandardHUD::DrawHealthBar(AActor* ForActor, float _health, float HealthPercentage, int32 BarHeight, int32 OffsetY /* = 0 */) const
 {
 	//GetComponentsBoundingBox：Returns the bounding box of all components in this Actor. //获取Acotr中所有组件的边界盒子box
 	FBox BB = ForActor->GetComponentsBoundingBox();
@@ -112,5 +114,14 @@ void AStandardHUD::DrawHealthBar(AActor * ForActor, float HealthPercentage, int3
 	TileItem.Size = FVector2D(HealthBarLength * (1.0f - HealthPercentage), BarHeight);
 	TileItem.SetColor(FLinearColor(0.5f, 0.5f, 0.5f, 1.f));
 	Canvas->DrawItem(TileItem); //画失去的血量
+
+	//画文字
+	X = Center2D.X - HealthBarLength / 2 - 50;
+	Y = Center2D.Y + OffsetY;
+
+	FCanvasTextItem TextItem(FVector2D(X, Y), FText::FromString(FString::SanitizeFloat(_health)), customFont, FLinearColor::Red);
+	TextItem.Scale = FVector2D(1.5f, 1.5f);
+	TextItem.BlendMode = SE_BLEND_Translucent;
+	Canvas->DrawItem(TextItem);
 }
 

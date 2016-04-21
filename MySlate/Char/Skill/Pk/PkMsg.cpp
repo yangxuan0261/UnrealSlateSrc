@@ -9,6 +9,39 @@
 #include "../Template/SkillTemplate.h"
 #include "../Utils/SkillDataMgr.h"
 
+
+UParam::UParam()
+{
+	mFightData = nullptr;
+	mTarget = nullptr;
+}
+
+UParam::~UParam()
+{
+	UE_LOG(PkLogger, Warning, TEXT("--- UParam::~UParam"));
+}
+
+void UParam::BeginDestroy()
+{
+	if (mFightData != nullptr)
+	{
+		mFightData->RemoveFromRoot();
+		mFightData->ConditionalBeginDestroy();
+		mFightData = nullptr;
+	}
+
+	UE_LOG(PkLogger, Warning, TEXT("--- UParam::BeginDestroy"));
+	Super::BeginDestroy();
+}
+
+void UParam::Init()
+{
+	mFightData = NewObject<UFightData>(UFightData::StaticClass());
+	mFightData->AddToRoot();
+}
+
+
+//-------------------------------- UPkMsg Begin
 UPkMsg::UPkMsg()
 	: Super()
 {
@@ -29,21 +62,31 @@ UPkMsg::UPkMsg()
 UPkMsg::~UPkMsg()
 {
 	UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::~UPkMsg"));
+}
+
+void UPkMsg::BeginDestroy()
+{
 	if (mAttackerData != nullptr)
 	{
 		mAttackerData->RemoveFromRoot();
+		mAttackerData->ConditionalBeginDestroy();
 		mAttackerData = nullptr;
 	}
-	if (mAttackerData != nullptr)
+	if (mAttackerDataForCacul != nullptr)
 	{
 		mAttackerDataForCacul->RemoveFromRoot();
+		mAttackerDataForCacul->ConditionalBeginDestroy();
 		mAttackerDataForCacul = nullptr;
 	}
 	for (int32 i = 0; i < mTargetArr.Num(); ++i)
 	{
 		mTargetArr[i]->RemoveFromRoot();
+		mTargetArr[i]->ConditionalBeginDestroy();
 	}
 	mTargetArr.Empty();
+
+	UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::BeginDestroy"));
+	Super::BeginDestroy();
 }
 
 void UPkMsg::SetData(USkillTemplate* _skillTemp, int32 _attackerId, int32 _targetId, const FVector& _targetLoc)
@@ -127,27 +170,4 @@ void UPkMsg::SetAttackDmgValue(float _value, int _limitId /* = -1 */, bool _isAd
 			break;
 		}
 	}
-}
-
-//-------------------------------- UParam Begin
-
-UParam::UParam()
-{
-	mFightData = nullptr;
-	mTarget = nullptr;
-}
-
-UParam::~UParam()
-{
-	if (mFightData)
-	{
-		mFightData->RemoveFromRoot();
-		mFightData = nullptr;
-	}
-}
-
-void UParam::Init()
-{
-	mFightData = NewObject<UFightData>(UFightData::StaticClass());
-	mFightData->AddToRoot();
 }

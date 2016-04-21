@@ -23,8 +23,8 @@ public:
 public:
 	// Begin UActorComponent Interface.
 	virtual void BeginPlay() override; //组件被new的时候立即调用
-	virtual void BeginDestroy() override; //引擎在gc的时候调用，并不是立即调用
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+	virtual void DestroyComponent(bool bPromoteChildren = false);
 	// End UActorComponent Interface.
 
 	void		SetFightData(UFightData* _data) { mFightData = _data; }

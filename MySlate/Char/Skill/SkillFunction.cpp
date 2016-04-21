@@ -25,12 +25,20 @@ USkillFunction::USkillFunction() : Super()
 
 USkillFunction::~USkillFunction()
 {
-	UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::~USkillFunction:%d"), mSkillId);
+	UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::~USkillFunction"));
+}
+
+void USkillFunction::BeginDestroy()
+{
 	if (mPkMsg != nullptr)
 	{
 		mPkMsg->RemoveFromRoot();
+		mPkMsg->ConditionalBeginDestroy();
 		mPkMsg = nullptr;
 	}
+
+	UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::BeginDestroy:%d"), mSkillId);
+	Super::BeginDestroy();
 }
 
 void USkillFunction::Tick(float DeltaSeconds)
@@ -173,6 +181,7 @@ void USkillFunction::ReleaseData()
 	if (mPkMsg != nullptr)
 	{
 		mPkMsg->RemoveFromRoot();
+		mPkMsg->ConditionalBeginDestroy();
 		mPkMsg = nullptr;
 	}
 }

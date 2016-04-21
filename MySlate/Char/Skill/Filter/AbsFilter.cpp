@@ -12,3 +12,9 @@ UAbsFilter::~UAbsFilter()
 {
 
 }
+
+void UAbsFilter::BeginDestroy()
+{
+
+	Super::BeginDestroy();
+}

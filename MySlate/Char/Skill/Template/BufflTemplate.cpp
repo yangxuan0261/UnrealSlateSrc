@@ -3,7 +3,6 @@
 #include "MySlate.h"
 #include "BufflTemplate.h"
 
-// Sets default values
 UBufflTemplate::UBufflTemplate() : Super()
 {
  
@@ -12,5 +11,13 @@ UBufflTemplate::UBufflTemplate() : Super()
 UBufflTemplate::~UBufflTemplate()
 {
 	UE_LOG(SkillLogger, Warning, TEXT("--- UBufflTemplate::~UBufflTemplate"));
+}
+
+void UBufflTemplate::BeginDestroy()
+{
+
+
+	UE_LOG(SkillLogger, Warning, TEXT("--- UBufflTemplate::BeginDestroy"));
+	Super::BeginDestroy();
 }
 

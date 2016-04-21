@@ -24,13 +24,12 @@ class AMyChar : public ACharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	AMyChar();
 	virtual ~AMyChar();
 
 	virtual void BeginPlay() override;
 	virtual void Tick( float DeltaSeconds ) override;
-
+	virtual void Destroyed() override; //用于释放成员，调用Destroy();会立即调用
 public:
 	void	OnCDFinish(UCoolDown* _cd);
 	FDeathDlg&	GetDeathDlg() { return mDeathDlg; }

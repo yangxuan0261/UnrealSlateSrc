@@ -24,11 +24,6 @@ UMyCharDataComp::UMyCharDataComp()
 UMyCharDataComp::~UMyCharDataComp()
 {
 	UE_LOG(CompLogger, Warning, TEXT("--- UMyCharDataComp::~UMyCharDataComp"));
-	if (mFightData != nullptr)
-	{
-		mFightData->RemoveFromRoot();
-		mFightData = nullptr;
-	}
 }
 
 void UMyCharDataComp::BeginPlay()
@@ -44,15 +39,21 @@ void UMyCharDataComp::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	//UE_LOG(CompLogger, Warning, TEXT("--- UMyCharDataComp::TickComponent"));
 }
 
+void UMyCharDataComp::DestroyComponent(bool bPromoteChildren /*= false*/)
+{
+	if (mFightData != nullptr)
+	{
+		mFightData->RemoveFromRoot();
+		mFightData->ConditionalBeginDestroy();
+		mFightData = nullptr;
+	}
+
+	UE_LOG(CompLogger, Warning, TEXT("--- UMyCharDataComp::DestroyComponent"));
+	Super::DestroyComponent(bPromoteChildren);
+}
+
 void UMyCharDataComp::SetCharData(UCharData* _data)
 {
 	mCharData = _data;
 	mFightData->Copy(mCharData->GetFightData());//角色模板中的基础数据拷到 战斗数据对象中
 }
-
-void UMyCharDataComp::BeginDestroy()
-{
-	//UE_LOG(CompLogger, Warning, TEXT("--- UMyCharDataComp::BeginDestroy"));
-	Super::BeginDestroy();
-}
-

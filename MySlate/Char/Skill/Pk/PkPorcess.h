@@ -41,11 +41,9 @@ class UPkPorcess : public UObject
 {
 	GENERATED_BODY()
 public:
-
-
-public:
 	UPkPorcess();
 	virtual ~UPkPorcess();
+	virtual void BeginDestroy() override;
 
 public:
 	void SetMsg(UPkMsg* _pkMsg);

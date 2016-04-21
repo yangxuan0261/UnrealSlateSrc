@@ -33,9 +33,11 @@ public:
 	/** enemy team health bar texture */
 	UPROPERTY()
 	class UTexture2D* BarFillTexture;
+	UPROPERTY()
+	class UFont* customFont;
 
 	void DrawActorsHealth();
-	void DrawHealthBar(AActor* ForActor, float HealthPercentage, int32 BarHeight, int32 OffsetY = 0) const;
+	void DrawHealthBar(AActor* ForActor, float _health, float HealthPercentage, int32 BarHeight, int32 OffsetY = 0) const;
 	float mUIScale;
 
 };

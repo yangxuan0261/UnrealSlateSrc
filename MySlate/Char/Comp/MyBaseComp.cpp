@@ -28,6 +28,12 @@ void UMyBaseComp::TickComponent( float DeltaTime, ELevelTick TickType, FActorCom
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 }
 
+void UMyBaseComp::DestroyComponent(bool bPromoteChildren /*= false*/)
+{
+
+	Super::DestroyComponent(bPromoteChildren);
+}
+
 void UMyBaseComp::Reset()
 {
 

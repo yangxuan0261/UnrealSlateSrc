@@ -49,7 +49,6 @@ AMyBullet::~AMyBullet()
 	UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::~AMyBullet"));
 }
 
-// Called when the game starts
 void AMyBullet::BeginPlay()
 {
 	Super::BeginPlay();
@@ -90,6 +89,13 @@ void AMyBullet::Tick(float DeltaSeconds)
 		CreatePk();
 		BulletJump();
 	}
+}
+
+void AMyBullet::Destroyed()
+{
+
+	UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::Destroyed"));
+	Super::Destroyed();
 }
 
 void AMyBullet::SetTargetId(int32 _targetId)
@@ -151,7 +157,6 @@ void AMyBullet::CreatePk()
 	if (mPkPorcess == nullptr)
 	{
 		mPkPorcess = NewObject<UPkPorcess>(UPkPorcess::StaticClass());
-		mPkPorcess->AddToRoot();
 		mPkPorcess->GetPkOverDlg().BindUObject(this, &AMyBullet::CallbackPkOver);
 
 		//设置本次结算被锁定的目标
@@ -168,7 +173,7 @@ void AMyBullet::CreatePk()
 		mPkPorcess->SetMsg(mPkMsg);
 		mPkPorcess->Run();
 
-		mPkPorcess->RemoveFromRoot();
+		mPkPorcess->ConditionalBeginDestroy();
 		mPkPorcess = nullptr;
 	}
 }
@@ -201,11 +206,13 @@ void AMyBullet::DestroyBullet()
 	if (mPkPorcess != nullptr)
 	{
 		mPkPorcess->RemoveFromRoot();
+		mPkPorcess->ConditionalBeginDestroy();
 		mPkPorcess = nullptr;
 	}
 	if (mPkMsg != nullptr)
 	{
 		mPkMsg->RemoveFromRoot();
+		mPkMsg->ConditionalBeginDestroy();
 		mPkMsg = nullptr;
 	}
 

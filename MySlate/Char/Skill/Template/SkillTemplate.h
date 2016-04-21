@@ -18,10 +18,11 @@ class USkillTemplate : public UObject
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	USkillTemplate();
 	virtual ~USkillTemplate();
+	virtual void BeginDestroy() override;
 
+	void ReleaseArray(TArray<UAbsPkEvent*>& _arr);
 public:
 	//UFUNCTION(BlueprintCallable, Category = "USkillTemplate")
 	//	int32			GetId() { return mId; }

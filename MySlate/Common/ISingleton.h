@@ -24,6 +24,7 @@ protected:
 		{
 			//delete m_sInstance;
 			m_sInstance->RemoveFromRoot();
+			m_sInstance->ConditionalBeginDestroy();
 			m_sInstance = nullptr;
 		}
 		else

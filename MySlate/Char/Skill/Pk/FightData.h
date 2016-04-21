@@ -13,6 +13,7 @@ public:
 	// Sets default values for this character's properties
 	UFightData();
 	virtual ~UFightData();
+	virtual void BeginDestroy() override;
 
 	UFightData* Clone();
 	void Copy(UFightData* _fightData);

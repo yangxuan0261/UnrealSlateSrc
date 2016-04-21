@@ -16,6 +16,13 @@ UCircleFilter::~UCircleFilter()
 	UE_LOG(FilterLogger, Warning, TEXT("--- UCircleFilter::~UCircleFilter"));
 }
  
+void UCircleFilter::BeginDestroy()
+{
+
+	UE_LOG(FilterLogger, Warning, TEXT("--- UCircleFilter::BeginDestroy"));
+	Super::BeginDestroy();
+}
+
 void UCircleFilter::Filter(UPkMsg* msg)
 {
 	//SphereOverlapActors_NEW

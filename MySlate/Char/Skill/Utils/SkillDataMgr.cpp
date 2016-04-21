@@ -21,11 +21,17 @@ USkillDataMgr::USkillDataMgr() : Super()
 USkillDataMgr::~USkillDataMgr()
 {
 	for (TMap<int32, USkillTemplate*>::TConstIterator iter = mSkillTempMap.CreateConstIterator(); iter; ++iter)
+	{
 		iter->Value->RemoveFromRoot();
+		iter->Value->ConditionalBeginDestroy();
+	}
 	mSkillTempMap.Empty();
 
 	for (TMap<int32, UBufflTemplate*>::TConstIterator iter = mBuffTempMap.CreateConstIterator(); iter; ++iter)
+	{
 		iter->Value->RemoveFromRoot();
+		iter->Value->ConditionalBeginDestroy();
+	}
 	mBuffTempMap.Empty();
 }
 

@@ -51,6 +51,25 @@ void AMyChar::Tick( float DeltaTime )
 	}
 }
 
+void AMyChar::Destroyed()
+{
+
+	if (mCDComp != nullptr)
+	{
+		mCDComp->DestroyComponent();
+		mCDComp = nullptr;
+	}
+
+	if (mDataComp != nullptr)
+	{
+		mDataComp->DestroyComponent();
+		mDataComp = nullptr;
+	}
+
+	UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::Destroyed"));
+	Super::Destroyed();
+}
+
 void AMyChar::BeginPlay()
 {
 	Super::BeginPlay();

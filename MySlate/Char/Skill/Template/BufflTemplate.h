@@ -12,8 +12,8 @@ class UBufflTemplate : public UObject
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	UBufflTemplate();
 	virtual ~UBufflTemplate();
+	virtual void BeginDestroy() override;
 
 };

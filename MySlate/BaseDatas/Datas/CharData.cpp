@@ -16,9 +16,17 @@ UCharData::UCharData() : Super()
 
 UCharData::~UCharData()
 {
+
+}
+
+void UCharData::BeginDestroy()
+{
 	if (mFightData != nullptr)
 	{
 		mFightData->RemoveFromRoot();
+		mFightData->ConditionalBeginDestroy();
 		mFightData = nullptr;
 	}
+
+	Super::BeginDestroy();
 }

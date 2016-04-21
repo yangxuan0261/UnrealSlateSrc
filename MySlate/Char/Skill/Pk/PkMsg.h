@@ -18,6 +18,8 @@ class UParam : public UObject
 public:
 	UParam();
 	virtual ~UParam();
+	virtual void BeginDestroy() override;
+
 	void Init();
 
 	UFightData*		mFightData;			//战斗数据
@@ -25,18 +27,16 @@ public:
 
 	float			mDmgPhyValue = 0.0f;						//物理总伤害
 	float			mDmgMagValue = 0.0f;						//法术总伤害
-
 };
 
 UCLASS()
 class UPkMsg : public UObject
 {
 	GENERATED_BODY()
-
 public:
-	// Sets default values for this character's properties
 	UPkMsg();
 	virtual ~UPkMsg();
+	void virtual BeginDestroy() override;
 
 	void	SetData(USkillTemplate* _skillTemp, int32 _attackerId, int32 _targetId, const FVector& _targetLoc);
 	const TArray<UParam*>& GetTargets() const { return mTargetArr; }

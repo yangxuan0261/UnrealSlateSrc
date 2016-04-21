@@ -33,6 +33,7 @@ public:
 	// Begin Actor interface
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
+	virtual void Destroyed() override;
 	// End Actor interface
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")

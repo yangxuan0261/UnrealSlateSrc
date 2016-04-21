@@ -14,7 +14,10 @@ UBaseDataMgr::UBaseDataMgr() : Super()
 UBaseDataMgr::~UBaseDataMgr()
 {
 	for (TMap<int32, UCharData*>::TConstIterator iter = mCharDataMap.CreateConstIterator(); iter; ++iter)
+	{
 		iter->Value->RemoveFromRoot();
+		iter->Value->ConditionalBeginDestroy();
+	}
 	mCharDataMap.Empty();
 }
 

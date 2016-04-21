@@ -14,6 +14,12 @@ UAbsPkEvent::~UAbsPkEvent()
 
 }
 
+void UAbsPkEvent::BeginDestroy()
+{
+
+	Super::BeginDestroy();
+}
+
 bool UAbsPkEvent::CheckPercent(const FString& _value)
 {
 	mIsPercent = _value.Contains(TEXT("%"));

@@ -24,12 +24,20 @@ UCoolDown::UCoolDown() : Super()
 
 UCoolDown::~UCoolDown()
 {
-	UE_LOG(SkillLogger, Warning, TEXT("--- UCoolDown::~UCoolDown, skillId:%d"), mSkillId);
-	if (mSkillFunc)
+	UE_LOG(SkillLogger, Warning, TEXT("--- UCoolDown::~UCoolDown"));
+}
+
+void UCoolDown::BeginDestroy()
+{
+	if (mSkillFunc != nullptr)
 	{
 		mSkillFunc->RemoveFromRoot();
+		mSkillFunc->ConditionalBeginDestroy();
 		mSkillFunc = nullptr;
 	}
+
+	UE_LOG(SkillLogger, Warning, TEXT("--- UCoolDown::BeginDestroy, skillId:%d"), mSkillId);
+	Super::BeginDestroy();
 }
 
 void UCoolDown::SetSkillTemplate(USkillTemplate* _skillTemp)

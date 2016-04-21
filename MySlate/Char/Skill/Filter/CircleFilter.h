@@ -13,9 +13,9 @@ class UCircleFilter : public UAbsFilter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	UCircleFilter();
 	virtual ~UCircleFilter();
+	virtual void BeginDestroy() override;
 
 	virtual void Filter(UPkMsg* msg) override;
 	virtual UAbsFilter* Clone() override;
