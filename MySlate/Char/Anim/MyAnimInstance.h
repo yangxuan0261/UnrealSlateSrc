@@ -24,10 +24,16 @@ public:
 		AMyChar* GetOwnerChar();
 
 	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
+		void AnimNotify_SkillBegin(UAnimNotify* Notify);
+
+	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
 		void AnimNotify_BulletCreate(UAnimNotify* Notify);
 
 	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
 		void AnimNotify_BulletShoot(UAnimNotify* Notify);
+
+	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
+		void AnimNotify_SkillEnd(UAnimNotify* Notify);
 
 	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
 		void AnimNotify_Test(UAnimNotify* Notify);

@@ -108,8 +108,6 @@ void USkillFunction::SkillBegin()
 	}
 }
 
-
-
 void USkillFunction::BulletCreate()
 {
 	if (mBullet != nullptr)

@@ -34,6 +34,14 @@ AMyChar* UMyAnimInstance::GetOwnerChar()
 	return mOwnerChar;
 }
 
+void UMyAnimInstance::AnimNotify_SkillBegin(UAnimNotify* Notify)
+{
+	if (mOwnerChar != nullptr)
+	{
+		mOwnerChar->GetUsingSkill()->SkillBegin();
+	}
+}
+
 void UMyAnimInstance::AnimNotify_BulletCreate(UAnimNotify * Notify)
 {
 	if (mOwnerChar != nullptr)
@@ -47,6 +55,14 @@ void UMyAnimInstance::AnimNotify_BulletShoot(UAnimNotify * Notify)
 	if (mOwnerChar != nullptr)
 	{
 		mOwnerChar->GetUsingSkill()->BulletCreate();
+	}
+}
+
+void UMyAnimInstance::AnimNotify_SkillEnd(UAnimNotify* Notify)
+{
+	if (mOwnerChar != nullptr)
+	{
+		mOwnerChar->GetUsingSkill()->SkillEnd();
 	}
 }
 
