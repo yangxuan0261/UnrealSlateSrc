@@ -6,12 +6,14 @@
 #include "../MyChar.h"
 #include "../MyBullet.h"
 #include "../Skill/SkillFunction.h"
+#include "../Skill/Template/SkillTemplate.h"
 
 UMyAnimInstance::UMyAnimInstance()
 {
 	mOwnerChar = nullptr;
 	mSpeed = 0.f;
 	mCharState = CharState::IdleRun;
+	mAnimType = EAnimType::None;
 }
 
 UMyAnimInstance::~UMyAnimInstance()
@@ -85,8 +87,12 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 
 	if (mOwnerChar != nullptr)
-	{
+	{	//TODO: 待优化，不变时不需要去get
 		mSpeed = mOwnerChar->GetVelocity().Size(); //设置速度
 		mCharState = mOwnerChar->mCharState; //设置动画状态
+
+		USkillFunction* skillFunc = mOwnerChar->GetUsingSkill();
+		USkillTemplate* skillTemp = skillFunc != nullptr ? skillFunc->GetSkillTemplate() : nullptr;
+		mAnimType = skillTemp != nullptr ? skillTemp->mAnimType : EAnimType::None; //设置动画类型
 	}
 }

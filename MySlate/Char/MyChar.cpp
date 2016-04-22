@@ -127,6 +127,12 @@ void AMyChar::Death()
 {
 	mDeathDlg.Broadcast(this); //通知所有绑定了的代理
 
+	//施放技能中被打死，释放创建的子弹和pkMsg
+	if (mUsingSkill != nullptr)
+	{
+		mUsingSkill->ReleaseData();
+	}
+
 	//TODO: 从管理器中移除，这里应该做回收，而不是销毁，暂时先销毁
 	gCharMgr->RemoveChar(mUuid);
 

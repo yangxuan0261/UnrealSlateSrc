@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Animation/AnimInstance.h"
+#include "../Skill/Template/SkillTemplate.h"
 #include "../GameTypes.h"
 #include "MyAnimInstance.generated.h"
 
@@ -46,4 +46,6 @@ public:
 		float		mSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyAnimInstance")
 		CharState	mCharState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyAnimInstance")
+		EAnimType	mAnimType;
 };

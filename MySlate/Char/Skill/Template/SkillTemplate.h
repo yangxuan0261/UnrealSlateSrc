@@ -11,6 +11,22 @@
 class UAbsPkEvent;
 class UAbsFilter;
 
+UENUM()
+enum class EAnimType : uint8 //技能动画
+{
+	None = 0,
+	Skill_1,
+	Skill_2,
+	Skill_3,
+	Skill_4,
+	Skill_5,
+	Injure_1,
+	Injure_2,
+	Victory_1,
+	Victory_2,
+	Victory_3,
+	Count,
+};
 
 UCLASS()
 class USkillTemplate : public UObject
@@ -69,6 +85,8 @@ public:
 		ESkillType		mSkillType;	//TODO: 技编数据
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
 		FString			mAttachPoint;//TODO: 技编数据 子弹绑定点
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+		EAnimType		mAnimType;//TODO: 技编数据 相同类型动画的不同动作枚举
 
 	FString	mFilterStr;
 	FString mBeforeSkillStr;

@@ -18,6 +18,9 @@
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Bool.h"
 
+//----- Animation Begin -----
+#include "Animation/AnimInstance.h"
+
 //----- Component Begin -----
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"

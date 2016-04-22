@@ -47,6 +47,7 @@ void USkillDataMgr::InitFakeDate()
 	skill1->mSkillType = ESkillType::Normal;
 	skill1->mFilterStr = TEXT("lock,-1");
 	skill1->mAttachPoint = TEXT("");
+	skill1->mAnimType = EAnimType::Skill_1;
 	mSkillTempMap.Add(skill1->mId, skill1);
 
 	USkillTemplate* skill2 = NewObject<USkillTemplate>(USkillTemplate::StaticClass());
@@ -57,9 +58,23 @@ void USkillDataMgr::InitFakeDate()
 	skill2->mCoolDown = 7.f;
 	skill2->mAttackDist = 50.f;
 	skill2->mSkillType = ESkillType::Initiative;
-	skill1->mFilterStr = TEXT("circle,-1,-1,200");
-	skill1->mAttachPoint = TEXT("rhand");
+	skill2->mFilterStr = TEXT("circle,-1,-1,200");
+	skill2->mAttachPoint = TEXT("rhand");
+	skill2->mAnimType = EAnimType::Skill_2;
 	mSkillTempMap.Add(skill2->mId, skill2);
+
+	USkillTemplate* skill3 = NewObject<USkillTemplate>(USkillTemplate::StaticClass());
+	skill3->AddToRoot();
+	skill3->mId = 10003;
+	skill3->mName = TEXT("Skill3 Name");
+	skill3->mDescr = TEXT("Skill3 Descr");
+	skill3->mCoolDown = 5.f;
+	skill3->mAttackDist = 80.f;
+	skill3->mSkillType = ESkillType::Initiative;
+	skill3->mFilterStr = TEXT("circle,-1,-1,200");
+	skill3->mAttachPoint = TEXT("lhand");
+	skill3->mAnimType = EAnimType::Skill_3;
+	mSkillTempMap.Add(skill3->mId, skill3);
 }
 
 USkillTemplate * USkillDataMgr::GetSkillTemplate(int32 _skillId)

@@ -8,6 +8,8 @@
 class USkillTemplate;
 class UPkMsg;
 class AMyBullet;
+class AMyChar;
+class UCoolDown;
 
 UCLASS()
 class USkillFunction : public UObject
@@ -25,6 +27,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		void		SetSkillTemplate(USkillTemplate* _skillTemp);
+
+	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
+		USkillTemplate*	GetSkillTemplate() const { return mSkillTemplate; }
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void		UseSkill(int32 _targetId, const FVector& _targetLoc);
@@ -50,6 +55,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		void		SetAttacker(AMyChar* _char) { mAttacker = _char; }
 
+	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
+		void		SetCD(UCoolDown* _cd) { mOwnerCD = _cd; }
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
 		AMyChar*		mAttacker;
@@ -74,4 +82,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
 		AMyBullet*		mBullet;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
+		UCoolDown*		mOwnerCD;
+
+private:
+	bool	mCanAttack;
 };

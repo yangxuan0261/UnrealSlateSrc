@@ -60,6 +60,9 @@ public:
 		void		ChangeState(CharState _state) { mCharState = _state; }
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		const CharState&	GetState() const { return mCharState; }
+
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void		Death();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "MyChar")

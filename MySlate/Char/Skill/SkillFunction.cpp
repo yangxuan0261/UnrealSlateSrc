@@ -9,6 +9,7 @@
 #include "../CharMgr.h"
 #include "../MyChar.h"
 #include "../Comp/MyCharDataComp.h"
+#include "CoolDown/CoolDown.h"
 #include "Function/Funcs/AbsPkEvent.h"
 
 USkillFunction::USkillFunction() : Super()
@@ -21,6 +22,7 @@ USkillFunction::USkillFunction() : Super()
 	mAttacker = nullptr;
 	mTargetId = 0;
 	mTargetLoc = FVector(0.f, 0.f, 0.f);
+	mCanAttack = false;
 }
 
 USkillFunction::~USkillFunction()
@@ -43,7 +45,18 @@ void USkillFunction::BeginDestroy()
 
 void USkillFunction::Tick(float DeltaSeconds)
 {
+	if (!mCanAttack)
+	{
+		mCanAttack = CanAttack();
+	}
 
+	if (mCanAttack)
+	{
+		if (mAttacker->GetState() != CharState::Attack)
+		{
+			mAttacker->ChangeState(CharState::Attack);
+		}
+	}
 }
 
 void USkillFunction::SetSkillTemplate(USkillTemplate* _skillTemp)
@@ -62,6 +75,8 @@ void USkillFunction::UseSkill(int32 _targetId, const FVector& _targetLoc)
 
 bool USkillFunction::CanAttack()
 {
+	return true; //for test
+
 	AMyChar* target = mTargetId > 0 ? UCharMgr::GetInstance()->GetChar(mTargetId) : nullptr;
 	float DistSq = 0.f;
 	if (target) //锁定目标
@@ -82,6 +97,9 @@ void USkillFunction::SkillBegin()
 	{
 		UE_LOG(SkillLogger, Error, TEXT("--- USkillFunction::BulletCreate, mPkMsg != nullptr before"));
 	}
+
+	mOwnerCD->Restart();
+	return; //for test
 
 	UPkMsg* pkMsg = NewObject<UPkMsg>(UPkMsg::StaticClass());
 	pkMsg->AddToRoot();
@@ -173,6 +191,7 @@ void USkillFunction::SkillEnd()
 
 		mAttacker->ChangeState(CharState::IdleRun);
 		mAttacker->SetUsingSkillNull();
+		mCanAttack = false;
 
 		ReleaseData();
 	}
@@ -181,16 +200,19 @@ void USkillFunction::SkillEnd()
 void USkillFunction::ReleaseData()
 {
 	//尝试释放内存
-	if (mBullet != nullptr) //创建子弹但没发射出去，技能就被打断，需要销毁子弹
+	if (mBullet != nullptr) //创建子弹但没发射出去，技能就被打断，需要销毁子弹,pkMsg在里面会跟着销毁
 	{
 		mBullet->DestroyBullet();
 		mBullet = nullptr;
 	}
-	if (mPkMsg != nullptr)
+	else //还没有创建子弹，就必须这里销毁pkMsg
 	{
-		mPkMsg->RemoveFromRoot();
-		mPkMsg->ConditionalBeginDestroy();
-		mPkMsg = nullptr;
+		if (mPkMsg != nullptr)
+		{
+			mPkMsg->RemoveFromRoot();
+			mPkMsg->ConditionalBeginDestroy();
+			mPkMsg = nullptr;
+		}
 	}
 }
 

@@ -25,6 +25,7 @@ USkillTemplate::USkillTemplate() : Super()
 	mEndEvnsStr = "";
 	mEndPkStr= "";
 	mEndSkillStr = "";
+	mAnimType = EAnimType::None;
 }
 
 USkillTemplate::~USkillTemplate()
