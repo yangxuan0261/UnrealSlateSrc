@@ -64,9 +64,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
 		float			mCoolDown;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
-		float			mAttackDist;
+		float			mAttackDist; //TODO: 技编数据
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
-		ESkillType		mSkillType;
+		ESkillType		mSkillType;	//TODO: 技编数据
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+		FString			mAttachPoint;//TODO: 技编数据 子弹绑定点
 
 	FString	mFilterStr;
 	FString mBeforeSkillStr;

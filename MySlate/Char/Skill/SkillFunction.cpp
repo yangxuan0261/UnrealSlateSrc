@@ -125,6 +125,14 @@ void USkillFunction::BulletCreate()
 		mBullet = GetWorld()->SpawnActor<AMyBullet>(mAttacker->BulletClass, mAttacker->GetActorLocation(), mAttacker->GetActorRotation(), SpawnInfo);
 		mBullet->SetPkMsg(mPkMsg);
 		mBullet->SetTargetAndLoc(mTargetId, mTargetLoc);  
+		mBullet->SetSpeed(50.f);
+		mBullet->SetFly(false);
+
+		if (mSkillTemplate->mAttachPoint.Len() > 0)
+		{
+			//TODO: 技编数据, 设置矩阵信息transform
+			mBullet->GetRootComponent()->AttachTo(mAttacker->GetMesh(), FName(*mSkillTemplate->mAttachPoint));
+		}
 	}
 }
 
@@ -132,8 +140,6 @@ void USkillFunction::BulletShoot()
 {
 	if (mBullet != nullptr && mPkMsg != nullptr)
 	{
-		//TODO: 射击，脱离绑定点，朝目标飞行
-
 		//step3 - 运行给攻击者自己提升攻击力的func
 		const TArray<UAbsPkEvent*>& functions = mSkillTemplate->GetBeforeEvns();
 		for (UAbsPkEvent* func : functions)
@@ -141,9 +147,9 @@ void USkillFunction::BulletShoot()
 			func->RunBeforeEvns(mPkMsg);
 		}
 
-		//子弹射击时，才绑定碰撞组件碰撞事件
+		//TODO: 射击，脱离绑定点，朝目标飞行，绑定碰撞组件碰撞事件
+		mBullet->GetRootComponent()->DetachFromParent();
 		mBullet->SetFly(true);
-
 		mBullet->CollisionComp->OnComponentBeginOverlap.AddDynamic(mBullet, &AMyBullet::OnMyCollisionCompBeginOverlap);
 
 		mBullet = nullptr;//发射出去后子弹、pkMsg置空，由子弹去释放pkMsg

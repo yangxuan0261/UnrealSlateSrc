@@ -45,7 +45,8 @@ void USkillDataMgr::InitFakeDate()
 	skill1->mCoolDown = 3.f;
 	skill1->mAttackDist = 100.f;
 	skill1->mSkillType = ESkillType::Normal;
-	skill1->mFilterStr =TEXT("lock,-1");
+	skill1->mFilterStr = TEXT("lock,-1");
+	skill1->mAttachPoint = TEXT("");
 	mSkillTempMap.Add(skill1->mId, skill1);
 
 	USkillTemplate* skill2 = NewObject<USkillTemplate>(USkillTemplate::StaticClass());
@@ -57,6 +58,7 @@ void USkillDataMgr::InitFakeDate()
 	skill2->mAttackDist = 50.f;
 	skill2->mSkillType = ESkillType::Initiative;
 	skill1->mFilterStr = TEXT("circle,-1,-1,200");
+	skill1->mAttachPoint = TEXT("rhand");
 	mSkillTempMap.Add(skill2->mId, skill2);
 }
 

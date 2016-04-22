@@ -15,6 +15,7 @@ class AMyBullet;
 class USkillFunction;
 class UCharMgr;
 class UCharData;
+class USkeletalMeshComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeathDlg, AMyChar*, MyCharBp);
 

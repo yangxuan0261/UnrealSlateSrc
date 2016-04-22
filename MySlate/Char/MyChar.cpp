@@ -28,6 +28,7 @@ AMyChar::AMyChar() : Super()
 	mCharState = CharState::IdleRun;
 	mUuid = 0;
 	mCharData = nullptr;
+
 }
 
 AMyChar::~AMyChar()
@@ -35,7 +36,30 @@ AMyChar::~AMyChar()
 	UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::~AMyChar"));
 }
 
-// Called every frame
+void AMyChar::BeginPlay()
+{
+	Super::BeginPlay();
+	gCharMgr = UCharMgr::GetInstance();
+
+	//设置默认AI控制类，并生成一下
+	AIControllerClass = AMyAIController::StaticClass();
+	SpawnDefaultController();
+
+	//注册cd组件
+	mCDComp = NewObject<UCoolDownComp>(this, TEXT("CDComponent"));
+	mCDComp->RegisterComponent();
+	mCDComp->SetOwner(this);
+
+	//注册data组件
+	mDataComp = NewObject<UMyCharDataComp>(this, TEXT("CharDataComponent"));
+	mDataComp->RegisterComponent();
+
+	//绑定buff管理器
+	mDeathDlg.AddDynamic(UBuffMgr::GetInstance(), &UBuffMgr::CharDeathNotify);
+
+	//GetMesh()->SetSkeletalMesh(nullptr);
+}
+
 void AMyChar::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
@@ -68,28 +92,6 @@ void AMyChar::Destroyed()
 
 	UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::Destroyed"));
 	Super::Destroyed();
-}
-
-void AMyChar::BeginPlay()
-{
-	Super::BeginPlay();
-	gCharMgr = UCharMgr::GetInstance();
-
-	//设置默认AI控制类，并生成一下
-	AIControllerClass = AMyAIController::StaticClass();
-	SpawnDefaultController();
-
-	//注册cd组件
-	mCDComp = NewObject<UCoolDownComp>(this, TEXT("CDComponent"));
-	mCDComp->RegisterComponent();
-	mCDComp->SetOwner(this);
-
-	//注册data组件
-	mDataComp = NewObject<UMyCharDataComp>(this, TEXT("CharDataComponent"));
-	mDataComp->RegisterComponent();
-
-	//绑定buff管理器
-	mDeathDlg.AddDynamic(UBuffMgr::GetInstance(), &UBuffMgr::CharDeathNotify);
 }
 
 void AMyChar::OnCDFinish(UCoolDown* _cd)
