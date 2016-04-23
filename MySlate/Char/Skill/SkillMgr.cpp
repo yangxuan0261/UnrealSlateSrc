@@ -8,17 +8,24 @@
 
 USkillMgr::USkillMgr() : Super()
 {
-	mCounter = 0.f;
+
 }
+
 USkillMgr::~USkillMgr()
 {
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- USkillMgr::~USkillMgr"));
+}
 
+void USkillMgr::BeginDestroy()
+{
+
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- USkillMgr::BeginDestroy"));
+	Super::BeginDestroy();
 }
 
 void USkillMgr::Tick(float DeltaTime)
 {
-	mCounter += DeltaTime;
-	//UE_LOG(SkillMgrLogger, Warning, TEXT("--- USkillMgr::Tick:%f"), mCounter);
+
 }
 
 bool USkillMgr::IsTickable() const

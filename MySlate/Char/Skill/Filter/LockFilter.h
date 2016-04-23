@@ -23,5 +23,5 @@ public:
 	static ULockFilter* CreateFilter(const FString& _key);
 
 public:
-	int32		mType; //1¼º·½£¬-1µÐ·½
+
 };

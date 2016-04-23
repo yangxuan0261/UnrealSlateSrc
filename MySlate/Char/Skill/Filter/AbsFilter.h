@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../SkillTypes.h"
 #include "AbsFilter.generated.h"
 
 /*
@@ -11,14 +12,6 @@ int32		mLimitId; //技能限制
 
 class AMyChar;
 class UPkMsg;
-
-UENUM()
-enum class EFilterType : uint8 //选人类型
-{
-	Locked = 0,	//锁定
-	Circle,		//圆形
-	Rect,		//矩形
-};
 
 UCLASS()
 class UAbsFilter : public UObject
@@ -41,6 +34,6 @@ public:
 public:
 		FString		mKey;
 		int32		mCount; //限制人数
-		int32		mSelectType; //选人 -- 1:攻击方，-1:受击方
+		ESelectType	mSelectType;
 		TArray<AMyChar*>	mDestChars; //目标集合
 };

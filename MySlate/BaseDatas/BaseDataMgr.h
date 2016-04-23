@@ -16,6 +16,7 @@ class UBaseDataMgr : public UObject, public USingleton<UBaseDataMgr>
 public:
 	UBaseDataMgr();
 	virtual ~UBaseDataMgr();
+	virtual void BeginDestroy() override;
 
 	void InitFakeData();
 	void LoadCharData();

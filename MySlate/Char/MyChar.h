@@ -48,7 +48,7 @@ public:
 		bool		IsAlive() const;
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
-		bool		UseSkill(int32 _skillId, int32 _targetId, FVector _targetLoc = FVector::ZeroVector);
+		bool		UseSkill(int32 _skillId, int32 _targetId = 0, FVector _targetLoc = FVector::ZeroVector);
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void		SetUsingSkillNull() { mUsingSkill = nullptr; }

@@ -39,7 +39,7 @@ void URectFilter::Parser(const TArray<FString>& _params)
 
 	if (_params.Num() == 5)
 	{
-		mSelectType = FCString::Atoi(*_params[0]);
+		mSelectType = (ESelectType)FCString::Atoi(*_params[0]);
 		mCount = FCString::Atoi(*_params[1]);
 		mBoxSize.X = FCString::Atof(*_params[2]);
 		mBoxSize.Y = FCString::Atof(*_params[2]);

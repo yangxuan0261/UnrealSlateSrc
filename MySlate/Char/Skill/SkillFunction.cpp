@@ -68,13 +68,20 @@ void USkillFunction::SetSkillTemplate(USkillTemplate* _skillTemp)
 	mSkillTemplate = _skillTemp;
 	mSkillId = _skillTemp->mId;
 	mType = _skillTemp->mSkillType;
-
 }
 
 void USkillFunction::UseSkill(int32 _targetId, const FVector& _targetLoc)
 {
 	mTargetId = _targetId;
 	mTargetLoc = _targetLoc;
+	if (_targetId > 0)
+	{
+		UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::UseSkill, targetId:%d"), mTargetId);
+	}
+	else
+	{
+		UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::UseSkill, target is Location"));
+	}
 }
 
 bool USkillFunction::CanAttack()
@@ -144,7 +151,7 @@ void USkillFunction::BulletCreate()
 		mBullet = GWorld->SpawnActor<AMyBullet>(mAttacker->BulletClass, SpawnInfo);
 		mBullet->SetPkMsg(mPkMsg);
 		mBullet->SetSkillTemplate(mSkillTemplate);
-		mBullet->SetTargetAndLoc(mTargetId, mTargetLoc);  
+		mBullet->SetTargetAndLoc(mPkMsg->GetTargetId(), mPkMsg->GetTargetLoc());
 		mBullet->SetSpeed(mSkillTemplate->mBulletSpeed);
 		mBullet->SetFly(false);
 

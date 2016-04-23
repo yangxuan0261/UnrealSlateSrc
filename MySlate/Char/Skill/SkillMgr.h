@@ -18,6 +18,7 @@ public:
 	// Sets default values for this character's properties
 	USkillMgr();
 	virtual ~USkillMgr();
+	virtual void BeginDestroy() override;
 
 	// Begin FTickableGameObject Interface.
 	virtual void Tick(float DeltaTime) override;

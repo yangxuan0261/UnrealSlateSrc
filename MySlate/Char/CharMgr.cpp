@@ -19,12 +19,24 @@ UCharMgr::UCharMgr() : Super()
 
 UCharMgr::~UCharMgr()
 {
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UCharMgr::~UCharMgr"));
+}
+
+void UCharMgr::BeginDestroy()
+{
+	for (TMap<int32, AMyChar*>::TConstIterator Iter = mAllCharMap.CreateConstIterator(); Iter; ++Iter)
+	{
+		Iter->Value->Destroy();
+	}
+
+	mAllCharMap.Empty();
 	mSelfCharArr.Empty();
 	mTeamCharArr.Empty();
 	mEnemyCharArr.Empty();
+
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UCharMgr::BeginDestroy"));
+	Super::BeginDestroy();
 }
-
-
 
 void UCharMgr::AddChar(AMyChar* _char)
 {
@@ -54,10 +66,10 @@ void UCharMgr::RemoveChar(int32 _id)
 	mAllCharMap.Remove(_id);
 }
 
-ETeam UCharMgr::GetDestTeam(const ETeam& _atkTeam, int32 _flag)
+ETeam UCharMgr::GetDestTeam(ETeam _atkTeam, ESelectType _flag)
 {
-	//_flag: 1:攻击方，2:受击方
-	if (_flag == 1)
+	//_flag: 1:攻击方，0:受击方
+	if (_flag == ESelectType::Self)
 	{
 		return _atkTeam;
 	}
@@ -74,10 +86,10 @@ ETeam UCharMgr::GetDestTeam(const ETeam& _atkTeam, int32 _flag)
 	}
 }
 
-ETeam UCharMgr::GetIgnoreTeam(const ETeam& _atkTeam, int32 _flag)
+ETeam UCharMgr::GetIgnoreTeam(ETeam _atkTeam, ESelectType _flag)
 {
-	//_flag: 1:攻击方，2:受击方
-	if (_flag == -1)
+	//_flag: 1:攻击方，0:受击方
+	if (_flag == ESelectType::Enemy)
 	{
 		return _atkTeam;
 	}

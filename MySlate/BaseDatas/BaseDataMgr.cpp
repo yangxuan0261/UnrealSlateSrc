@@ -13,12 +13,20 @@ UBaseDataMgr::UBaseDataMgr() : Super()
 
 UBaseDataMgr::~UBaseDataMgr()
 {
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UBaseDataMgr::~UBaseDataMgr"));
+}
+
+void UBaseDataMgr::BeginDestroy()
+{
 	for (TMap<int32, UCharData*>::TConstIterator iter = mCharDataMap.CreateConstIterator(); iter; ++iter)
 	{
 		iter->Value->RemoveFromRoot();
 		iter->Value->ConditionalBeginDestroy();
 	}
 	mCharDataMap.Empty();
+
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UBaseDataMgr::BeginDestroy"));
+	Super::BeginDestroy();
 }
 
 void UBaseDataMgr::InitFakeData()

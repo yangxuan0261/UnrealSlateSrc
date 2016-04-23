@@ -15,6 +15,11 @@ USkillDataMgr::USkillDataMgr() : Super()
 
 USkillDataMgr::~USkillDataMgr()
 {
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- USkillDataMgr::~USkillDataMgr"));
+}
+
+void USkillDataMgr::BeginDestroy()
+{
 	for (TMap<int32, USkillTemplate*>::TConstIterator iter = mSkillTempMap.CreateConstIterator(); iter; ++iter)
 	{
 		iter->Value->RemoveFromRoot();
@@ -28,6 +33,9 @@ USkillDataMgr::~USkillDataMgr()
 		iter->Value->ConditionalBeginDestroy();
 	}
 	mBuffTempMap.Empty();
+
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- USkillDataMgr::BeginDestroy"));
+	Super::BeginDestroy();
 }
 
 void USkillDataMgr::InitFakeDate()
@@ -40,10 +48,10 @@ void USkillDataMgr::InitFakeDate()
 	skill1->mCoolDown = 3.f;
 	skill1->mAttackDist = 100.f;
 	skill1->mTolerance = 5.f;
-	skill1->mBulletSpeed = 300.f;
+	skill1->mBulletSpeed = 400.f;
 	skill1->mFlyDist = 0.f;
 	skill1->mSkillType = ESkillType::Normal;
-	skill1->mFilterStr = TEXT("circle,-1,-1,200");
+	skill1->mFilterStr = TEXT("circle,0,-1,500");
 	skill1->mAttachPoint = TEXT("BulletPos");
 	skill1->mAnimType = EAnimType::Skill_1;
 	mSkillTempMap.Add(skill1->mId, skill1);
@@ -59,7 +67,7 @@ void USkillDataMgr::InitFakeDate()
 	skill2->mBulletSpeed = 5.f;
 	skill2->mFlyDist = 0.f;
 	skill2->mSkillType = ESkillType::Initiative;
-	skill2->mFilterStr = TEXT("circle,-1,-1,200");
+	skill2->mFilterStr = TEXT("circle,0,-1,200");
 	skill2->mAttachPoint = TEXT("rhand");
 	skill2->mAnimType = EAnimType::Skill_2;
 	mSkillTempMap.Add(skill2->mId, skill2);
@@ -75,7 +83,7 @@ void USkillDataMgr::InitFakeDate()
 	skill3->mBulletSpeed = 5.f;
 	skill3->mFlyDist = 0.f;
 	skill3->mSkillType = ESkillType::Initiative;
-	skill3->mFilterStr = TEXT("circle,-1,-1,200");
+	skill3->mFilterStr = TEXT("circle,0,-1,200");
 	skill3->mAttachPoint = TEXT("lhand");
 	skill3->mAnimType = EAnimType::Skill_3;
 	mSkillTempMap.Add(skill3->mId, skill3);

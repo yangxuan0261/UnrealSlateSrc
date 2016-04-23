@@ -27,3 +27,19 @@ enum class ESkillAttackType : uint8 //技能攻击类型
 	ATTACK_SUCKHP,	//吸血
 	ATTACK_REBOUND	//反伤
 };
+
+//------------------- 
+UENUM()
+enum class EFilterType : uint8 //选人类型
+{
+	Locked = 0,	//锁定一人
+	Circle,		//圆形
+	Rect,		//矩形
+};
+
+UENUM()
+enum class ESelectType : uint8 //选人标记
+{
+	Enemy = 0,	//受击方
+	Self,		//攻击方
+};

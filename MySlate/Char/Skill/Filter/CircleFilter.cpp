@@ -38,7 +38,7 @@ void UCircleFilter::Parser(const TArray<FString>& _params)
 {
 	if (_params.Num() == 3)
 	{
-		mSelectType = FCString::Atoi(*_params[0]);
+		mSelectType = (ESelectType)FCString::Atoi(*_params[0]);
 		mCount = FCString::Atoi(*_params[1]);
 		mRadius = FCString::Atoi(*_params[2]);
 	}

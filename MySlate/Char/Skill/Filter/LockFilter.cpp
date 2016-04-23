@@ -31,10 +31,9 @@ UAbsFilter* ULockFilter::Clone()
 
 void ULockFilter::Parser(const TArray<FString>& _params)
 {
-	mType = -1; //Ä¬ÈÏµÐ·½
 	if (_params.Num() > 0)
 	{
-		mType = FCString::Atoi(*_params[0]);
+		mSelectType = (ESelectType)FCString::Atoi(*_params[0]);
 	}
 }
 

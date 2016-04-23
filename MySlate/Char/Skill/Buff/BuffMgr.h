@@ -7,6 +7,7 @@
 
 class UPkMsg;
 class AMyChar;
+class UAbsBuff;
 
 UCLASS()
 class UBuffMgr : public UObject, public FTickableGameObject, public USingleton<UBuffMgr>
@@ -17,6 +18,7 @@ public:
 	// Sets default values for this character's properties
 	UBuffMgr();
 	virtual ~UBuffMgr();
+	virtual void BeginDestroy() override;
 
 	// Begin FTickableGameObject Interface.
 	virtual void Tick(float DeltaTime) override;
@@ -35,8 +37,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
 		void CharDeathNotify(AMyChar* _char);
 
-public:
-	
 
 private:
+	TMap<int32, TArray<UAbsBuff*>>		mBuffs;//key, charΨһid
 };

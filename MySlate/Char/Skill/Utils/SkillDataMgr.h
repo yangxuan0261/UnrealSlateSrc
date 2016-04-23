@@ -17,6 +17,7 @@ class USkillDataMgr : public UObject, public USingleton<USkillDataMgr>
 public:
 	USkillDataMgr();
 	virtual ~USkillDataMgr();
+	virtual void BeginDestroy() override;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "USkillDataMgr")

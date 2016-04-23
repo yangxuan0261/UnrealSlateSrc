@@ -4,6 +4,7 @@
 #include "BuffMgr.h"
 
 #include "Char/MyChar.h"
+#include "Buffs/AbsBuff.h"
 
 UBuffMgr::UBuffMgr() : Super()
 {
@@ -12,7 +13,23 @@ UBuffMgr::UBuffMgr() : Super()
 
 UBuffMgr::~UBuffMgr()
 {
-	
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UBuffMgr::~UBuffMgr"));
+}
+
+void UBuffMgr::BeginDestroy()
+{
+	for (auto iter = mBuffs.CreateIterator(); iter; ++iter)
+	{
+		for (auto tempBuff : iter->Value)
+		{
+			tempBuff->RemoveFromRoot();
+			tempBuff->ConditionalBeginDestroy();
+		}
+		iter->Value.Empty();
+	}
+
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UBuffMgr::BeginDestroy"));
+	Super::BeginDestroy();
 }
 
 void UBuffMgr::Tick(float DeltaTime)

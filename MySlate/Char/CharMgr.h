@@ -4,6 +4,7 @@
 
 #include "Common/ISingleton.h"
 #include "GameTypes.h"
+#include "Skill/SkillTypes.h"
 
 #include "CharMgr.generated.h"
 
@@ -18,6 +19,7 @@ public:
 	// Sets default values for this character's properties
 	UCharMgr();
 	virtual ~UCharMgr();
+	virtual void BeginDestroy() override;
 
 	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
 		void		AddChar(AMyChar* _char);
@@ -29,10 +31,10 @@ public:
 		void		RemoveChar(int32 _id);
 
 	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
-		ETeam		GetDestTeam(const ETeam& _atkTeam, int32 _flag);//根据标记获取目的队伍标记
+		ETeam		GetDestTeam(ETeam _atkTeam, ESelectType _flag);//根据标记获取目的队伍标记
 
 	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
-		ETeam		GetIgnoreTeam(const ETeam& _atkTeam, int32 _flag);//根据标记获取目的队伍标记
+		ETeam		GetIgnoreTeam(ETeam _atkTeam, ESelectType _flag);//根据标记获取目的队伍标记
 
 	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
 		void		GetIgnoreCharsByTeam(ETeam _type, UPARAM(ref) TArray<AMyChar*>& _outChars) const;

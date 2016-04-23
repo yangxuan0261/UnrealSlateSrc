@@ -111,7 +111,7 @@ bool AMyChar::IsAlive() const
 	return mDataComp->mHealth > 0.f ? true : false;
 }
 
-bool AMyChar::UseSkill(int32 _skillId, int32 _targetId, FVector _targetLoc /* = FVector::ZeroVector */)
+bool AMyChar::UseSkill(int32 _skillId, int32 _targetId /* = 0 */, FVector _targetLoc /* = FVector::ZeroVector */)
 {
 	bool canUse = false;
 	if (mUsingSkill == nullptr)

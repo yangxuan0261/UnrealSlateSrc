@@ -11,8 +11,8 @@
 UAbsFilter::UAbsFilter()
 {
 	mKey = "";
-	mSelectType = -1;
-	mCount = -1;
+	mSelectType = ESelectType::Enemy; //默认敌方
+	mCount = -1; //不限人数
 }
 
 UAbsFilter::~UAbsFilter()
@@ -74,30 +74,32 @@ void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::
 			UKismetSystemLibrary::BoxOverlapActors_NEW(GWorld, targetLoc, _boxSize, destObjectTypes, AMyChar::StaticClass(), ignoreActors, destActors);
 		}
 
-		if (mCount > 0)
+		//为减少多次遍历，直接在cast后加入pkMsg目标集合中
+		AMyChar* tmpTarget = nullptr;
+		int32 tmpTargetId = 0;
+		int32 counter = mCount;
+		//把选中的人丢进pkMsg目标集合中
+		for (AActor* destTarget : destActors)
 		{
-			int counter = mCount;
-			AMyChar* tmpTarget = nullptr;
-			//把选中的人丢进pkMsg目标集合中
-			for (AActor* destTarget : destActors)
+			if (mCount > 0)//有人数限制
 			{
 				if (counter == 0)
 				{
-					return; //选定人数已经达到
-				}
-
-				tmpTarget = Cast<AMyChar>(destTarget);
-				if (tmpTarget)
-				{
-					mDestChars.Add(tmpTarget);
-					--counter;
+					break; //选定人数已经达到
 				}
 			}
+
+			tmpTarget = Cast<AMyChar>(destTarget);
+			tmpTargetId = tmpTarget != nullptr ? tmpTarget->GetUuid() : 0;
+			tmpTarget = tmpTargetId > 0 ? UCharMgr::GetInstance()->GetChar(tmpTargetId) : nullptr; //防止死亡的char被选中
+			if (tmpTarget)
+			{
+				_msg->AddTarget(tmpTarget);
+				mDestChars.Add(tmpTarget);
+				--counter;
+			}
 		}
-		else
-		{
-			UCharMgr::GetInstance()->ConvertActorsToChars(destActors, mDestChars);
-		}
+	
 
 		//DEBUG: 绘制一下选中的目标集合线段
 		for (AMyChar* tmpChar : mDestChars)
