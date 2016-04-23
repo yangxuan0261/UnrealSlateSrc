@@ -8,9 +8,6 @@
 #include "Char/Skill/CoolDown/CoolDown.h"
 #include "Char/AI/MyAIController.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(BTDecorateLogger, Log, All);
-DEFINE_LOG_CATEGORY(BTDecorateLogger)
-
 UBTDecorateMyBase::UBTDecorateMyBase()
 	: Super()
 {

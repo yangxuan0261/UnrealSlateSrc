@@ -15,6 +15,9 @@ USkillTemplate::USkillTemplate() : Super()
 	mDescr = TEXT("Default SkillDescr");
 	mCoolDown = 5.f;
 	mAttackDist = 10.f;
+	mTolerance = 0.f;
+	mBulletSpeed = 0.f;
+	mFlyDist = 0.f;
 	mSkillType = ESkillType::Normal;
 	mFilterStr = "";
 	mFilter = nullptr;
@@ -121,7 +124,7 @@ UAbsFilter* USkillTemplate::GetFilter()
 {
 	if (mFilter == nullptr && mFilterStr.Len() > 0)
 	{
-		ParseFilterStr(mFilterStr, mFilter);
+		ParseFilterStr(mFilterStr);
 	}
 	return mFilter;
 }
@@ -142,11 +145,11 @@ void USkillTemplate::ParseFuncStr(const FString& _funcStr, TArray<UAbsPkEvent*>&
 	}
 }
 
-void USkillTemplate::ParseFilterStr(const FString& _filterStr, UAbsFilter*& _filter)
+void USkillTemplate::ParseFilterStr(const FString& _filterStr)
 {
-	_filter = UFuncFactory::GetInstance()->createFilter(_filterStr.ToLower());
-	if (_filter != nullptr)
+	mFilter = UFuncFactory::GetInstance()->createFilter(_filterStr);
+	if (mFilter != nullptr)
 	{
-		_filter->AddToRoot();
+		mFilter->AddToRoot();
 	}
 }

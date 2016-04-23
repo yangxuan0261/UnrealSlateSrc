@@ -125,3 +125,10 @@ void UGolbalFunc::TestFilter(AMyChar* _actor, float _radius)
 	}
 }
 
+void UGolbalFunc::TestSpwanBullet(AMyChar* _actor)
+{
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	AMyBullet* bullet = GWorld->SpawnActor<AMyBullet>(_actor->BulletClass, _actor->GetActorLocation(), _actor->GetActorRotation(), SpawnInfo);
+}
+

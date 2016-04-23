@@ -28,7 +28,7 @@ AMyBullet::AMyBullet()
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
 	MovementComp->UpdatedComponent = CollisionComp;
 	MovementComp->ProjectileGravityScale = 0.0f;
-	MovementComp->MaxSpeed = 300.f;
+	MovementComp->MaxSpeed = 0.f;
 	MovementComp->InitialSpeed = 0.f;
 
 	//TODO: mesh component
@@ -37,7 +37,7 @@ AMyBullet::AMyBullet()
 
 	mTargetId = 0;
 	mSkillTemp = nullptr;
-	mTargetLoc = FVector(0.f, 0.f, 0.f);
+	mTargetLoc = FVector::ZeroVector;
 	mPkMsg = nullptr;
 	mPkPorcess = nullptr;
 	mFlying = false;
@@ -83,8 +83,8 @@ void AMyBullet::Tick(float DeltaSeconds)
 		}
 	}
 
-	//到达到Loc，结算，子弹弹射
-	if (mTargetLoc == GetActorLocation())
+	//到达到Loc，结算，子弹弹射，需要容许一定的误差
+	if (GetActorLocation().Equals(mTargetLoc, mSkillTemp->mTolerance))
 	{
 		CreatePk();
 		BulletJump();
@@ -116,29 +116,30 @@ void AMyBullet::SetTargetAndLoc(int32 _targetId, UPARAM(ref) const FVector& _tar
 
 void AMyBullet::SetFly(bool _fly)
 {
-	//开始飞行，设置移动组件的的速度矢量，并朝向目标 or Loc
-	mFlying = mFlying;
-
-	if (mSpeed > 0.f)
+	mFlying = _fly;
+	if (_fly) //开始飞行，设置移动组件的的速度矢量，并朝向目标 or Loc
 	{
-		if (mTargetId > 0)
+		if (mSpeed > 0.f)
 		{
-			AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
-			if (target != nullptr)
+			if (mTargetId > 0)
 			{
-				mTargetLoc = target->GetActorLocation();
+				AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
+				if (target != nullptr)
+				{
+					mTargetLoc = target->GetActorLocation();
+				}
 			}
-		}
-		MovementComp->InitialSpeed = mSpeed;
-		MovementComp->MaxSpeed = mSpeed;
-		MovementComp->Velocity = MovementComp->GetMaxSpeed() * (mTargetLoc - GetActorLocation()).GetSafeNormal(); //子弹移动方向
+			MovementComp->InitialSpeed = mSpeed;
+			MovementComp->MaxSpeed = mSpeed;
+			MovementComp->Velocity = MovementComp->GetMaxSpeed() * (mTargetLoc - GetActorLocation()).GetSafeNormal(); //子弹移动方向
 
-		//朝向目标
-		SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), mTargetLoc));
+			//朝向目标
+			SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), mTargetLoc));
+		}
 	}
 	else
 	{
-		UE_LOG(BulletLogger, Error, TEXT("--- AMyBullet::SetFly, mSpeed == 0.f"));
+		MovementComp->Velocity = FVector::ZeroVector;
 	}
 }
 
@@ -240,12 +241,10 @@ void AMyBullet::OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UP
 	//}
 	//else
 	//{
-		//TODO: 锁定目标，子弹飞往目的地过程中，碰撞款撞到的敌人都应该做一次战斗结算，
-		if (mPkMsg->GetAttackerTeam() != OtherChar->GetDataComp()->GetTeamType()) //不是同一队的
-		{
-			//
-
-		}
+		////TODO: 锁定目标，子弹飞往目的地过程中，碰撞款撞到的敌人都应该做一次战斗结算，
+		//if (mPkMsg->GetAttackerTeam() != OtherChar->GetDataComp()->GetTeamType()) //不是同一队的
+		//{
+		//}
 	//}
 
 	//if (target == nullptr)

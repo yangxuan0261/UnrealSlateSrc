@@ -8,14 +8,9 @@
 #include "Char/Skill/Template/BufflTemplate.h"
 #include "Char/Skill/SkillTypes.h"
 
-
-DECLARE_LOG_CATEGORY_EXTERN(SkillDataMgrLogger, Log, All);
-DEFINE_LOG_CATEGORY(SkillDataMgrLogger)
-
-// Sets default values
 USkillDataMgr::USkillDataMgr() : Super()
 {
-	//UE_LOG(SkillDataMgrLogger, Warning, TEXT("--- USkillDataMgr::Tick:%f"), 0.2f);
+
 }
 
 USkillDataMgr::~USkillDataMgr()
@@ -44,9 +39,12 @@ void USkillDataMgr::InitFakeDate()
 	skill1->mDescr = TEXT("Skill1 Descr");
 	skill1->mCoolDown = 3.f;
 	skill1->mAttackDist = 100.f;
+	skill1->mTolerance = 5.f;
+	skill1->mBulletSpeed = 300.f;
+	skill1->mFlyDist = 0.f;
 	skill1->mSkillType = ESkillType::Normal;
-	skill1->mFilterStr = TEXT("lock,-1");
-	skill1->mAttachPoint = TEXT("");
+	skill1->mFilterStr = TEXT("circle,-1,-1,200");
+	skill1->mAttachPoint = TEXT("BulletPos");
 	skill1->mAnimType = EAnimType::Skill_1;
 	mSkillTempMap.Add(skill1->mId, skill1);
 
@@ -57,6 +55,9 @@ void USkillDataMgr::InitFakeDate()
 	skill2->mDescr = TEXT("Skill2 Descr");
 	skill2->mCoolDown = 7.f;
 	skill2->mAttackDist = 50.f;
+	skill2->mTolerance = 5.f;
+	skill2->mBulletSpeed = 5.f;
+	skill2->mFlyDist = 0.f;
 	skill2->mSkillType = ESkillType::Initiative;
 	skill2->mFilterStr = TEXT("circle,-1,-1,200");
 	skill2->mAttachPoint = TEXT("rhand");
@@ -70,6 +71,9 @@ void USkillDataMgr::InitFakeDate()
 	skill3->mDescr = TEXT("Skill3 Descr");
 	skill3->mCoolDown = 5.f;
 	skill3->mAttackDist = 80.f;
+	skill3->mTolerance = 5.f;
+	skill3->mBulletSpeed = 5.f;
+	skill3->mFlyDist = 0.f;
 	skill3->mSkillType = ESkillType::Initiative;
 	skill3->mFilterStr = TEXT("circle,-1,-1,200");
 	skill3->mAttachPoint = TEXT("lhand");

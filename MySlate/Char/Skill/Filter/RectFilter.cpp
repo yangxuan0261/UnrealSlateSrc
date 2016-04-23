@@ -8,7 +8,7 @@
 
 URectFilter::URectFilter() : Super()
 {
-	mBoxSize = FVector(0.f, 0.f, 0.f);
+	mBoxSize = FVector::ZeroVector;
 }
 
 URectFilter::~URectFilter()
@@ -23,7 +23,7 @@ void URectFilter::BeginDestroy()
 	Super::BeginDestroy();
 }
 
-void URectFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::Locked */, float _radius /* = 0.f */, const FVector& _boxSize /* = FVector(0.f, 0.f, 0.f) */)
+void URectFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::Locked */, float _radius /* = 0.f */, const FVector& _boxSize /* = FVector::ZeroVector */)
 {
 	Super::Filter(_msg, EFilterType::Circle, 0.f, mBoxSize);
 

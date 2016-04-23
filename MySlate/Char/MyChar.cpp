@@ -111,17 +111,44 @@ bool AMyChar::IsAlive() const
 	return mDataComp->mHealth > 0.f ? true : false;
 }
 
-bool AMyChar::UseSkill(int32 _skillId, int32 _targetId, FVector _targetLoc /* = FVector(0.f, 0.f, 0.f) */)
+bool AMyChar::UseSkill(int32 _skillId, int32 _targetId, FVector _targetLoc /* = FVector::ZeroVector */)
 {
-	USkillFunction* skillFunc = mCDComp->CanUseSkill(_skillId);
-	if (skillFunc != nullptr)
+	bool canUse = false;
+	if (mUsingSkill == nullptr)
 	{
-		skillFunc->UseSkill(_targetId, _targetLoc);
-		mUsingSkill = skillFunc;
-		return true;
+		USkillFunction* skillFunc = mCDComp->CanUseSkill(_skillId);
+		if (skillFunc != nullptr)
+		{
+			skillFunc->UseSkill(_targetId, _targetLoc);
+			mUsingSkill = skillFunc;
+			canUse = true;
+		}
+	}		
+	else
+	{
+		UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::UseSkill, mUsingSkill != nullptr, skillId:%d"), mUsingSkill->mSkillId);
 	}
-	return false;
+
+	return canUse;
 }
+
+void AMyChar::ChangeState(CharState _state)
+{
+	mCharState = _state;
+	//for test
+	//USkillFunction* sdf = GetUsingSkill();
+	//bool b = sdf != nullptr ? sdf->CanAttack() : false;
+	//if (b)
+	//{
+	//	UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::UseSkill, mUsingSkill != nullptr, skillId:%d"), mUsingSkill->mSkillId);
+	//}
+}
+
+void AMyChar::FaceToTargetLoc(const FVector& _targetLoc)
+{
+	SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), _targetLoc));
+}
+
 
 void AMyChar::Death()
 {
@@ -131,13 +158,15 @@ void AMyChar::Death()
 	if (mUsingSkill != nullptr)
 	{
 		mUsingSkill->ReleaseData();
+		mUsingSkill = nullptr;
 	}
 
 	//TODO: 从管理器中移除，这里应该做回收，而不是销毁，暂时先销毁
 	gCharMgr->RemoveChar(mUuid);
 
 	OnDeath(); //通知一下蓝图
-	Destroy();
+
+	ChangeState(CharState::Death);//等动画状态机通知销毁
 }
 
 void AMyChar::Reset()

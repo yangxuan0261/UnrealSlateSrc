@@ -21,7 +21,7 @@ USkillFunction::USkillFunction() : Super()
 	mBullet = nullptr;
 	mAttacker = nullptr;
 	mTargetId = 0;
-	mTargetLoc = FVector(0.f, 0.f, 0.f);
+	mTargetLoc = FVector::ZeroVector;
 	mCanAttack = false;
 }
 
@@ -55,6 +55,10 @@ void USkillFunction::Tick(float DeltaSeconds)
 		if (mAttacker->GetState() != CharState::Attack)
 		{
 			mAttacker->ChangeState(CharState::Attack);
+			//朝向敌人
+			AMyChar* target = mTargetId > 0 ? UCharMgr::GetInstance()->GetChar(mTargetId) : nullptr;
+			FVector targetLoc = target != nullptr ? target->GetActorLocation() : mTargetLoc;
+			mAttacker->FaceToTargetLoc(targetLoc);
 		}
 	}
 }
@@ -99,7 +103,6 @@ void USkillFunction::SkillBegin()
 	}
 
 	mOwnerCD->Restart();
-	return; //for test
 
 	UPkMsg* pkMsg = NewObject<UPkMsg>(UPkMsg::StaticClass());
 	pkMsg->AddToRoot();
@@ -138,16 +141,25 @@ void USkillFunction::BulletCreate()
 		 //TODO: 创建子弹,带上pk信息, 绑定到身体的某个socket部位上
 		FActorSpawnParameters SpawnInfo;
 		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		mBullet = GetWorld()->SpawnActor<AMyBullet>(mAttacker->BulletClass, mAttacker->GetActorLocation(), mAttacker->GetActorRotation(), SpawnInfo);
+		mBullet = GWorld->SpawnActor<AMyBullet>(mAttacker->BulletClass, SpawnInfo);
 		mBullet->SetPkMsg(mPkMsg);
+		mBullet->SetSkillTemplate(mSkillTemplate);
 		mBullet->SetTargetAndLoc(mTargetId, mTargetLoc);  
-		mBullet->SetSpeed(50.f);
+		mBullet->SetSpeed(mSkillTemplate->mBulletSpeed);
 		mBullet->SetFly(false);
 
-		if (mSkillTemplate->mAttachPoint.Len() > 0)
+		if (mSkillTemplate->mAttachPoint.Len() > 0) //有绑定部位
 		{
 			//TODO: 技编数据, 设置矩阵信息transform
-			mBullet->GetRootComponent()->AttachTo(mAttacker->GetMesh(), FName(*mSkillTemplate->mAttachPoint));
+			mBullet->AttachRootComponentTo(mAttacker->GetMesh(), FName(*mSkillTemplate->mAttachPoint));
+			mBullet->SetActorRelativeLocation(FVector::ZeroVector);
+			mBullet->SetActorRelativeRotation(FRotator::ZeroRotator);
+			mBullet->SetActorRelativeScale3D(FVector(1.f, 1.f, 1.f));
+		}
+		else
+		{
+			mBullet->SetActorLocation(mAttacker->GetActorLocation());
+			mBullet->SetActorRotation(mAttacker->GetActorRotation());
 		}
 	}
 }
@@ -164,7 +176,9 @@ void USkillFunction::BulletShoot()
 		}
 
 		//TODO: 射击，脱离绑定点，朝目标飞行，绑定碰撞组件碰撞事件
-		mBullet->GetRootComponent()->DetachFromParent();
+		//mBullet->GetRootComponent()->DetachFromParent();
+		mBullet->DetachRootComponentFromParent();
+
 		mBullet->SetFly(true);
 		mBullet->CollisionComp->OnComponentBeginOverlap.AddDynamic(mBullet, &AMyBullet::OnMyCollisionCompBeginOverlap);
 
@@ -185,7 +199,7 @@ void USkillFunction::SkillEnd()
 		//step6 - 运行技能后置func, 比如瞬间移动移回原地
 		const TArray<UAbsPkEvent*>& functions2 = mSkillTemplate->GetEndSkill();
 		for (UAbsPkEvent* func : functions2)
-		{
+		{	//issue mPkMsg is nullptr befor
 			func->RunEndSkill(mPkMsg);
 		}
 
@@ -199,11 +213,15 @@ void USkillFunction::SkillEnd()
 
 void USkillFunction::ReleaseData()
 {
+	mAttacker->SetUsingSkillNull();
+	mCanAttack = false;
+
 	//尝试释放内存
 	if (mBullet != nullptr) //创建子弹但没发射出去，技能就被打断，需要销毁子弹,pkMsg在里面会跟着销毁
 	{
 		mBullet->DestroyBullet();
 		mBullet = nullptr;
+		mPkMsg = nullptr;
 	}
 	else //还没有创建子弹，就必须这里销毁pkMsg
 	{

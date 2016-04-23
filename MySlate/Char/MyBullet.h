@@ -13,7 +13,6 @@ class UPkMsg;
 class UPkPorcess;
 //struct FDamageInfo;
 
-
 /*
 set target order
 SetSkillTemplate
@@ -61,13 +60,16 @@ public:
 	//	virtual void OnHit(const FHitResult& HitResult);
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		virtual void CreatePk();
+		void CreatePk();
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		virtual void BulletJump();
+		void BulletJump();
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		virtual void DestroyBullet();
+		void SetSkillTemplate(USkillTemplate* _skillTemp) { mSkillTemp = _skillTemp; }
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		void DestroyBullet();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "AMyBullet")
 		void OnProjectileDestroyed();
@@ -76,7 +78,7 @@ public:
 		void OnProjectileHit(AActor* HitActor, const FVector& HitLocation, const FVector& HitNormal);
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		virtual void OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+		void OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 public:
 	/** movement component */

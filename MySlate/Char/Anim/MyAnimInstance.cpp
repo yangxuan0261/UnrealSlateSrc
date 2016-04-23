@@ -36,7 +36,7 @@ AMyChar* UMyAnimInstance::GetOwnerChar()
 	return mOwnerChar;
 }
 
-void UMyAnimInstance::AnimNotify_SkillBegin(UAnimNotify* Notify)
+void UMyAnimInstance::SkillBegin()
 {
 	if (mOwnerChar != nullptr)
 	{
@@ -47,8 +47,12 @@ void UMyAnimInstance::AnimNotify_SkillBegin(UAnimNotify* Notify)
 void UMyAnimInstance::AnimNotify_BulletCreate(UAnimNotify * Notify)
 {
 	if (mOwnerChar != nullptr)
-	{
-		mOwnerChar->GetUsingSkill()->BulletCreate();
+	{	//issue 不知道为啥，动画结束后还是会跑进来，先容错解决，待深究
+		USkillFunction* skillFunc = mOwnerChar->GetUsingSkill();
+		if (skillFunc != nullptr)
+		{
+			skillFunc->BulletCreate();
+		}
 	}
 }
 
@@ -56,7 +60,11 @@ void UMyAnimInstance::AnimNotify_BulletShoot(UAnimNotify * Notify)
 {
 	if (mOwnerChar != nullptr)
 	{
-		mOwnerChar->GetUsingSkill()->BulletCreate();
+		USkillFunction* skillFunc = mOwnerChar->GetUsingSkill();
+		if (skillFunc != nullptr)
+		{
+			skillFunc->BulletShoot();
+		}
 	}
 }
 
@@ -64,7 +72,31 @@ void UMyAnimInstance::AnimNotify_SkillEnd(UAnimNotify* Notify)
 {
 	if (mOwnerChar != nullptr)
 	{
-		mOwnerChar->GetUsingSkill()->SkillEnd();
+		USkillFunction* skillFunc = mOwnerChar->GetUsingSkill();
+		if (skillFunc != nullptr)
+		{
+			skillFunc->SkillEnd();
+		}
+	}
+}
+
+void UMyAnimInstance::SkillDataRelease()
+{
+	if (mOwnerChar != nullptr)
+	{
+		USkillFunction* skillFunc = mOwnerChar->GetUsingSkill();
+		if (skillFunc != nullptr)
+		{
+			skillFunc->ReleaseData();
+		}
+	}
+}
+
+void UMyAnimInstance::AnimNotify_DeathOver(UAnimNotify* Notify)
+{
+	if (mOwnerChar != nullptr)
+	{
+		mOwnerChar->Destroy();
 	}
 }
 

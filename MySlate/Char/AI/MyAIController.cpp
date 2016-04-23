@@ -23,11 +23,7 @@ void AMyAIController::Possess(APawn * InPawn)
 {
 	Super::Possess(InPawn);
 
-	AMyChar* myChar = Cast<AMyChar>(InPawn);
-
-
-
-		
+	//AMyChar* myChar = Cast<AMyChar>(InPawn);
 }
 
 void AMyAIController::BeginInactiveState()

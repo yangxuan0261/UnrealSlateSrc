@@ -23,7 +23,7 @@ void UCircleFilter::BeginDestroy()
 	Super::BeginDestroy();
 }
 
-void UCircleFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::Locked */, float _radius /* = 0.f */, const FVector& _boxSize /* = FVector(0.f, 0.f, 0.f) */)
+void UCircleFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::Locked */, float _radius /* = 0.f */, const FVector& _boxSize /* = FVector::ZeroVector */)
 {
 	Super::Filter(_msg, EFilterType::Circle, mRadius);
 

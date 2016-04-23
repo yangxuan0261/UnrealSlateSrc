@@ -56,6 +56,9 @@ public:
 		static void					TestFilter(AMyChar* _actor, float _radius);
 
 
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static void					TestSpwanBullet(AMyChar* _actor);
+
 private:
 	static USkillDataMgr*			gSkillDataMgr;
 	static USkillMgr*				gSkillMgr;

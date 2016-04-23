@@ -24,7 +24,7 @@ public:
 		AMyChar* GetOwnerChar();
 
 	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
-		void AnimNotify_SkillBegin(UAnimNotify* Notify);
+		void SkillBegin();
 
 	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
 		void AnimNotify_BulletCreate(UAnimNotify* Notify);
@@ -33,7 +33,13 @@ public:
 		void AnimNotify_BulletShoot(UAnimNotify* Notify);
 
 	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
-		void AnimNotify_SkillEnd(UAnimNotify* Notify);
+		void AnimNotify_SkillEnd(UAnimNotify* Notify); //动画正常结束
+
+	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
+		void SkillDataRelease(); //技能动画被打断，释放资源，从技能状态切换到其他状态一定会调用的方法
+
+	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
+		void AnimNotify_DeathOver(UAnimNotify* Notify);
 
 	UFUNCTION(BlueprintCallable, Category = "UMyAnimInstance")
 		void AnimNotify_Test(UAnimNotify* Notify);

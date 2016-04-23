@@ -81,7 +81,7 @@ UAbsFilter* UFuncFactory::createFilter(const FString& _str)
 {
 	FString paramStr = _str.ToLower();
 	TArray<FString> params;
-	paramStr.ParseIntoArray(params, Split_Line, true);
+	paramStr.ParseIntoArray(params, Split_Com, true);
 	if (params.Num() > 0)
 	{
 		const FString clsName = params[0];

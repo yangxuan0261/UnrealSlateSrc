@@ -58,6 +58,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
 		void		SetCD(UCoolDown* _cd) { mOwnerCD = _cd; }
 
+	void	SetPkMsgNull() { mPkMsg = nullptr; }
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
 		AMyChar*		mAttacker;

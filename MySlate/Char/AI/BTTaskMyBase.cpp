@@ -7,9 +7,6 @@
 #include "Char/Skill/Template/SkillTemplate.h"
 #include "Char/Skill/CoolDown/CoolDown.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(BTDTaskLogger, Log, All);
-DEFINE_LOG_CATEGORY(BTDTaskLogger)
-
 UBTTaskMyBase::UBTTaskMyBase()
 	: Super()
 {

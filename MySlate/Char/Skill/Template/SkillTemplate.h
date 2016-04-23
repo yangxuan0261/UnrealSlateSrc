@@ -20,6 +20,8 @@ enum class EAnimType : uint8 //技能动画
 	Skill_3,
 	Skill_4,
 	Skill_5,
+	Skill_6,
+	Skill_7,
 	Injure_1,
 	Injure_2,
 	Victory_1,
@@ -60,7 +62,7 @@ public:
 	UAbsFilter*	GetFilter();
 
 	void ParseFuncStr(const FString& _funcStr, TArray<UAbsPkEvent*>& _funcArr);
-	void ParseFilterStr(const FString& _filterStr, UAbsFilter*& _filter);
+	void ParseFilterStr(const FString& _filterStr);
 public:
 	TArray<UAbsPkEvent*> mBeforeSkill;
 	TArray<UAbsPkEvent*> mBeforePk;
@@ -81,6 +83,12 @@ public:
 		float			mCoolDown;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
 		float			mAttackDist; //TODO: 技编数据
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+		float			mTolerance; //TODO: 技编数据 //子弹到targetLoc的容许误差
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+		float			mBulletSpeed; //TODO: 技编数据
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+		float			mFlyDist; //TODO: 技编数据 子弹飞行距离
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
 		ESkillType		mSkillType;	//TODO: 技编数据
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")

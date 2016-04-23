@@ -48,7 +48,7 @@ public:
 		bool		IsAlive() const;
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
-		bool		UseSkill(int32 _skillId, int32 _targetId, FVector _targetLoc = FVector(0.f, 0.f, 0.f));
+		bool		UseSkill(int32 _skillId, int32 _targetId, FVector _targetLoc = FVector::ZeroVector);
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void		SetUsingSkillNull() { mUsingSkill = nullptr; }
@@ -57,10 +57,16 @@ public:
 		USkillFunction*	GetUsingSkill() const { return mUsingSkill; }
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
-		void		ChangeState(CharState _state) { mCharState = _state; }
+		void		ChangeState(CharState _state);
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		const CharState&	GetState() const { return mCharState; }
+
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		virtual UMyCharDataComp* GetDataComp() const { return mDataComp; }
+
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		void FaceToTargetLoc(const FVector& _targetLoc);
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void		Death();
@@ -71,11 +77,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		virtual void Reset();
 
-	UFUNCTION(BlueprintCallable, Category = "MyChar")
-		virtual UMyCharDataComp* GetDataComp() const { return mDataComp; }
-
-	//UFUNCTION(BlueprintCallable, Category = "MyChar")
-		//void FaceToTarget();
 public:
 	/* …Ë÷√◊”µØ¿∂Õº¿‡ */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")

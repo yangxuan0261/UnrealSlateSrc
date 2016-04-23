@@ -6,6 +6,7 @@
 #include "Char/BpFuncLib/GolbalFunc.h"
 #include "Char/MyChar.h"
 #include "Char/CharMgr.h"
+#include "../Pk/PkMsg.h"
 
 UAbsFilter::UAbsFilter()
 {
@@ -25,7 +26,7 @@ void UAbsFilter::BeginDestroy()
 	Super::BeginDestroy();
 }
 
-void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::Locked */, float _radius /* = 0.f */, const FVector& _boxSize /* = FVector(0.f, 0.f, 0.f) */)
+void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::Locked */, float _radius /* = 0.f */, const FVector& _boxSize /* = FVector::ZeroVector */)
 {
 	mDestChars.Empty();
 	if (_filterType == EFilterType::Locked)
@@ -35,7 +36,7 @@ void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::
 
 	int32 targetId = _msg->GetTargetId();
 	AMyChar* target = targetId > 0 ? UCharMgr::GetInstance()->GetChar(targetId) : nullptr;
-	FVector targetLoc = FVector(0.f, 0.f, 0.f);
+	FVector targetLoc = FVector::ZeroVector;
 	if (target != nullptr) //锁定目标，有可能飞行中目标死亡，所以去Char管理器中拿比较靠谱
 	{
 		targetLoc = target->GetActorLocation();

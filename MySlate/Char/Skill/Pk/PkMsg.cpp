@@ -53,7 +53,7 @@ UPkMsg::UPkMsg()
 	mTargetId = 0;
 	mAttackerData = nullptr;
 	mAttackerDataForCacul = nullptr;
-	mTargetLoc = FVector(0.f, 0.f, 0.f);
+	mTargetLoc = FVector::ZeroVector;
 	mSkillTemp = nullptr;
 	mCurrTarget = nullptr;
 	mTargetLocked = nullptr;

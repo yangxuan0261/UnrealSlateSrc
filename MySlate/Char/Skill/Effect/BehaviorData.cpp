@@ -9,8 +9,8 @@ UEffectDataElement::UEffectDataElement()
 	mEffectType = SkillEffectType::SelfFollow;
 	mBindPoint = "";
 	mDelayTime = 0.f;
-	mOffset = FVector(0.f, 0.f, 0.f);
-	mScale = FVector(0.f, 0.f, 0.f);
+	mOffset = FVector::ZeroVector;
+	mScale = FVector::ZeroVector;
 }
 
 UEffectDataElement::~UEffectDataElement()
