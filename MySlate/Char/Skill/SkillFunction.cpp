@@ -75,14 +75,6 @@ void USkillFunction::UseSkill(int32 _targetId, const FVector& _targetLoc)
 {
 	mTargetId = _targetId;
 	mTargetLoc = _targetLoc;
-	if (mSkillTemplate->mLockedType == ELockedType::Char)
-	{
-		UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::UseSkill, targetId:%d"), mTargetId);
-	}
-	else if (mSkillTemplate->mLockedType == ELockedType::Loc)
-	{
-		UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::UseSkill, target is Location"));
-	}
 }
 
 bool USkillFunction::CanAttack()
@@ -109,6 +101,9 @@ void USkillFunction::SkillBegin()
 	{
 		UE_LOG(SkillLogger, Error, TEXT("--- USkillFunction::BulletCreate, mPkMsg != nullptr before"));
 	}
+
+	//TODO: 技编数据, 做技能表现
+	mAttacker->TempNotifyA();
 
 	mOwnerCD->Restart();
 

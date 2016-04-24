@@ -74,6 +74,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "MyChar")
 		void		OnDeath();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "MyChar") //临时播放特效用，攻击特效
+		void		TempNotifyA();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "MyChar") //临时播放特效用，受击特效
+		void		TempNotifyB();
+
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		virtual void Reset();
 

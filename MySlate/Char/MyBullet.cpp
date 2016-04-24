@@ -97,23 +97,19 @@ void AMyBullet::Tick(float DeltaSeconds)
 				UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::Tick, distSq > flyDist"));
 			}
 		}
-		else
+	}
+	else if (mSkillTemp->mLockedType == ELockedType::Char) //被锁定目标死亡情况，不做任何结算
+	{
+		int32 targetId = mPkMsg->GetTargetId();
+		if (UCharMgr::GetInstance()->GetChar(targetId) == nullptr)
 		{
-			//到达到Loc，结算，子弹弹射，需要容许一定的误差
 			if (GetActorLocation().Equals(mTargetLoc, mSkillTemp->mTolerance))
 			{
-				CreatePk();
-				BulletJump();
+				DestroyBullet();
+				UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::Tick, target death, bullet arrival"));
+				//CreatePk();
+				//BulletJump();
 			}
-		}
-	}
-	else if (mSkillTemp->mLockedType == ELockedType::Char)
-	{
-		//issue 锁定人应该用碰撞，暂时先这样，到达到Loc，结算，子弹弹射，需要容许一定的误差
-		if (GetActorLocation().Equals(mTargetLoc, mSkillTemp->mTolerance))
-		{
-			CreatePk();
-			BulletJump();
 		}
 	}
 }
@@ -146,38 +142,36 @@ void AMyBullet::SetFly(bool _fly)
 	mFlying = _fly;
 	if (_fly) //开始飞行，设置移动组件的的速度矢量，并朝向目标 or Loc
 	{
-		if (mSpeed > 0)
+		mStartPos = GetActorLocation();//记录一下开始点
+		AMyChar* target = mTargetId > 0 ? UCharMgr::GetInstance()->GetChar(mTargetId) : nullptr;
+		if (target != nullptr)
 		{
-			mStartPos = GetActorLocation();//记录一下开始点
-			AMyChar* target = mTargetId > 0 ? UCharMgr::GetInstance()->GetChar(mTargetId) : nullptr;
-			if (target != nullptr)
+			mTargetLoc = target->GetActorLocation();
+		}
+
+		MovementComp->InitialSpeed = (float)mSpeed;
+		MovementComp->MaxSpeed = (float)mSpeed;
+		MovementComp->Velocity = MovementComp->GetMaxSpeed() * (mTargetLoc - GetActorLocation()).GetSafeNormal(); //子弹移动方向
+		CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AMyBullet::OnMyCollisionCompBeginOverlap);
+
+		//朝向目标
+		SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), mTargetLoc));
+
+		//如果锁定地点，且飞行距离 > 0，则飞行距离一定大于开始点与目标点的距离，比如黑暗游侠的箭，会飞行一定的距离才消失
+		if (mSkillTemp->mLockedType == ELockedType::Loc && mSkillTemp->mFlyDist > 0)
+		{
+			float distSq = (mTargetLoc, mStartPos).Size();
+			float flyDist = mSkillTemp->mFlyDist;
+
+			if (flyDist < distSq)
 			{
-				mTargetLoc = target->GetActorLocation();
-			}
-			
-			MovementComp->InitialSpeed = (float)mSpeed;
-			MovementComp->MaxSpeed = (float)mSpeed;
-			MovementComp->Velocity = MovementComp->GetMaxSpeed() * (mTargetLoc - GetActorLocation()).GetSafeNormal(); //子弹移动方向
-			CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AMyBullet::OnMyCollisionCompBeginOverlap);
-
-			//朝向目标
-			SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), mTargetLoc));
-
-			//如果锁定地点，且飞行距离 > 0，则飞行距离一定大于开始点与目标点的距离，比如黑暗游侠的箭，会飞行一定的距离才消失
-			if (mSkillTemp->mLockedType == ELockedType::Loc && mSkillTemp->mFlyDist > 0)
-			{
-				float distSq = (mTargetLoc, mStartPos).Size();
-				float flyDist = mSkillTemp->mFlyDist;
-
-				if (flyDist < distSq)
-				{
-					UE_LOG(BulletLogger, Error, TEXT("--- AMyBullet::SetFly, flyDist < distSq, %f < %f "), flyDist, distSq);
-				}
+				UE_LOG(BulletLogger, Error, TEXT("--- AMyBullet::SetFly, flyDist < distSq, %f < %f "), flyDist, distSq);
 			}
 		}
-		else
+
+		if (mSpeed == 0)
 		{
-			UE_LOG(BulletLogger, Error, TEXT("--- AMyBullet::SetFly, bullet speed == 0 "));
+			UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::SetFly, bullet speed == 0 "));
 		}
 	}
 	else
@@ -194,31 +188,38 @@ void AMyBullet::CallbackPkOver(TArray<FDamageInfo>& _dmgArr)
 
 void AMyBullet::CreatePk()
 {
-	//TODO: 做技能表现， 技编数据
-
+	//TODO: 技编数据, 做技能表现
+	UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CreatePk, targetId:%d"), mPkMsg->GetTargetId());
+	//设置本次结算被锁定的目标
+	AMyChar* target = UCharMgr::GetInstance()->GetChar(mPkMsg->GetTargetId());
+	if (target != nullptr)
+	{
+		target->TempNotifyB();
+	}
+	return; //for test
 
 	//TODO: 结算
 	if (mPkProcess == nullptr)
 	{
-		mPkProcess = NewObject<UPkProcess>(UPkProcess::StaticClass());
-		mPkProcess->GetPkOverDlg().BindUObject(this, &AMyBullet::CallbackPkOver);
-
-		//设置本次结算被锁定的目标
-		AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
 		if (target != nullptr)
 		{
 			UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CreatePk, target lock != null, id:%d"), target->GetUuid());
+
+			mPkProcess = NewObject<UPkProcess>(UPkProcess::StaticClass());
+			mPkProcess->GetPkOverDlg().BindUObject(this, &AMyBullet::CallbackPkOver);
+
+			mPkMsg->SetTarget(target);
+			mPkProcess->SetMsg(mPkMsg);
+			mPkProcess->Run();
+
+			mPkProcess->ConditionalBeginDestroy();
+			mPkProcess = nullptr;
 		}
 		else
 		{
 			UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CreatePk, target lock is null"));
 		}
-		mPkMsg->SetTarget(target);
-		mPkProcess->SetMsg(mPkMsg);
-		mPkProcess->Run();
 
-		mPkProcess->ConditionalBeginDestroy();
-		mPkProcess = nullptr;
 	}
 }
 
@@ -266,7 +267,32 @@ void AMyBullet::DestroyBullet()
 
 void AMyBullet::OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	AMyChar* OtherChar = Cast<AMyChar>(OtherActor);
+	AMyChar* target = Cast<AMyChar>(OtherActor);
+	if (target == nullptr)
+	{
+		return;
+	}
+
+	//TODO: 暂时先只对敌方
+	if (mSkillTemp->mLockedType == ELockedType::Loc && mSkillTemp->mFlyDist > 0)
+	{
+		if (target->GetDataComp()->GetTeamType() != mPkMsg->GetAttackerTeam())
+		{
+			mPkMsg->SetTargetId(target->GetUuid());
+			mPkMsg->SetTarget(target);
+			CreatePk();
+		}
+	}
+	else if (mSkillTemp->mLockedType == ELockedType::Char) //TODO: 暂时先只对敌方锁定目标造成伤害
+	{
+		int32 targetId = target->GetUuid();
+		if (targetId == mPkMsg->GetTargetId() && UCharMgr::GetInstance()->GetChar(targetId) != nullptr)
+		{
+			CreatePk();
+			BulletJump();
+		}
+	}
+
 	//TODO：这里不针对锁定目标做结算，因为到达锁定目标的Loc后会做结算
 	//		只针对飞行过程中碰撞框碰撞到的目标，即时结算
 	//if (mTargetId > 0)//锁定目标，碰撞检测只检测是否为目标

@@ -53,6 +53,7 @@ public:
 	void	SetTargetLoc(const FVector& _Loc) { mTargetLoc = _Loc; } //设置被锁定的Loc
 	const FVector&	GetTargetLoc() const { return mTargetLoc; }
 	int32	GetTargetId() const { return mTargetId; }
+	void	SetTargetId(int32 _id) { mTargetId = _id; }
 	void	SetAttackerTeam(const ETeam& _type) { mTeamType = _type; }
 	const ETeam&	GetAttackerTeam() const { return mTeamType; }
 	void	SetCurrTarget(UParam* _target);
