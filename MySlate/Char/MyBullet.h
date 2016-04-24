@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-#include "Skill/Pk/PkPorcess.h"
+#include "Skill/Pk/PkProcess.h"
 
 #include "MyBullet.generated.h"
 
@@ -10,7 +10,7 @@ class USphereComponent;
 class AMyChar;
 class USkillTemplate;
 class UPkMsg;
-class UPkPorcess;
+class UPkProcess;
 //struct FDamageInfo;
 
 /*
@@ -45,7 +45,7 @@ public:
 		void SetTargetAndLoc(int32 _targetId, UPARAM(ref) const FVector& _targetLoc);
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void SetSpeed(float _speed) { mSpeed = _speed; }
+		void SetSpeed(int32 _speed) { mSpeed = _speed; }
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void SetPkMsg(UPkMsg* _pkMsg) { mPkMsg = _pkMsg; }
@@ -107,9 +107,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		UPkMsg*				mPkMsg; //
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
-		UPkPorcess*			mPkPorcess; 
+		UPkProcess*			mPkProcess; 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		bool				mFlying;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
-		float				mSpeed;
+		int32				mSpeed;
+private:
+	FVector		mStartPos; //³öÉúµã
+
 };

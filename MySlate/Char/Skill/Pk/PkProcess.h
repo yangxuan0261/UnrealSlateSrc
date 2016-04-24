@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../SkillTypes.h"
-#include "PkPorcess.generated.h"
+#include "PkProcess.generated.h"
 
 class UPkMsg;
 struct FDamageInfo;
@@ -37,12 +37,12 @@ public:
 };
 
 UCLASS()
-class UPkPorcess : public UObject
+class UPkProcess : public UObject
 {
 	GENERATED_BODY()
 public:
-	UPkPorcess();
-	virtual ~UPkPorcess();
+	UPkProcess();
+	virtual ~UPkProcess();
 	virtual void BeginDestroy() override;
 
 public:

@@ -24,11 +24,13 @@ public:
 
 public:
 	//原始属性
-	float		mAttackPhy;		//物理攻击
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharData")
+		float		mAttackPhy;		//物理攻击
 
 public:
 	//成长相关
-	int			mLv;			//等级
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharData")
+		int			mLv;			//等级
 
 public:
 };

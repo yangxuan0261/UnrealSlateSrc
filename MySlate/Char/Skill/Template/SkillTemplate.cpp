@@ -13,11 +13,12 @@ USkillTemplate::USkillTemplate() : Super()
 	mId = -1;
 	mName = TEXT("Default SkillName");
 	mDescr = TEXT("Default SkillDescr");
-	mCoolDown = 5.f;
-	mAttackDist = 10.f;
-	mTolerance = 0.f;
-	mBulletSpeed = 0.f;
-	mFlyDist = 0.f;
+	mCoolDown = 5;
+	mLockedType = ELockedType::Loc;
+	mAttackDist = 10;
+	mTolerance = 0;
+	mBulletSpeed = 0;
+	mFlyDist = 0;
 	mSkillType = ESkillType::Normal;
 	mFilterStr = "";
 	mFilter = nullptr;

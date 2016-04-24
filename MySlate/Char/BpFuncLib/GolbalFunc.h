@@ -37,6 +37,9 @@ public:
 		static UCharMgr*			GetCharMgr() { return gCharMgr; }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static UBaseDataMgr*		GetBaseDataMgr() { return gBaseDataMgr; }
+
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TurnForward(AActor* _actor, const FVector& _targetLoc);
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")

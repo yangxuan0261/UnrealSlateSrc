@@ -66,7 +66,7 @@ public:
 		virtual UMyCharDataComp* GetDataComp() const { return mDataComp; }
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
-		void FaceToTargetLoc(const FVector& _targetLoc);
+		void		FaceToTargetLoc(const FVector& _targetLoc, bool _smooth = false);
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void		Death();
@@ -108,5 +108,8 @@ public:
 		FDeathDlg		mDeathDlg; //绑定： buff管理器、
 
 private:
-	UCharMgr*	gCharMgr; //char 管理器
+	UCharMgr*		gCharMgr; //char 管理器
+	FTimerHandle	mTimer;
+	FVector			mTurnToLoc; //用来平滑旋转时保存目标Loc，因为用了内部函数lambda
+	FRotator		mTurnToRot; //用来平滑旋转时保存目标Rotate,
 };

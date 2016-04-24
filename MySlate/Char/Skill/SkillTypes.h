@@ -43,3 +43,10 @@ enum class ESelectType : uint8 //选人标记
 	Enemy = 0,	//受击方
 	Self,		//攻击方
 };
+
+UENUM()
+enum class ELockedType : uint8 //锁定类型
+{
+	Loc = 0,	//地点
+	Char,		//人
+};

@@ -9,7 +9,7 @@
 #include "Char/Skill/Template/SkillTemplate.h"
 #include "CharMgr.h"
 #include "Skill/Pk/PkMsg.h"
-//#include "Skill/Pk/PkPorcess.h"
+//#include "Skill/Pk/PkProcess.h"
 
 AMyBullet::AMyBullet()
 {
@@ -39,9 +39,10 @@ AMyBullet::AMyBullet()
 	mSkillTemp = nullptr;
 	mTargetLoc = FVector::ZeroVector;
 	mPkMsg = nullptr;
-	mPkPorcess = nullptr;
+	mPkProcess = nullptr;
 	mFlying = false;
-	mSpeed = 0.f;
+	mSpeed = 0;
+	mStartPos = FVector::ZeroVector;
 }
 
 AMyBullet::~AMyBullet()
@@ -83,11 +84,37 @@ void AMyBullet::Tick(float DeltaSeconds)
 		}
 	}
 
-	//到达到Loc，结算，子弹弹射，需要容许一定的误差
-	if (GetActorLocation().Equals(mTargetLoc, mSkillTemp->mTolerance))
+	if (mSkillTemp->mLockedType == ELockedType::Loc)
 	{
-		CreatePk();
-		BulletJump();
+		if (mSkillTemp->mFlyDist > 0)
+		{
+			float distSq = FVector::DistSquared(GetActorLocation(), mStartPos);
+			float flyDist = FMath::Pow((float)mSkillTemp->mFlyDist, 2.f);
+
+			if (distSq > flyDist)
+			{
+				DestroyBullet();
+				UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::Tick, distSq > flyDist"));
+			}
+		}
+		else
+		{
+			//到达到Loc，结算，子弹弹射，需要容许一定的误差
+			if (GetActorLocation().Equals(mTargetLoc, mSkillTemp->mTolerance))
+			{
+				CreatePk();
+				BulletJump();
+			}
+		}
+	}
+	else if (mSkillTemp->mLockedType == ELockedType::Char)
+	{
+		//issue 锁定人应该用碰撞，暂时先这样，到达到Loc，结算，子弹弹射，需要容许一定的误差
+		if (GetActorLocation().Equals(mTargetLoc, mSkillTemp->mTolerance))
+		{
+			CreatePk();
+			BulletJump();
+		}
 	}
 }
 
@@ -119,22 +146,38 @@ void AMyBullet::SetFly(bool _fly)
 	mFlying = _fly;
 	if (_fly) //开始飞行，设置移动组件的的速度矢量，并朝向目标 or Loc
 	{
-		if (mSpeed > 0.f)
+		if (mSpeed > 0)
 		{
-			if (mTargetId > 0)
+			mStartPos = GetActorLocation();//记录一下开始点
+			AMyChar* target = mTargetId > 0 ? UCharMgr::GetInstance()->GetChar(mTargetId) : nullptr;
+			if (target != nullptr)
 			{
-				AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
-				if (target != nullptr)
-				{
-					mTargetLoc = target->GetActorLocation();
-				}
+				mTargetLoc = target->GetActorLocation();
 			}
-			MovementComp->InitialSpeed = mSpeed;
-			MovementComp->MaxSpeed = mSpeed;
+			
+			MovementComp->InitialSpeed = (float)mSpeed;
+			MovementComp->MaxSpeed = (float)mSpeed;
 			MovementComp->Velocity = MovementComp->GetMaxSpeed() * (mTargetLoc - GetActorLocation()).GetSafeNormal(); //子弹移动方向
+			CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AMyBullet::OnMyCollisionCompBeginOverlap);
 
 			//朝向目标
 			SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), mTargetLoc));
+
+			//如果锁定地点，且飞行距离 > 0，则飞行距离一定大于开始点与目标点的距离，比如黑暗游侠的箭，会飞行一定的距离才消失
+			if (mSkillTemp->mLockedType == ELockedType::Loc && mSkillTemp->mFlyDist > 0)
+			{
+				float distSq = (mTargetLoc, mStartPos).Size();
+				float flyDist = mSkillTemp->mFlyDist;
+
+				if (flyDist < distSq)
+				{
+					UE_LOG(BulletLogger, Error, TEXT("--- AMyBullet::SetFly, flyDist < distSq, %f < %f "), flyDist, distSq);
+				}
+			}
+		}
+		else
+		{
+			UE_LOG(BulletLogger, Error, TEXT("--- AMyBullet::SetFly, bullet speed == 0 "));
 		}
 	}
 	else
@@ -155,10 +198,10 @@ void AMyBullet::CreatePk()
 
 
 	//TODO: 结算
-	if (mPkPorcess == nullptr)
+	if (mPkProcess == nullptr)
 	{
-		mPkPorcess = NewObject<UPkPorcess>(UPkPorcess::StaticClass());
-		mPkPorcess->GetPkOverDlg().BindUObject(this, &AMyBullet::CallbackPkOver);
+		mPkProcess = NewObject<UPkProcess>(UPkProcess::StaticClass());
+		mPkProcess->GetPkOverDlg().BindUObject(this, &AMyBullet::CallbackPkOver);
 
 		//设置本次结算被锁定的目标
 		AMyChar* target = UCharMgr::GetInstance()->GetChar(mTargetId);
@@ -171,11 +214,11 @@ void AMyBullet::CreatePk()
 			UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CreatePk, target lock is null"));
 		}
 		mPkMsg->SetTarget(target);
-		mPkPorcess->SetMsg(mPkMsg);
-		mPkPorcess->Run();
+		mPkProcess->SetMsg(mPkMsg);
+		mPkProcess->Run();
 
-		mPkPorcess->ConditionalBeginDestroy();
-		mPkPorcess = nullptr;
+		mPkProcess->ConditionalBeginDestroy();
+		mPkProcess = nullptr;
 	}
 }
 
@@ -204,11 +247,11 @@ void AMyBullet::BulletJump()
 void AMyBullet::DestroyBullet()
 {
 
-	if (mPkPorcess != nullptr)
+	if (mPkProcess != nullptr)
 	{
-		mPkPorcess->RemoveFromRoot();
-		mPkPorcess->ConditionalBeginDestroy();
-		mPkPorcess = nullptr;
+		mPkProcess->RemoveFromRoot();
+		mPkProcess->ConditionalBeginDestroy();
+		mPkProcess = nullptr;
 	}
 	if (mPkMsg != nullptr)
 	{	//如果子弹发射出去了， pkMsg应该跟随子弹释放

@@ -68,9 +68,7 @@ void AStandardHUD::DrawActorsHealth()
 	const TMap<int32, AMyChar*>& allChars = UCharMgr::GetInstance()->GetAllChars();
 	for (TMap<int32, AMyChar*>::TConstIterator Iter = allChars.CreateConstIterator(); Iter; ++Iter)
 	{
-		float health = Iter->Value->GetDataComp()->GetHealth();
-		float healthMax = Iter->Value->GetDataComp()->GetHealthMax();
-		DrawHealthBar(Iter->Value, health, health / healthMax, 18 * mUIScale, -20.f);
+		DrawHealthBar(Iter->Value, 18 * mUIScale, -20.f);
 	}
 
 	//float counter = 30.f;
@@ -82,8 +80,13 @@ void AStandardHUD::DrawActorsHealth()
 	//}
 }
 
-void AStandardHUD::DrawHealthBar(AActor* ForActor, float _health, float HealthPercentage, int32 BarHeight, int32 OffsetY /* = 0 */) const
+void AStandardHUD::DrawHealthBar(AMyChar* ForActor, int32 BarHeight, int32 OffsetY /* = 0 */) const
 {
+	float health = ForActor->GetDataComp()->GetHealth();
+	float healthMax = ForActor->GetDataComp()->GetHealthMax();
+	float HealthPercentage = health / healthMax;
+	int32 uuid = ForActor->GetUuid();
+
 	//GetComponentsBoundingBox：Returns the bounding box of all components in this Actor. //获取Acotr中所有组件的边界盒子box
 	FBox BB = ForActor->GetComponentsBoundingBox();
 	FVector Center = BB.GetCenter(); //获取box的中心点，坐标
@@ -115,13 +118,22 @@ void AStandardHUD::DrawHealthBar(AActor* ForActor, float _health, float HealthPe
 	TileItem.SetColor(FLinearColor(0.5f, 0.5f, 0.5f, 1.f));
 	Canvas->DrawItem(TileItem); //画失去的血量
 
-	//画文字
+	//画血量文字
 	X = Center2D.X - HealthBarLength / 2 - 50;
 	Y = Center2D.Y + OffsetY;
 
-	FCanvasTextItem TextItem(FVector2D(X, Y), FText::FromString(FString::SanitizeFloat(_health)), customFont, FLinearColor::Red);
-	TextItem.Scale = FVector2D(1.5f, 1.5f);
-	TextItem.BlendMode = SE_BLEND_Translucent;
-	Canvas->DrawItem(TextItem);
+	FCanvasTextItem TextItemHealth(FVector2D(X, Y), FText::FromString(FString::SanitizeFloat(health)), customFont, FLinearColor::Yellow);
+	TextItemHealth.Scale = FVector2D(1.5f, 1.5f);
+	TextItemHealth.BlendMode = SE_BLEND_Translucent;
+	Canvas->DrawItem(TextItemHealth);
+
+	//画uuid文字
+	X = Center2D.X;
+	Y = Center2D.Y - (OffsetY + BarHeight + 45);
+	FString idStr = FString::Printf(TEXT("id:%d"), uuid);
+	FCanvasTextItem TextItemUuid(FVector2D(X, Y), FText::FromString(idStr), customFont, FLinearColor::Yellow);
+	TextItemUuid.Scale = FVector2D(1.5f, 1.5f);
+	TextItemUuid.BlendMode = SE_BLEND_Translucent;
+	Canvas->DrawItem(TextItemUuid);
 }
 

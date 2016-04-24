@@ -6,6 +6,8 @@
 #include "StandardHUD.generated.h"
 
 class SStandardSlateWidget;
+class AMyChar;
+
 
 UCLASS()
 class AStandardHUD : public AHUD
@@ -37,7 +39,7 @@ public:
 	class UFont* customFont;
 
 	void DrawActorsHealth();
-	void DrawHealthBar(AActor* ForActor, float _health, float HealthPercentage, int32 BarHeight, int32 OffsetY = 0) const;
+	void DrawHealthBar(AMyChar* ForActor, int32 BarHeight, int32 OffsetY = 0) const;
 	float mUIScale;
 
 };

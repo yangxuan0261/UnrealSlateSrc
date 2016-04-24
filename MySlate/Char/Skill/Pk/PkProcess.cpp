@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
-#include "PkPorcess.h"
+#include "PkProcess.h"
 
 #include "PkMsg.h"
 #include "char/MyChar.h"
@@ -10,25 +10,25 @@
 #include "../Template/SkillTemplate.h"
 #include "../Buff/BuffMgr.h"
 
-UPkPorcess::UPkPorcess() : Super()
+UPkProcess::UPkProcess() : Super()
 {
 
 }
 
-UPkPorcess::~UPkPorcess()
+UPkProcess::~UPkProcess()
 {
-	UE_LOG(PkLogger, Warning, TEXT("--- UPkPorcess::~UPkPorcess"));
+	UE_LOG(PkLogger, Warning, TEXT("--- UPkProcess::~UPkProcess"));
 }
 
-void UPkPorcess::BeginDestroy()
+void UPkProcess::BeginDestroy()
 {
 
 
-	UE_LOG(PkLogger, Warning, TEXT("--- UPkPorcess::BeginDestroy"));
+	UE_LOG(PkLogger, Warning, TEXT("--- UPkProcess::BeginDestroy"));
 	Super::BeginDestroy();
 }
 
-void UPkPorcess::SetMsg(UPkMsg* _pkMsg)
+void UPkProcess::SetMsg(UPkMsg* _pkMsg)
 {
 	if (mPkMsg != nullptr)
 	{
@@ -39,7 +39,7 @@ void UPkPorcess::SetMsg(UPkMsg* _pkMsg)
 	mPkMsg->AddToRoot();
 }
 
-void UPkPorcess::Run()
+void UPkProcess::Run()
 {
 	AMyChar* targetActor = nullptr;
 	
@@ -56,12 +56,12 @@ void UPkPorcess::Run()
 	PkPrice();
 }
 
-bool UPkPorcess::CheckCanPk()
+bool UPkProcess::CheckCanPk()
 {
 	return false;
 }
 
-void UPkPorcess::Filter()
+void UPkProcess::Filter()
 {
 	UAbsFilter* filter = nullptr;
 	USkillTemplate* skillTemp = mPkMsg->GetSkillTemp();
@@ -76,7 +76,7 @@ void UPkPorcess::Filter()
 	}
 }
 
-void UPkPorcess::RunEndEvns()
+void UPkProcess::RunEndEvns()
 {
 	//step5 - 运行对目标集中的每个个体的func，pk逻辑完成后技能逻辑，如吸血，加蓝等
 	const TArray<UAbsPkEvent*>& functions2 = mPkMsg->GetSkillTemp()->GetEndEvns();
@@ -86,14 +86,14 @@ void UPkPorcess::RunEndEvns()
 	}
 }
 
-void UPkPorcess::PkLogic()
+void UPkProcess::PkLogic()
 {
 	//战斗伤害值
 	float dmg = mPkMsg->GetAttackerData()->GetAttackPhy();
 	mPkMsg->SetAttackDmgValue(dmg, -1, false);
 }
 
-void UPkPorcess::RunEndPk()
+void UPkProcess::RunEndPk()
 {
 	//step4 - 运行对目标集中的每个个体的func
 	USkillTemplate* skillTemp = mPkMsg->GetSkillTemp();
@@ -106,7 +106,7 @@ void UPkPorcess::RunEndPk()
 	UBuffMgr::GetInstance()->RunEndPkBuffs(mPkMsg->GetAttackerId(), mPkMsg);
 }
 
-void UPkPorcess::PkPrice()
+void UPkProcess::PkPrice()
 {
 	TArray<FDamageInfo> dmgArr;
 

@@ -30,7 +30,7 @@ enum class EAnimType : uint8 //技能动画
 	Count,
 };
 
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class USkillTemplate : public UObject
 {
 	GENERATED_BODY()
@@ -73,34 +73,43 @@ public:
 	UAbsFilter*		mFilter;
 public:
 	//读表属性
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		int32			mId;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		FString			mName;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		FString			mDescr;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
-		float			mCoolDown;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
-		float			mAttackDist; //TODO: 技编数据
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
-		float			mTolerance; //TODO: 技编数据 //子弹到targetLoc的容许误差
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
-		float			mBulletSpeed; //TODO: 技编数据
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
-		float			mFlyDist; //TODO: 技编数据 子弹飞行距离
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		int32			mCoolDown;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		ELockedType		mLockedType; //TODO: 技编数据 锁定 人or地
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		int32			mAttackDist; //TODO: 技编数据
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		int32			mTolerance; //TODO: 技编数据 //子弹到targetLoc的容许误差
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		int32			mBulletSpeed; //TODO: 技编数据
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		int32			mFlyDist; //TODO: 技编数据 子弹飞行距离
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		ESkillType		mSkillType;	//TODO: 技编数据
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		FString			mAttachPoint;//TODO: 技编数据 子弹绑定点
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		EAnimType		mAnimType;//TODO: 技编数据 相同类型动画的不同动作枚举
 
-	FString	mFilterStr;
-	FString mBeforeSkillStr;
-	FString mBeforePkStr;
-	FString mBeforeEvnsStr;
-	FString mEndEvnsStr;
-	FString mEndPkStr;
-	FString mEndSkillStr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		FString			mFilterStr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		FString			mBeforeSkillStr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		FString			mBeforePkStr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		FString			mBeforeEvnsStr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		FString			mEndEvnsStr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		FString			mEndPkStr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		FString			mEndSkillStr;
 };

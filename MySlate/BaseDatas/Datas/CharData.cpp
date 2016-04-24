@@ -10,13 +10,14 @@ UCharData::UCharData() : Super()
 	mName = "";;
 	mDescr = "";
 	mHeath = 100.f;
+	mHeathMax = 150.f;
 	mFightData = NewObject<UFightData>(UFightData::StaticClass());
 	mFightData->AddToRoot();
 }
 
 UCharData::~UCharData()
 {
-
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UCharData::~UCharData"));
 }
 
 void UCharData::BeginDestroy()
@@ -28,5 +29,6 @@ void UCharData::BeginDestroy()
 		mFightData = nullptr;
 	}
 
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UCharData::BeginDestroy, id:%d"), mId);
 	Super::BeginDestroy();
 }

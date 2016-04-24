@@ -15,8 +15,8 @@ UMyCharDataComp::UMyCharDataComp()
 
 	mGroup = EGroup::None;
 	mTeam = ETeam::None;
-	mHealth = 100.f;
-	mHealthMax = 150.f;
+	mHealth = 0.f;
+	mHealthMax = 0.f;
 	mFightData = nullptr;
 	mCharData = nullptr;
 }
@@ -55,5 +55,7 @@ void UMyCharDataComp::DestroyComponent(bool bPromoteChildren /*= false*/)
 void UMyCharDataComp::SetCharData(UCharData* _data)
 {
 	mCharData = _data;
+	mHealth = _data->mHeath;
+	mHealthMax = _data->mHeathMax;
 	mFightData->Copy(mCharData->GetFightData());//角色模板中的基础数据拷到 战斗数据对象中
 }

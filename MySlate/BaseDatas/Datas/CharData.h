@@ -7,7 +7,7 @@
 
 class UFightData;
 
-UCLASS()
+UCLASS(Blueprintable)
 class UCharData : public UObject
 {
 	GENERATED_BODY()
@@ -20,9 +20,16 @@ public:
 	UFightData*	GetFightData() const { return mFightData; }
 
 public:
-	int32		mId;
-	FString		mName;
-	FString		mDescr;
-	float		mHeath;
-	UFightData*	mFightData;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharData")
+		int32		mId;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharData")
+		FString		mName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharData")
+		FString		mDescr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharData")
+		float		mHeath;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharData")
+		float		mHeathMax;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharData")
+		UFightData*	mFightData;
 };

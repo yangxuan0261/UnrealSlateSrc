@@ -20,13 +20,20 @@ public:
 	virtual void BeginDestroy() override;
 
 public:
+
 	UFUNCTION(BlueprintCallable, Category = "USkillDataMgr")
-		void				InitFakeDate();
+		USkillTemplate*		CreateSkillTemp(int32 _id);
+
+	UFUNCTION(BlueprintCallable, Category = "USkillDataMgr")
+		UBufflTemplate*		CreateBuffTemp(int32 _id);
 
 	UFUNCTION(BlueprintCallable, Category = "USkillDataMgr")
 		USkillTemplate*		GetSkillTemplate(int32 _skillId);
 	UFUNCTION(BlueprintCallable, Category = "USkillDataMgr")
 		UBufflTemplate*		GetBuffTemplate(int32 _buffId);
+
+private:
+	void				InitFakeDate();//不在这里模拟数据，在蓝图中生产
 
 private:
 	TMap<int32, USkillTemplate*>	mSkillTempMap;

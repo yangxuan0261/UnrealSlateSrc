@@ -18,8 +18,14 @@ public:
 	virtual ~UBaseDataMgr();
 	virtual void BeginDestroy() override;
 
-	void InitFakeData();
 	void LoadCharData();
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "UBaseDataMgr")
+		UCharData*		CreateCharData(int32 _id);
+
+private:
+	void InitFakeData();
 
 public:
 	UCharData*		GetCharData(int32 _id);

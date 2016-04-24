@@ -6,7 +6,7 @@
 
 #include "BufflTemplate.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class UBufflTemplate : public UObject
 {
 	GENERATED_BODY()
@@ -16,4 +16,8 @@ public:
 	virtual ~UBufflTemplate();
 	virtual void BeginDestroy() override;
 
+public:
+	//∂¡±Ì Ù–‘
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "USkillTemplate")
+		int32			mId;
 };

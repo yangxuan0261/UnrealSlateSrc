@@ -55,6 +55,7 @@ void USkillFunction::Tick(float DeltaSeconds)
 		if (mAttacker->GetState() != CharState::Attack)
 		{
 			mAttacker->ChangeState(CharState::Attack);
+
 			//朝向敌人
 			AMyChar* target = mTargetId > 0 ? UCharMgr::GetInstance()->GetChar(mTargetId) : nullptr;
 			FVector targetLoc = target != nullptr ? target->GetActorLocation() : mTargetLoc;
@@ -74,11 +75,11 @@ void USkillFunction::UseSkill(int32 _targetId, const FVector& _targetLoc)
 {
 	mTargetId = _targetId;
 	mTargetLoc = _targetLoc;
-	if (_targetId > 0)
+	if (mSkillTemplate->mLockedType == ELockedType::Char)
 	{
 		UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::UseSkill, targetId:%d"), mTargetId);
 	}
-	else
+	else if (mSkillTemplate->mLockedType == ELockedType::Loc)
 	{
 		UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::UseSkill, target is Location"));
 	}
@@ -187,7 +188,6 @@ void USkillFunction::BulletShoot()
 		mBullet->DetachRootComponentFromParent();
 
 		mBullet->SetFly(true);
-		mBullet->CollisionComp->OnComponentBeginOverlap.AddDynamic(mBullet, &AMyBullet::OnMyCollisionCompBeginOverlap);
 
 		mBullet = nullptr;//发射出去后子弹、pkMsg置空，由子弹去释放pkMsg
 		mPkMsg = nullptr;

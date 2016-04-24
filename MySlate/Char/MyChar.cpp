@@ -28,7 +28,7 @@ AMyChar::AMyChar() : Super()
 	mCharState = CharState::IdleRun;
 	mUuid = 0;
 	mCharData = nullptr;
-
+	mTurnToLoc = FVector::ZeroVector;
 }
 
 AMyChar::~AMyChar()
@@ -126,7 +126,7 @@ bool AMyChar::UseSkill(int32 _skillId, int32 _targetId /* = 0 */, FVector _targe
 	}		
 	else
 	{
-		UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::UseSkill, mUsingSkill != nullptr, skillId:%d"), mUsingSkill->mSkillId);
+		UE_LOG(SkillLogger, Warning, TEXT("--AMyChar::Turing- AMyChar::UseSkill, mUsingSkill != nullptr, skillId:%d"), mUsingSkill->mSkillId);
 	}
 
 	return canUse;
@@ -144,11 +144,42 @@ void AMyChar::ChangeState(CharState _state)
 	//}
 }
 
-void AMyChar::FaceToTargetLoc(const FVector& _targetLoc)
+void AMyChar::FaceToTargetLoc(const FVector& _targetLoc, bool _smooth /* = false */)
 {
-	SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), _targetLoc));
-}
+	if (!_smooth)
+	{
+		SetActorRotation(
+			UKismetMathLibrary::FindLookAtRotation(
+				GetActorLocation()
+				, _targetLoc)
+			);
+	}
+	else //平滑旋转
+	{
+		mTurnToLoc = _targetLoc;
+		mTurnToRot = FRotator::ZeroRotator;
 
+		auto rotaInterp = [&]() -> void{
+			mTurnToRot = UKismetMathLibrary::RInterpTo(
+				GetActorRotation()
+				, UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), mTurnToLoc)
+				, GetWorld()->GetDeltaSeconds()
+				, 10.f);
+
+			if (GetActorRotation().Equals(mTurnToRot, 1.f))
+			{
+				this->GetWorldTimerManager().ClearTimer(mTimer); //清理定时器
+				UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::FaceToTargetLoc, stop rotate"));
+			}
+			else
+			{
+				SetActorRotation(mTurnToRot);
+			}
+		};
+
+		GetWorldTimerManager().SetTimer(mTimer, FTimerDelegate::CreateLambda(rotaInterp), GetWorld()->GetDeltaSeconds(), true); //设置定时器
+	}
+}
 
 void AMyChar::Death()
 {

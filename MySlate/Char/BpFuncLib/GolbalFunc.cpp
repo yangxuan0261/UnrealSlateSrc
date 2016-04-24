@@ -34,13 +34,11 @@ UGolbalFunc::~UGolbalFunc()
 void UGolbalFunc::InitMgrs()
 {
 	gSkillDataMgr = USkillDataMgr::GetInstance();
-	gSkillDataMgr->InitFakeDate();
 	gSkillMgr = USkillMgr::GetInstance();
 	gCharMgr = UCharMgr::GetInstance();
 	gFunctionMgr = UFuncFactory::GetInstance();
 	gFunctionMgr->InitFuncAndFilters();
 	gBaseDataMgr = UBaseDataMgr::GetInstance();
-	gBaseDataMgr->InitFakeData();
 	gBuffMgr = UBuffMgr::GetInstance();
 }
 
