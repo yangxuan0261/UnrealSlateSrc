@@ -37,6 +37,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		bool		CanAttack();
 
+	UFUNCTION(BlueprintCallable, Category = "MyChar")
+		void		CancelSkill();
+
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		void		SkillBegin(); //技能释放前运行, 比如 瞬间移动 -> 攻击
 
@@ -90,4 +93,5 @@ public:
 
 private:
 	bool	mCanAttack;
+	bool	mMoving;
 };

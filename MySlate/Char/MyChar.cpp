@@ -115,7 +115,14 @@ bool AMyChar::UseSkill(int32 _skillId, int32 _targetId /* = 0 */, FVector _targe
 {
 	bool canUse = false;
 	if (mUsingSkill == nullptr)
-	{
+	{	
+		//可以容错，但不是必须，因为使用技能是目标肯定是存在的
+		//AMyChar* target = _targetId > 0 ? UCharMgr::GetInstance()->GetChar(_targetId) : nullptr;
+		//if (target == nullptr)
+		//{
+		//	return canUse;
+		//}
+
 		USkillFunction* skillFunc = mCDComp->CanUseSkill(_skillId);
 		if (skillFunc != nullptr)
 		{

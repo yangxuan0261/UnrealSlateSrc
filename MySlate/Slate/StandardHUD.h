@@ -8,7 +8,6 @@
 class SStandardSlateWidget;
 class AMyChar;
 
-
 UCLASS()
 class AStandardHUD : public AHUD
 {

@@ -23,6 +23,7 @@ USkillFunction::USkillFunction() : Super()
 	mTargetId = 0;
 	mTargetLoc = FVector::ZeroVector;
 	mCanAttack = false;
+	mMoving = false;
 }
 
 USkillFunction::~USkillFunction()
@@ -79,20 +80,70 @@ void USkillFunction::UseSkill(int32 _targetId, const FVector& _targetLoc)
 
 bool USkillFunction::CanAttack()
 {
-	return true; //for test
-
 	AMyChar* target = mTargetId > 0 ? UCharMgr::GetInstance()->GetChar(mTargetId) : nullptr;
 	float DistSq = 0.f;
-	if (target) //锁定目标
+	if (mTargetId > 0 && target != nullptr) //锁定目标，未死
 	{
 		DistSq = (target->GetActorLocation() - mAttacker->GetActorLocation()).SizeSquared();
+	}
+	else if (mTargetId > 0) //锁定目标，已死
+	{
+		if (mMoving) //移动中需要取消移动
+		{
+			mAttacker->GetController()->StopMovement();
+		}
+		CancelSkill();
+		return false;
 	}
 	else //锁定地点
 	{
 		DistSq = (mTargetLoc - mAttacker->GetActorLocation()).SizeSquared();
 	}
 	float atkDist = mSkillTemplate->mAttackDist;
-	return FMath::Pow(atkDist, 2) > DistSq ? true : false;
+	bool ret = FMath::Pow(atkDist, 2) > DistSq ? true : false;
+
+	if (ret)
+	{
+		if (mMoving) //移动中需要取消移动
+		{
+			mAttacker->GetController()->StopMovement();
+			UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::CanAttack, stop moving, atkDist > DistSq, %f > %f"), atkDist, FMath::Sqrt(DistSq));
+		}
+		else
+		{
+			UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::CanAttack, dont need move, atkDist > DistSq, %f > %f"), atkDist, FMath::Sqrt(DistSq));
+		}
+		mMoving = false;
+	}
+	else
+	{
+		if (!mMoving)
+		{
+			if (target != nullptr) 
+			{
+				UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::CanAttack, move to target"));
+				UNavigationSystem::SimpleMoveToActor(mAttacker->GetController(), target);
+			}
+			else
+			{
+				UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::CanAttack, move to location"));
+				UNavigationSystem::SimpleMoveToLocation(mAttacker->GetController(), mTargetLoc);
+			}
+			mMoving = true;
+		}
+	}
+	return ret;
+}
+
+void USkillFunction::CancelSkill()
+{
+	//向锁定的目标奔跑时，目标死亡，取消技能
+	mTargetId = 0;
+	mTargetLoc = FVector::ZeroVector;
+	mAttacker->SetUsingSkillNull();
+	mCanAttack = false;
+	mMoving = false;
+	UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::CancelSkill"));
 }
 
 void USkillFunction::SkillBegin()
@@ -208,6 +259,7 @@ void USkillFunction::SkillEnd()
 		mAttacker->ChangeState(CharState::IdleRun);
 		mAttacker->SetUsingSkillNull();
 		mCanAttack = false;
+		mMoving = false;
 
 		ReleaseData();
 	}
@@ -217,6 +269,7 @@ void USkillFunction::ReleaseData()
 {
 	mAttacker->SetUsingSkillNull();
 	mCanAttack = false;
+	mMoving = false;
 
 	//尝试释放内存
 	if (mBullet != nullptr) //创建子弹但没发射出去，技能就被打断，需要销毁子弹,pkMsg在里面会跟着销毁

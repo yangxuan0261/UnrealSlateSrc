@@ -69,6 +69,10 @@ void UGolbalFunc::DrawSegment(const FVector& _start, const FVector& _end, float 
 	::DrawDebugLine(GWorld, _start, _end, FColor::Red, true, _time);
 	::DrawDebugSolidBox(GWorld, _start, FVector(5.f, 5.f, 5.f), FColor::Green, true, _time);
 	::DrawDebugSolidBox(GWorld, _end, FVector(5.f, 5.f, 5.f), FColor::Green, true, _time);
+
+	//dist
+	int32 dist = (int32)(_end - _start).Size();
+	::DrawDebugString(GWorld, _end, FString::Printf(TEXT("dist:%d"), dist), nullptr, FColor::Green, 5.f, true);
 }
 
 void UGolbalFunc::TestStrSplit()
