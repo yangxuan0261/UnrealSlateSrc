@@ -24,6 +24,7 @@ USkillFunction::USkillFunction() : Super()
 	mTargetLoc = FVector::ZeroVector;
 	mCanAttack = false;
 	mMoving = false;
+	mIsOver = false;
 }
 
 USkillFunction::~USkillFunction()
@@ -140,6 +141,7 @@ void USkillFunction::CancelSkill()
 	//向锁定的目标奔跑时，目标死亡，取消技能
 	mTargetId = 0;
 	mTargetLoc = FVector::ZeroVector;
+	mAttacker->ChangeState(CharState::IdleRun);
 	mAttacker->SetUsingSkillNull();
 	mCanAttack = false;
 	mMoving = false;
@@ -155,6 +157,7 @@ void USkillFunction::SkillBegin()
 
 	//TODO: 技编数据, 做技能表现
 	mAttacker->TempNotifyA();
+	mIsOver = false;
 
 	mOwnerCD->Restart();
 
@@ -192,7 +195,7 @@ void USkillFunction::BulletCreate()
 
 	if (mAttacker)
 	{
-		 //TODO: 创建子弹,带上pk信息, 绑定到身体的某个socket部位上
+		//TODO: 创建子弹,带上pk信息, 绑定到身体的某个socket部位上
 		FActorSpawnParameters SpawnInfo;
 		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		mBullet = GWorld->SpawnActor<AMyBullet>(mAttacker->BulletClass, SpawnInfo);
@@ -235,6 +238,7 @@ void USkillFunction::BulletShoot()
 
 		mBullet->SetFly(true);
 
+		UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::BulletShoot, mBullet = nullptr"));
 		mBullet = nullptr;//发射出去后子弹、pkMsg置空，由子弹去释放pkMsg
 		mPkMsg = nullptr;
 	}
@@ -247,44 +251,41 @@ void USkillFunction::BulletShoot()
 void USkillFunction::SkillEnd()
 {
 	//切换状态，使用中的技能置空
-	if (mAttacker)
-	{
-		//step6 - 运行技能后置func, 比如瞬间移动移回原地
-		const TArray<UAbsPkEvent*>& functions2 = mSkillTemplate->GetEndSkill();
-		for (UAbsPkEvent* func : functions2)
-		{	//issue mPkMsg is nullptr befor
-			func->RunEndSkill(mPkMsg);
-		}
-
-		mAttacker->ChangeState(CharState::IdleRun);
-		mAttacker->SetUsingSkillNull();
-		mCanAttack = false;
-		mMoving = false;
-
-		ReleaseData();
+	//step6 - 运行技能后置func, 比如瞬间移动移回原地
+	const TArray<UAbsPkEvent*>& functions2 = mSkillTemplate->GetEndSkill();
+	for (UAbsPkEvent* func : functions2)
+	{	//issue mPkMsg is nullptr befor
+		func->RunEndSkill(mPkMsg);
 	}
+
+	mIsOver = true;
+	CancelSkill();
+	ReleaseData();
 }
 
 void USkillFunction::ReleaseData()
 {
-	mAttacker->SetUsingSkillNull();
-	mCanAttack = false;
-	mMoving = false;
+	if (!mIsOver)
+	{
+		UE_LOG(SkillLogger, Error, TEXT("--- USkillFunction::ReleaseData, mIsOver == false"));
 
-	//尝试释放内存
-	if (mBullet != nullptr) //创建子弹但没发射出去，技能就被打断，需要销毁子弹,pkMsg在里面会跟着销毁
-	{
-		mBullet->DestroyBullet();
-		mBullet = nullptr;
-		mPkMsg = nullptr;
-	}
-	else //还没有创建子弹，就必须这里销毁pkMsg
-	{
-		if (mPkMsg != nullptr)
+		CancelSkill();
+
+		//尝试释放内存
+		if (mBullet != nullptr) //创建子弹但没发射出去，技能就被打断，需要销毁子弹,pkMsg在里面会跟着销毁
 		{
-			mPkMsg->RemoveFromRoot();
-			mPkMsg->ConditionalBeginDestroy();
+			mBullet->DestroyBullet();
+			mBullet = nullptr;
 			mPkMsg = nullptr;
+		}
+		else //还没有创建子弹，就必须这里销毁pkMsg
+		{
+			if (mPkMsg != nullptr)
+			{
+				mPkMsg->RemoveFromRoot();
+				mPkMsg->ConditionalBeginDestroy();
+				mPkMsg = nullptr;
+			}
 		}
 	}
 }

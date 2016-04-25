@@ -94,4 +94,5 @@ public:
 private:
 	bool	mCanAttack;
 	bool	mMoving;
+	bool		mIsOver;//正常结束技能标记
 };

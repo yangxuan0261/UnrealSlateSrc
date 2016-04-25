@@ -7,6 +7,7 @@
 //#include "Engine.h"
 #include "EngineGlobals.h"
 #include "Engine/Engine.h"
+#include "Engine/StreamableManager.h"
 
 #include "CanvasItem.h"
 #include "Engine/Canvas.h"
@@ -44,6 +45,7 @@ DECLARE_LOG_CATEGORY_EXTERN(CompLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(PkLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(AILogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(GolbalFuncLogger, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(ResLogger, Log, All);
 
 //use logger
 //UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::~USkillFunction:%d"), mSkillId);

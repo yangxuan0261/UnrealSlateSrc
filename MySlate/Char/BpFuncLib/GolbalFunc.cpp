@@ -10,6 +10,7 @@
 #include "Char/Skill/Function/FuncFactory.h"
 #include "BaseDatas/BaseDataMgr.h"
 #include "Char/Skill/Buff/BuffMgr.h"
+#include "Char/Res/ResMgr.h"
 #include "Char/MyChar.h"
 
 USkillDataMgr*	UGolbalFunc::gSkillDataMgr	= nullptr;
@@ -18,6 +19,7 @@ UCharMgr*		UGolbalFunc::gCharMgr		= nullptr;
 UFuncFactory*	UGolbalFunc::gFunctionMgr	= nullptr;
 UBaseDataMgr*	UGolbalFunc::gBaseDataMgr	= nullptr;
 UBuffMgr*		UGolbalFunc::gBuffMgr		= nullptr;
+UResMgr*		UGolbalFunc::gResMgr		= nullptr;
 
 // Sets default values
 //UGolbalFunc::UGolbalFunc(const UGolbalFunc& ObjectInitializer) : Super(ObjectInitializer)
@@ -40,6 +42,7 @@ void UGolbalFunc::InitMgrs()
 	gFunctionMgr->InitFuncAndFilters();
 	gBaseDataMgr = UBaseDataMgr::GetInstance();
 	gBuffMgr = UBuffMgr::GetInstance();
+	gResMgr = UResMgr::GetInstance();
 }
 
 void UGolbalFunc::DestroyMgrs()
@@ -50,12 +53,14 @@ void UGolbalFunc::DestroyMgrs()
 	UFuncFactory::ReleaseInstance();
 	UBaseDataMgr::ReleaseInstance();
 	UBuffMgr::ReleaseInstance();
+	UResMgr::ReleaseInstance();
 	gSkillDataMgr = nullptr;
 	gSkillMgr = nullptr;
 	gCharMgr = nullptr;
 	gFunctionMgr = nullptr;
 	gBaseDataMgr = nullptr;
 	gBuffMgr = nullptr;
+	gResMgr = nullptr;
 }
 
 void UGolbalFunc::TurnForward(AActor* _actor, const FVector& _targetLoc)

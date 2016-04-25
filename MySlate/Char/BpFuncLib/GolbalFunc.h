@@ -10,6 +10,7 @@ class UCharMgr;
 class UFuncFactory;
 class UBaseDataMgr;
 class UBuffMgr;
+class UResMgr;
 class AMyChar;
 
 UCLASS()
@@ -38,6 +39,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static UBaseDataMgr*		GetBaseDataMgr() { return gBaseDataMgr; }
+
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static UResMgr*				GetResMgr() { return gResMgr; }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TurnForward(AActor* _actor, const FVector& _targetLoc);
@@ -69,5 +73,6 @@ private:
 	static UFuncFactory*			gFunctionMgr;
 	static UBaseDataMgr*			gBaseDataMgr;
 	static UBuffMgr*				gBuffMgr;
+	static UResMgr*					gResMgr;
 
 };
