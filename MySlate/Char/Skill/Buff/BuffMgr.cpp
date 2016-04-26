@@ -34,8 +34,29 @@ void UBuffMgr::BeginDestroy()
 
 void UBuffMgr::Tick(float DeltaTime)
 {
-	//UE_LOG(BuffLogger, Warning, TEXT("--- UBuffMgr::Tick"));
+	UAbsBuff* buff = nullptr;
+	for (auto Iter = mBuffs.CreateIterator(); Iter; ++Iter)
+	{
+		TArray<UAbsBuff*>&	buffs = Iter->Value;
+		for (int32 i = 0;i < buffs.Num(); i++)
+		{
+			buff = buffs[i];
+			if (buff->IsRemoeve())
+			{
+				buff->BuffOver();
+				buffs.RemoveAt(i);
+			}
+			else
+			{
+				buff->Tick(DeltaTime);//¸üÐÂbuffer
+			}
+		}
 
+		if (buffs.Num() == 0)
+		{
+			Iter.RemoveCurrent();
+		}
+	}
 }
 
 bool UBuffMgr::IsTickable() const
@@ -58,9 +79,37 @@ void UBuffMgr::RunEndPkBuffs(int32 _charId, UPkMsg* msg)
 
 }
 
-void UBuffMgr::RemoveBuff(int32 _charId)
+void UBuffMgr::AddBuff(int32 _charId)
 {
 
+}
+
+void UBuffMgr::RemoveBuff(int32 _charId)
+{
+	TArray<UAbsBuff*>* buffs = mBuffs.Find(_charId);
+	if (buffs != nullptr)
+	{
+		for (UAbsBuff* buff : *buffs)
+		{
+			buff->Remove();
+		}
+	}
+}
+
+void UBuffMgr::RemoveBuffSpec(int32 _charId, int32 _buffId)
+{
+	TArray<UAbsBuff*>* buffs = mBuffs.Find(_charId);
+	if (buffs != nullptr)
+	{
+		for (UAbsBuff* buff : *buffs)
+		{
+			if (buff->GetBuffId() == _buffId)
+			{
+				buff->Remove();
+				break;
+			}
+		}
+	}
 }
 
 void UBuffMgr::CharDeathNotify(AMyChar* _char)

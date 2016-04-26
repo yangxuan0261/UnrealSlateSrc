@@ -54,6 +54,9 @@ public:
 		static void					TestStrSplit();
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static void					TestMapRmove();
+
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TestForceGC();
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")

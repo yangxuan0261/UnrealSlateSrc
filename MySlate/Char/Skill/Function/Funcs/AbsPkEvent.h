@@ -1,6 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
+
+#include "AbsAttrFunc.h"
 
 #include "AbsPkEvent.generated.h"
 
@@ -8,7 +8,7 @@ class UPkMsg;
 class UAbsBuff;
 
 UCLASS()
-class UAbsPkEvent : public UObject
+class UAbsPkEvent : public UAbsAttrFunc
 {
 	GENERATED_BODY()
 

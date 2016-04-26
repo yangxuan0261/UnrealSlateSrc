@@ -93,6 +93,51 @@ void UGolbalFunc::TestStrSplit()
 
 }
 
+void UGolbalFunc::TestMapRmove()
+{
+	//TMap<int32, FString> map1;
+	//map1.Add(1, "aaa");
+	//map1.Add(2, "bbb");
+	//map1.Add(3, "ccc");
+	//map1.Add(4, "ddd");
+	//map1.Add(5, "eee");
+
+	//for (auto Iter = map1.CreateIterator(); Iter;++Iter)
+	//{
+	//	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- %d, %s"), Iter->Key, *Iter->Value);
+	//	if (Iter->Key == 3)
+	//	{
+	//		Iter.RemoveCurrent();
+	//	}
+	//}
+
+	//for (auto Iter = map1.CreateIterator(); Iter; ++Iter)
+	//{
+	//	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- %d, %s"), Iter->Key, *Iter->Value);
+	//}
+
+
+	TArray<int32> mArr;
+	mArr.Add(1);
+	mArr.Add(222);
+	mArr.Add(3);
+	mArr.Add(4);
+	mArr.Add(5);
+
+	for (int32 i = 0;i < mArr.Num(); ++i)
+	{
+		if (mArr[i] == 222)
+		{
+			mArr.RemoveAt(i);
+		}
+	}
+
+	for (auto tmp : mArr)
+	{
+		UE_LOG(GolbalFuncLogger, Warning, TEXT("--- tmp:%d"), tmp);
+	}
+}
+
 void UGolbalFunc::TestForceGC()
 {
 	GWorld->GetWorld()->ForceGarbageCollection(true);
