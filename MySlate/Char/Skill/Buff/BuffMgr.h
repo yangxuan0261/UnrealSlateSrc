@@ -38,10 +38,10 @@ public:
 		UAbsBuff*	FindBuff(int32 _charId, int32 _buffId);
 
 	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
-		void RemoveBuff(int32 _charId);
+		void RemoveBuff(int32 _charId, bool _exeBuffOver = false);
 
 	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
-		void RemoveBuffSpec(int32 _charId, int32 _buffId);
+		void RemoveBuffSpec(int32 _charId, int32 _buffId, bool _exeBuffOver = false);
 
 	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
 		void CharDeathNotify(AMyChar* _char);

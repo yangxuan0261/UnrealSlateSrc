@@ -90,27 +90,57 @@ void UBuffMgr::AddBuff(int32 _attackId,int32 _targetId, int32 _skillId, int32 _b
 	UBufflTemplate* buffTemp = USkillDataMgr::GetInstance()->GetBuffTemplate(_buffId);
 	if (buffTemp != nullptr)
 	{
+		UAbsBuff* beAdd = nullptr;
 		if (buffTemp->mCanAdd) //叠加buff
 		{
-			UAppendBuff* appendBuff = NewObject<UAppendBuff>(UAppendBuff::StaticClass());
-
-			UAbsBuff* findBuff = FindBuff(_targetId, _buffId);
-			UAppendBuff* buff = findBuff != nullptr ? Cast<UAppendBuff>(UAppendBuff::StaticClass()) : nullptr;
-			if (buff != nullptr)
-			{
-				buff->AppendBuff(buff);
-				appendBuff->ConditionalBeginDestroy();
-			}
-			else
-			{
-
-			}
-
+			beAdd = NewObject<UAppendBuff>(UAppendBuff::StaticClass());
 		}
 		else
 		{
-			UCommonBuff* commBuff = NewObject<UCommonBuff>(UCommonBuff::StaticClass());
+			beAdd = NewObject<UCommonBuff>(UCommonBuff::StaticClass());
+		}
+		beAdd->SetBuffTemp(buffTemp);
 
+		TArray<UAbsBuff*>* buffs = mBuffs.Find(_targetId);
+		if (buffs != nullptr)
+		{
+			UAbsBuff** buff = buffs->FindByPredicate([&](const UAbsBuff* _buff)->bool { return _buff->GetBuffId() == _buffId; });
+			if (buff != nullptr)//原来已存在这个buffId
+			{
+				UAppendBuff* appBuff = Cast<UAppendBuff>(*buff);
+				if (appBuff != nullptr)//存在的buff是缀加的，把缀加数据丢到进去，释放新创建的
+				{
+					appBuff->AppendBuff(beAdd);
+					beAdd->ConditionalBeginDestroy(); 
+				}
+				else //不可缀加，去旧迎新
+				{
+					UAbsBuff* tmpBuff = *buff;
+					tmpBuff->BuffOver();
+					buffs->Remove(tmpBuff);//非常重要：删除是必须把*buff赋值给一个临时对象，不然地址检查不通过导致崩溃
+					tmpBuff->RemoveFromRoot();
+					tmpBuff->ConditionalBeginDestroy();
+
+					beAdd->AddToRoot();
+					beAdd->BuffStart();
+					buffs->Add(beAdd);
+				}
+			}
+			else
+			{
+				beAdd->AddToRoot();
+				beAdd->BuffStart();
+				buffs->Add(beAdd);
+			}
+		}
+		else
+		{
+			beAdd->AddToRoot();
+			beAdd->BuffStart();
+
+			TArray<UAbsBuff*> tmpBuffs;
+			tmpBuffs.Add(beAdd);
+			mBuffs.Add(_targetId, tmpBuffs);
 		}
 	}
 	else
@@ -134,19 +164,28 @@ UAbsBuff* UBuffMgr::FindBuff(int32 _charId, int32 _buffId)
 	return nullptr;
 }
 
-void UBuffMgr::RemoveBuff(int32 _charId)
+//移除某个角色身上的所有buff
+void UBuffMgr::RemoveBuff(int32 _charId, bool _exeBuffOver /* = false */)
 {
 	TArray<UAbsBuff*>* buffs = mBuffs.Find(_charId);
 	if (buffs != nullptr)
 	{
 		for (UAbsBuff* buff : *buffs)
 		{
-			buff->Remove();
+			if (_exeBuffOver)
+			{
+				buff->BuffOver();
+			}
+			buff->RemoveFromRoot();
+			buff->ConditionalBeginDestroy();
 		}
+
+		mBuffs.Remove(_charId);
 	}
 }
 
-void UBuffMgr::RemoveBuffSpec(int32 _charId, int32 _buffId)
+//移除某个角色身上的某个具体buff
+void UBuffMgr::RemoveBuffSpec(int32 _charId, int32 _buffId, bool _exeBuffOver /* = false */)
 {
 	TArray<UAbsBuff*>* buffs = mBuffs.Find(_charId);
 	if (buffs != nullptr)
@@ -155,9 +194,20 @@ void UBuffMgr::RemoveBuffSpec(int32 _charId, int32 _buffId)
 		{
 			if (buff->GetBuffId() == _buffId)
 			{
-				buff->Remove();
+				if (_exeBuffOver)
+				{
+					buff->BuffOver();
+				}
+				buff->RemoveFromRoot();
+				buff->ConditionalBeginDestroy();
+				buffs->Remove(buff);
 				break;
 			}
+		}
+
+		if (buffs->Num() == 0) //角色身上buff移光了
+		{
+			mBuffs.Remove(_charId);
 		}
 	}
 }

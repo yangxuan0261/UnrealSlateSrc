@@ -5,6 +5,7 @@
 
 #include "MyChar.h"
 #include "Comp/MyCharDataComp.h"
+#include "Skill/Template/SkillTemplate.h"
 
 static int32 uuid = 1;
 static int32 IdGenerator()
@@ -139,4 +140,3 @@ void UCharMgr::ConvertActorsToChars(UPARAM(ref) const TArray<AActor*>& _srcActor
 		}
 	}
 }
-

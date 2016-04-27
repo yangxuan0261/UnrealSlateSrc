@@ -184,3 +184,32 @@ void UGolbalFunc::TestSpwanBullet(AMyChar* _actor)
 	AMyBullet* bullet = GWorld->SpawnActor<AMyBullet>(_actor->BulletClass, _actor->GetActorLocation(), _actor->GetActorRotation(), SpawnInfo);
 }
 
+void UGolbalFunc::TestArrLambda(FString _str)
+{
+	TArray<FString> arr;
+	arr.Add(TEXT("aaa"));
+	arr.Add(TEXT("ccc"));
+	arr.Add(TEXT("eee"));
+	arr.Add(TEXT("ddd"));
+
+	//lambda表达式条件式查找，返回指针
+	FString* result = arr.FindByPredicate([&](const FString& str)->bool { return str == _str; });
+	if (result != nullptr)
+	{
+		UE_LOG(GolbalFuncLogger, Warning, TEXT("--- Find result:%s"), **result);
+
+		FString temp = *result;//必须要给一个临时对象，直接这样arr.Remove(**temp)会引发崩溃，检查地址不通过
+		arr.Remove(temp);
+		UE_LOG(GolbalFuncLogger, Warning, TEXT("--- len:%d"), arr.Num());
+
+		for (FString str : arr)
+		{
+			UE_LOG(GolbalFuncLogger, Warning, TEXT("--- %s"), *str);
+		}
+	}
+	else
+	{
+		UE_LOG(GolbalFuncLogger, Warning, TEXT("--- not Find result"));
+	}
+}
+

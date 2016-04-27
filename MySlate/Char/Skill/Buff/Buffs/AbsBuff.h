@@ -25,14 +25,13 @@ public:
 	virtual void RunBeforePk(UPkMsg* msg);
 	virtual void RunEndPk(UPkMsg* msg);
 
-	const TArray<UAbsPkEvent*>&	GetBuffAttrs();
 	AMyChar*	GetOwnerChar();
 	void		Remove() { mIsRemove = true; }
 	bool		IsRemoeve() const { return mIsRemove; }
 
 	int32		GetBuffId() const { return mBuffId; }
 	void		SetAttacker(AMyChar* _char);
-
+	void		SetBuffTemp(UBufflTemplate* _buffTemp);
 
 private:
 	int32		mBuffId;		//

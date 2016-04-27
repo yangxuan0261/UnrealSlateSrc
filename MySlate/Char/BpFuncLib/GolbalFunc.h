@@ -65,9 +65,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TestFilter(AMyChar* _actor, float _radius);
 
-
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TestSpwanBullet(AMyChar* _actor);
+
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static void					TestArrLambda(FString _str);
 
 private:
 	static USkillDataMgr*			gSkillDataMgr;

@@ -7,6 +7,7 @@
 #include "../../Pk/PkMsg.h"
 #include "Char/CharMgr.h"
 #include "Char/MyChar.h"
+#include "../../Template/BufflTemplate.h"
 
 UAbsBuff::UAbsBuff() : Super()
 {
@@ -65,12 +66,6 @@ void UAbsBuff::RunEndPk(UPkMsg* msg)
 
 }
 
-const TArray<UAbsPkEvent*>& UAbsBuff::GetBuffAttrs()
-{
-	TArray<UAbsPkEvent*> sdf;
-	return sdf;
-}
-
 AMyChar* UAbsBuff::GetOwnerChar()
 {
 	//return UCharMgr::GetInstance()->GetChar(mOwnerId);
@@ -88,4 +83,10 @@ void UAbsBuff::SetAttacker(AMyChar* _char)
 	};
 
 	_char->AddDeathNotify(FDeathOneNotify::CreateLambda(charDeathCallback));
+}
+
+void UAbsBuff::SetBuffTemp(UBufflTemplate* _buffTemp)
+{
+	mBuffTemp = _buffTemp;
+	mBuffId = _buffTemp->mId;
 }
