@@ -25,17 +25,21 @@ public:
 	virtual void RunBeforePk(UPkMsg* msg);
 	virtual void RunEndPk(UPkMsg* msg);
 
-	TArray<UAbsPkEvent*>	GetBuffAttrs();
+	const TArray<UAbsPkEvent*>&	GetBuffAttrs();
 	AMyChar*	GetOwnerChar();
 	void		Remove() { mIsRemove = true; }
 	bool		IsRemoeve() const { return mIsRemove; }
 
 	int32		GetBuffId() const { return mBuffId; }
+	void		SetAttacker(AMyChar* _char);
+
 
 private:
 	int32		mBuffId;		//
 	int32		mOwnerId;		//中招者
+	AMyChar*	mOwnerChar;		//中招者ptr
 	int32		mAttackerId;	//释放者
+	AMyChar*	mAttacker;		//释放者ptr
 	UBufflTemplate*	mBuffTemp;
 
 	float		mTimer;		//计数器

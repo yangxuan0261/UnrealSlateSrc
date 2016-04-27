@@ -32,7 +32,7 @@ public:
 		USkillTemplate*	GetSkillTemplate() const { return mSkillTemplate; }
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
-		void		UseSkill(int32 _targetId, const FVector& _targetLoc);
+		void		UseSkill(AMyChar* _target, const FVector& _targetLoc);
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		bool		CanAttack();
@@ -66,6 +66,9 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
 		AMyChar*		mAttacker;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
+		AMyChar*		mTarget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillFunction")
 		int32			mTargetId;

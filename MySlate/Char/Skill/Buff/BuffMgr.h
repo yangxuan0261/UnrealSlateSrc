@@ -32,7 +32,10 @@ public:
 	//=== buffer‘À–– end   ===
 
 	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
-		void AddBuff(int32 _charId);
+		void AddBuff(int32 _attackId,int32 _targetId, int32 _skillId, int32 _buffId);
+
+	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
+		UAbsBuff*	FindBuff(int32 _charId, int32 _buffId);
 
 	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
 		void RemoveBuff(int32 _charId);

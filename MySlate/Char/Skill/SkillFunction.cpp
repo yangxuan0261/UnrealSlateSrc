@@ -20,11 +20,12 @@ USkillFunction::USkillFunction() : Super()
 	mPkMsg = nullptr;
 	mBullet = nullptr;
 	mAttacker = nullptr;
-	mTargetId = 0;
 	mTargetLoc = FVector::ZeroVector;
 	mCanAttack = false;
 	mMoving = false;
 	mIsOver = false;
+	mTarget = nullptr;
+	mTargetId = 0;
 }
 
 USkillFunction::~USkillFunction()
@@ -59,8 +60,7 @@ void USkillFunction::Tick(float DeltaSeconds)
 			mAttacker->ChangeState(CharState::Attack);
 
 			//朝向敌人
-			AMyChar* target = mTargetId > 0 ? UCharMgr::GetInstance()->GetChar(mTargetId) : nullptr;
-			FVector targetLoc = target != nullptr ? target->GetActorLocation() : mTargetLoc;
+			FVector targetLoc = mTarget != nullptr ? mTarget->GetActorLocation() : mTargetLoc;
 			mAttacker->FaceToTargetLoc(targetLoc);
 		}
 	}
@@ -73,17 +73,35 @@ void USkillFunction::SetSkillTemplate(USkillTemplate* _skillTemp)
 	mType = _skillTemp->mSkillType;
 }
 
-void USkillFunction::UseSkill(int32 _targetId, const FVector& _targetLoc)
+void USkillFunction::UseSkill(AMyChar* _target, const FVector& _targetLoc)
 {
-	mTargetId = _targetId;
-	mTargetLoc = _targetLoc;
+	if (_target != nullptr)
+	{
+		mTarget = _target;
+		mTargetId = _target->GetUuid();
+		mTargetLoc = _target->GetActorLocation();
+
+		//死亡回调
+		auto charDeathCallback = [&](AMyChar* _deathChar)->void {
+			mTarget = nullptr;
+			UE_LOG(BuffLogger, Warning, TEXT("--- USkillFunction::UseSkill, charDeathCallback, id:%d"), _deathChar->GetUuid());
+		};
+
+
+		mTarget->AddDeathNotify(FDeathOneNotify::CreateLambda(charDeathCallback));
+	}
+	else
+	{
+		mTargetLoc = _targetLoc;
+	}
+
 }
 
 bool USkillFunction::CanAttack()
 {
-	AMyChar* target = mTargetId > 0 ? UCharMgr::GetInstance()->GetChar(mTargetId) : nullptr;
 	float DistSq = 0.f;
-	if (mTargetId > 0 && target != nullptr) //锁定目标，未死
+	AMyChar* target = mTarget;
+	if (target != nullptr) //锁定目标，未死
 	{
 		DistSq = (target->GetActorLocation() - mAttacker->GetActorLocation()).SizeSquared();
 	}
@@ -140,6 +158,7 @@ void USkillFunction::CancelSkill()
 {
 	//向锁定的目标奔跑时，目标死亡，取消技能
 	mTargetId = 0;
+	mTarget = nullptr;
 	mTargetLoc = FVector::ZeroVector;
 	mAttacker->ChangeState(CharState::IdleRun);
 	mAttacker->SetUsingSkillNull();
@@ -165,7 +184,7 @@ void USkillFunction::SkillBegin()
 	pkMsg->AddToRoot();
 	mPkMsg = pkMsg;
 
-	pkMsg->SetData(mSkillTemplate, mAttacker->GetUuid(), mTargetId, mTargetLoc);
+	pkMsg->SetData(mSkillTemplate, mAttacker, mTarget, mTargetLoc);
 
 	UFightData* attackerData = mAttacker->GetDataComp()->GetFigthData()->Clone();//将攻击者的战斗数据拷贝到 新建的战斗数据对象中
 	attackerData->AddToRoot();//在pkMsg的析构函数中释放这个对象
@@ -201,7 +220,7 @@ void USkillFunction::BulletCreate()
 		mBullet = GWorld->SpawnActor<AMyBullet>(mAttacker->BulletClass, SpawnInfo);
 		mBullet->SetPkMsg(mPkMsg);
 		mBullet->SetSkillTemplate(mSkillTemplate);
-		mBullet->SetTargetAndLoc(mPkMsg->GetTargetId(), mPkMsg->GetTargetLoc());
+		mBullet->SetTargetAndLoc(mPkMsg->GetTarget(), mPkMsg->GetTargetLoc());
 		mBullet->SetSpeed(mSkillTemplate->mBulletSpeed);
 		mBullet->SetFly(false);
 
@@ -233,9 +252,7 @@ void USkillFunction::BulletShoot()
 		}
 
 		//TODO: 射击，脱离绑定点，朝目标飞行，绑定碰撞组件碰撞事件
-		//mBullet->GetRootComponent()->DetachFromParent();
 		mBullet->DetachRootComponentFromParent();
-
 		mBullet->SetFly(true);
 
 		UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::BulletShoot, mBullet = nullptr"));

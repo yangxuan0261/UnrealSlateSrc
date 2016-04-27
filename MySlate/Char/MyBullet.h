@@ -36,13 +36,7 @@ public:
 	// End Actor interface
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void SetTargetId(int32 _targetId); 
-
-	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void SetTargetLoc(UPARAM(ref) const FVector& _targetLoc);
-
-	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void SetTargetAndLoc(int32 _targetId, UPARAM(ref) const FVector& _targetLoc);
+		void SetTargetAndLoc(AMyChar* _target, const FVector& _targetLoc);
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void SetSpeed(int32 _speed) { mSpeed = _speed; }
@@ -100,6 +94,8 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		int32				mTargetId; //受击者
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
+		AMyChar*			mTarget; //受击者
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		USkillTemplate*		mSkillTemp; //技能模板
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")

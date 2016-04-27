@@ -6,6 +6,7 @@
 #include "../../Function/Funcs/AbsPkEvent.h"
 #include "../../Pk/PkMsg.h"
 #include "Char/CharMgr.h"
+#include "Char/MyChar.h"
 
 UAbsBuff::UAbsBuff() : Super()
 {
@@ -17,18 +18,18 @@ UAbsBuff::UAbsBuff() : Super()
 	mTotalTime = 0.f;
 	mLessTimes = 0;
 	mIsRemove = false;
+	mAttacker = nullptr;
+	mOwnerChar = nullptr;
 }
 
 UAbsBuff::~UAbsBuff()
 {
-	UE_LOG(BuffLogger, Warning, TEXT("--- UAbsBuff::~UAbsBuff"));
+
 }
 
 void UAbsBuff::BeginDestroy()
 {
 
-
-	UE_LOG(BuffLogger, Warning, TEXT("--- UAbsBuff::BeginDestroy"));
 	Super::BeginDestroy();
 }
 
@@ -64,7 +65,7 @@ void UAbsBuff::RunEndPk(UPkMsg* msg)
 
 }
 
-TArray<UAbsPkEvent*> UAbsBuff::GetBuffAttrs()
+const TArray<UAbsPkEvent*>& UAbsBuff::GetBuffAttrs()
 {
 	TArray<UAbsPkEvent*> sdf;
 	return sdf;
@@ -72,5 +73,19 @@ TArray<UAbsPkEvent*> UAbsBuff::GetBuffAttrs()
 
 AMyChar* UAbsBuff::GetOwnerChar()
 {
-	return UCharMgr::GetInstance()->GetChar(mOwnerId);
+	//return UCharMgr::GetInstance()->GetChar(mOwnerId);
+	return mOwnerChar;
+}
+
+void UAbsBuff::SetAttacker(AMyChar* _char)
+{
+	mAttacker = _char;
+
+	//ËÀÍö»Øµ÷
+	auto charDeathCallback = [&](AMyChar* _deathChar)->void {
+		mAttacker = nullptr;
+		UE_LOG(BuffLogger, Warning, TEXT("--- UAbsBuff::SetAttacker, charDeathCallback, id:%d"), _deathChar->GetUuid());
+	};
+
+	_char->AddDeathNotify(FDeathOneNotify::CreateLambda(charDeathCallback));
 }

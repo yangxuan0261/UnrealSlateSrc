@@ -5,6 +5,11 @@
 
 #include "Char/MyChar.h"
 #include "Buffs/AbsBuff.h"
+#include "Buffs/AppendBuff.h"
+#include "Buffs/CommonBuff.h"
+#include "../Utils/SkillDataMgr.h"
+#include "../Template/BufflTemplate.h"
+
 
 UBuffMgr::UBuffMgr() : Super()
 {
@@ -13,7 +18,7 @@ UBuffMgr::UBuffMgr() : Super()
 
 UBuffMgr::~UBuffMgr()
 {
-	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UBuffMgr::~UBuffMgr"));
+	UE_LOG(BuffLogger, Warning, TEXT("--- UBuffMgr::~UBuffMgr"));
 }
 
 void UBuffMgr::BeginDestroy()
@@ -27,8 +32,9 @@ void UBuffMgr::BeginDestroy()
 		}
 		iter->Value.Empty();
 	}
+	mBuffs.Empty();
 
-	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UBuffMgr::BeginDestroy"));
+	UE_LOG(BuffLogger, Warning, TEXT("--- UBuffMgr::BeginDestroy"));
 	Super::BeginDestroy();
 }
 
@@ -79,9 +85,53 @@ void UBuffMgr::RunEndPkBuffs(int32 _charId, UPkMsg* msg)
 
 }
 
-void UBuffMgr::AddBuff(int32 _charId)
+void UBuffMgr::AddBuff(int32 _attackId,int32 _targetId, int32 _skillId, int32 _buffId)
 {
+	UBufflTemplate* buffTemp = USkillDataMgr::GetInstance()->GetBuffTemplate(_buffId);
+	if (buffTemp != nullptr)
+	{
+		if (buffTemp->mCanAdd) //µþ¼Óbuff
+		{
+			UAppendBuff* appendBuff = NewObject<UAppendBuff>(UAppendBuff::StaticClass());
 
+			UAbsBuff* findBuff = FindBuff(_targetId, _buffId);
+			UAppendBuff* buff = findBuff != nullptr ? Cast<UAppendBuff>(UAppendBuff::StaticClass()) : nullptr;
+			if (buff != nullptr)
+			{
+				buff->AppendBuff(buff);
+				appendBuff->ConditionalBeginDestroy();
+			}
+			else
+			{
+
+			}
+
+		}
+		else
+		{
+			UCommonBuff* commBuff = NewObject<UCommonBuff>(UCommonBuff::StaticClass());
+
+		}
+	}
+	else
+	{
+		UE_LOG(BuffLogger, Error, TEXT("--- UBuffMgr::AddBuff, buff template == nullptr, id:%d"), _buffId);
+	}
+}
+
+UAbsBuff* UBuffMgr::FindBuff(int32 _charId, int32 _buffId)
+{
+	TArray<UAbsBuff*>* buffs = mBuffs.Find(_charId);
+	if (buffs != nullptr)
+	{
+		for (UAbsBuff* buff : *buffs)
+		{
+			if (buff->GetBuffId() == _buffId)
+				return buff;
+
+		}
+	}
+	return nullptr;
 }
 
 void UBuffMgr::RemoveBuff(int32 _charId)

@@ -89,21 +89,41 @@ void UPkMsg::BeginDestroy()
 	Super::BeginDestroy();
 }
 
-void UPkMsg::SetData(USkillTemplate* _skillTemp, int32 _attackerId, int32 _targetId, const FVector& _targetLoc)
+void UPkMsg::SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _target, const FVector& _targetLoc)
 {
 	mSkillTemp = _skillTemp;
 	if (mSkillTemp)
 	{
-		mSkillId = mSkillTemp->mId;
-		mTargetId = _targetId;
-		mTargetLocked = _targetId > 0 ? UCharMgr::GetInstance()->GetChar(_targetId) : nullptr;
-		if (mTargetLocked != nullptr) //防止，发动技能过程中，目标死亡的情况
+		mSkillId = _skillTemp->mId;
+
+		//target 
+		if (_target != nullptr)
 		{
+			mTargetLocked = _target; //防止，发动技能过程中，目标死亡的情况
+			mTargetId = _target->GetUuid();
 			mTargetLoc = mTargetLocked->GetActorLocation();
+
+			//死亡回调
+			auto charDeathCallback = [&](AMyChar* _deathChar)->void {
+				mTargetLocked = nullptr;
+				UE_LOG(BuffLogger, Warning, TEXT("--- UPkMsg::SetData, charDeathCallback, id:%d"), _deathChar->GetUuid());
+			};
+
+			mTargetLocked->AddDeathNotify(FDeathOneNotify::CreateLambda(charDeathCallback));
 		}
 		else
 		{
 			mTargetLoc = _targetLoc;
+		}
+
+		//attack //TODO:不是必要，可以技能过程中攻击者死亡，后在拷贝战斗数据，一般情况下只需用指针获取攻击者战斗数据
+		if (_attacker != nullptr)
+		{
+			mAttackerId = _attacker->GetUuid();
+		}
+		else
+		{
+			UE_LOG(BuffLogger, Error, TEXT("--- UPkMsg::SetData, _attacker == nullptr"));
 		}
 	}
 }
@@ -117,12 +137,6 @@ void UPkMsg::AddTarget(AMyChar* _char)
 	param->mFightData->Copy(_char->GetDataComp()->GetFigthData());//复制目标的战斗数据
 	mTargetArr.Add(param);
 }
-
-//void UPkMsg::ExeNullDlg()
-//{
-//	UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::ExeNullDlg"));
-//	mSetNullDlg.ExecuteIfBound();
-//}
 
 void UPkMsg::SetAttackerData(UFightData* _data)
 {

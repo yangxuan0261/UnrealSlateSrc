@@ -34,8 +34,7 @@ void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::
 		return;
 	}
 
-	int32 targetId = _msg->GetTargetId();
-	AMyChar* target = targetId > 0 ? UCharMgr::GetInstance()->GetChar(targetId) : nullptr;
+	AMyChar* target = _msg->GetTarget();
 	FVector targetLoc = FVector::ZeroVector;
 	if (target != nullptr) //锁定目标，有可能飞行中目标死亡，所以去Char管理器中拿比较靠谱
 	{
@@ -60,7 +59,6 @@ void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::
 		TArray<AActor*> ignoreActors;
 		UCharMgr::GetInstance()->ConvertCharsToActors(ignoreChars, ignoreActors);
 
-		//ignoreChars.Add(_actor);
 		TArray<TEnumAsByte<EObjectTypeQuery>>  destObjectTypes; //目的类型集合
 		destObjectTypes.Add((EObjectTypeQuery)ECollisionChannel::ECC_Pawn); //这里强转一下，一一对应的
 
@@ -90,9 +88,7 @@ void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::
 			}
 
 			tmpTarget = Cast<AMyChar>(destTarget);
-			tmpTargetId = tmpTarget != nullptr ? tmpTarget->GetUuid() : 0;
-			tmpTarget = tmpTargetId > 0 ? UCharMgr::GetInstance()->GetChar(tmpTargetId) : nullptr; //防止死亡的char被选中
-			if (tmpTarget)
+			if (tmpTarget && tmpTarget->IsAlive())
 			{
 				_msg->AddTarget(tmpTarget);
 				mDestChars.Add(tmpTarget);

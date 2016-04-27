@@ -55,8 +55,7 @@ void AMyChar::BeginPlay()
 	mDataComp->RegisterComponent();
 
 	//绑定buff管理器
-	mDeathDlg.AddDynamic(UBuffMgr::GetInstance(), &UBuffMgr::CharDeathNotify);
-
+	mDeathMultiNotify.Add(FDeathOneNotify::CreateUObject(UBuffMgr::GetInstance(), &UBuffMgr::CharDeathNotify));
 	//GetMesh()->SetSkeletalMesh(nullptr);
 }
 
@@ -100,6 +99,11 @@ void AMyChar::OnCDFinish(UCoolDown* _cd)
 	mCanUseSkillArr.AddUnique(_cd);
 }
 
+void AMyChar::AddDeathNotify(const FDeathOneNotify& _notify)
+{
+	mDeathMultiNotify.Add(_notify);
+}
+
 void AMyChar::SetCharData(int32 _id)
 {
 	UCharData* data = UBaseDataMgr::GetInstance()->GetCharData(_id);
@@ -123,17 +127,19 @@ bool AMyChar::UseSkill(int32 _skillId, int32 _targetId /* = 0 */, FVector _targe
 		//	return canUse;
 		//}
 
+		AMyChar* target = UCharMgr::GetInstance()->GetChar(_targetId);
+
 		USkillFunction* skillFunc = mCDComp->CanUseSkill(_skillId);
 		if (skillFunc != nullptr)
 		{
-			skillFunc->UseSkill(_targetId, _targetLoc);
+			skillFunc->UseSkill(target, _targetLoc);
 			mUsingSkill = skillFunc;
 			canUse = true;
 		}
 	}		
 	else
 	{
-		UE_LOG(SkillLogger, Warning, TEXT("--AMyChar::Turing- AMyChar::UseSkill, mUsingSkill != nullptr, skillId:%d"), mUsingSkill->mSkillId);
+		UE_LOG(SkillLogger, Error, TEXT("--AMyChar::Turing- AMyChar::UseSkill, mUsingSkill != nullptr, skillId:%d"), mUsingSkill->mSkillId);
 	}
 
 	return canUse;
@@ -190,7 +196,7 @@ void AMyChar::FaceToTargetLoc(const FVector& _targetLoc, bool _smooth /* = false
 
 void AMyChar::Death()
 {
-	mDeathDlg.Broadcast(this); //通知所有绑定了的代理
+	mDeathMultiNotify.Broadcast(this);//通知所有绑定了的代理
 
 	//施放技能中被打死，释放创建的子弹和pkMsg
 	if (mUsingSkill != nullptr)

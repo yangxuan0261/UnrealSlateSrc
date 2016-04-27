@@ -38,7 +38,7 @@ public:
 	virtual ~UPkMsg();
 	void virtual BeginDestroy() override;
 
-	void	SetData(USkillTemplate* _skillTemp, int32 _attackerId, int32 _targetId, const FVector& _targetLoc);
+	void	SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _target, const FVector& _targetLoc);
 	const TArray<UParam*>& GetTargets() const { return mTargetArr; }
 	void	AddTarget(AMyChar* _char);
 	USkillTemplate*	GetSkillTemp() const { return mSkillTemp; }
