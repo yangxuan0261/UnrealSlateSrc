@@ -5,6 +5,7 @@
 #include "../Utils/CommonDef.h"
 #include "Funcs/AbsPkEvent.h"
 #include "Funcs/AttackPhy.h"
+#include "Funcs/Suckup.h"
 #include "../Filter/AbsFilter.h"
 #include "../Filter/LockFilter.h"
 #include "../Filter/CircleFilter.h"
@@ -46,11 +47,16 @@ void UFuncFactory::InitFuncAndFilters()
 	//------------ 选人 Start ------------
 	registerFilter(ULockFilter::CreateFilter(Filter_Lock));
 	registerFilter(UCircleFilter::CreateFilter(Filter_Circle));
+	
 	//------------ 选人 End ------------
 
 	//------------ 技能 Start ------------
 	registerFunction(UAttackPhy::CreateFunction(Func_Phyattack));
 	//------------ 技能 End ------------
+
+	//------------ 属性 Start ------------
+	registerFunction(USuckup::CreateFunction(Func_Suckhp));
+	//------------ 属性 End ------------
 }
 
 void UFuncFactory::registerFunction(UAbsPkEvent* _object)

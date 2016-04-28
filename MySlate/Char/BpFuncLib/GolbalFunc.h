@@ -35,6 +35,9 @@ public:
 		static USkillMgr*			GetSkillMgr() { return gSkillMgr; }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static UBuffMgr*			GetBuffMgr() { return gBuffMgr; }
+
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static UCharMgr*			GetCharMgr() { return gCharMgr; }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")

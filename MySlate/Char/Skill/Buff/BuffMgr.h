@@ -47,6 +47,7 @@ public:
 		void CharDeathNotify(AMyChar* _char);
 
 
+
 private:
 	TMap<int32, TArray<UAbsBuff*>>		mBuffs;//key, charΨһid
 };

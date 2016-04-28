@@ -13,6 +13,7 @@
 #include "BaseDatas/BaseDataMgr.h"
 #include "BaseDatas/Datas/CharData.h"
 #include "Skill/Buff/BuffMgr.h"
+#include "Res/ResMgr.h"
 
 // Sets default values
 AMyChar::AMyChar() : Super()
@@ -131,7 +132,12 @@ void AMyChar::AttachEffect(const FEffectBind& _effBind)
 
 	if (beAdd)
 	{
-		mEffects.Add(FEffectBind(_effBind.mEffectId, _effBind.mUuId, _effBind.mBindPos, _effBind.mResPath, _effBind.mLeftTime));
+		UParticleSystem* ps = UResMgr::GetInstance()->GetParticle(_effBind.mEffectId);
+		if (ps != nullptr)
+		{
+			auto psComp = UGameplayStatics::SpawnEmitterAttached(ps, GetMesh(), FName(*_effBind.mBindPos), FVector::ZeroVector, FRotator::ZeroRotator);
+			mEffects.Add(FEffectBind(_effBind.mEffectId, _effBind.mUuId, _effBind.mBindPos, _effBind.mResPath, _effBind.mLeftTime, psComp));
+		}
 	}
 }
 
@@ -144,6 +150,8 @@ void AMyChar::DetachEffect(int32 _uuid)
 	if (effBind != nullptr)
 	{
 		FEffectBind tmp = *effBind;
+		tmp.mPsComp->DetachFromParent();
+		tmp.mPsComp->DestroyComponent();
 		mEffects.Remove(tmp);
 		UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::DetachEffect, effectId:%d"), tmp.mEffectId);
 	}

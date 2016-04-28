@@ -57,3 +57,20 @@ void UResMgr::AsyncCallback()
 	UE_LOG(ResLogger, Warning, TEXT("--- UResMgr::AsyncCallback, assets load over"));
 }
 
+UParticleSystem* UResMgr::GetParticle(int32 _id)
+{
+	TArray<FParticleItem>& parArr = mResDB->GetParticles();
+	FParticleItem* result = parArr.FindByPredicate([&](const FParticleItem& _pi)->bool {
+		return _pi.mId == _id;
+	});
+
+	UParticleSystem* dstps = nullptr;
+	if (result != nullptr)
+	{
+		UObject* obj = mAssetLoader->SynchronousLoad(result->mParticleAsset.ToStringReference());
+		dstps = obj != nullptr ? Cast<UParticleSystem>(obj) : nullptr;
+	}
+
+	return dstps;
+}
+

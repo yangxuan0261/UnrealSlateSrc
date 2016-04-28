@@ -71,7 +71,7 @@ void UAbsBuff::BuffStart()
 
 	//TODO ÌØÐ§°ó¶¨
 	mEffectUUid = ::IdGeneratorEffect();
-	FEffectBind eb(1, mEffectUUid, mBuffTemp->mBindPos, "", 10.f);
+	FEffectBind eb(1, mEffectUUid, mBuffTemp->mBindPos, "", 10.f, nullptr);
 	mOwnerChar->AttachEffect(eb);
 }
 
@@ -108,7 +108,7 @@ bool UAbsBuff::IsDurable() const
 
 float UAbsBuff::GetDtVal(float _value)
 {
-	float f = (float)mBuffTemp->mBuffTime / GetWorld()->GetDeltaSeconds();
+	float f = (float)mBuffTemp->mBuffTime / GWorld->GetDeltaSeconds();
 	return _value / f;
 }
 
@@ -116,6 +116,7 @@ void UAbsBuff::SetData(UBufflTemplate* _buffTemp, AMyChar* _attacker, AMyChar* _
 {
 	mBuffTemp = _buffTemp;
 	mBuffId = _buffTemp->mId;
+	mTotalTime = _buffTemp->mBuffTime;
 	mSkillId = _skillId;
 
 	if (_attacker != nullptr)

@@ -7,7 +7,6 @@
 #include "../Utils/CommonDef.h"
 #include "../Function/Funcs/AbsPkEvent.h"
 
-// Sets default values
 USkillTemplate::USkillTemplate() : Super()
 {
 	mId = -1;

@@ -30,19 +30,22 @@ public:
 	{
 		return mUuId == _cp.mUuId;
 	}
-	FEffectBind(int32 _id, int32 _uuid, FString _bindPos, FString _resPath, float _time) 
+	FEffectBind(int32 _id, int32 _uuid, FString _bindPos, FString _resPath, float _time, UParticleSystemComponent* _psComp)
 	{
 		mEffectId = _id;
 		mUuId = _uuid;
 		mBindPos = _bindPos;
 		mResPath = _resPath;
 		mLeftTime = _time;
+		mPsComp = _psComp;
 	}
 	int32	mEffectId;
 	int32	mUuId; //唯一识别，区分相同buff移除
 	FString	mBindPos; //特效绑定点
 	FString mResPath; //资源路径
 	float	mLeftTime; //剩余时间
+
+	UParticleSystemComponent* mPsComp; //生成的粒子组件
 };
 
 UCLASS()

@@ -48,6 +48,8 @@ public:
 	virtual ~UResDataBase();
 	virtual void BeginDestroy() override;
 
+	TArray<FParticleItem>&		GetParticles() { return mParticleList; }
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
 		TArray<FMeshItem> mMeshList;

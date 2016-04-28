@@ -25,6 +25,7 @@ public:
 
 
 	FStreamableManager*		GetAssetLoader() const { return mAssetLoader; }
+	UParticleSystem*		GetParticle(int32 _id);
 
 private:
 	FStreamableManager*		mAssetLoader;
