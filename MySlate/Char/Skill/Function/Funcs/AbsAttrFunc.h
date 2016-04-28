@@ -1,8 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "AbsAttrFunc.generated.h"
+
+class UAbsBuff;
+class AMyChar;
 
 UCLASS()
 class UAbsAttrFunc : public UObject
@@ -17,5 +19,14 @@ public:
 	virtual ~UAbsAttrFunc();
 	virtual void BeginDestroy() override;
 
-	virtual void RunFunc() {}
+	virtual void RunTick(float DeltaSeconds) {}
+	virtual void RunStart() {}
+	virtual void RunOver() {}
+
+	void	SetData(UAbsBuff* _buff, AMyChar* _attacker, AMyChar* _owner);
+
+protected:
+	UAbsBuff*		mBuff;
+	AMyChar*		mAttacker;
+	AMyChar*		mOwnerChar;
 };

@@ -20,6 +20,31 @@ class USkeletalMeshComponent;
 DECLARE_MULTICAST_DELEGATE_OneParam(FDeathMultiNotify, AMyChar*);
 DECLARE_DELEGATE_OneParam(FDeathOneNotify, AMyChar*);
 
+USTRUCT()
+struct FEffectBind
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FEffectBind() {}
+	bool operator ==(const FEffectBind& _cp) //重载==操作符，TArray remove中需要用到
+	{
+		return mUuId == _cp.mUuId;
+	}
+	FEffectBind(int32 _id, int32 _uuid, FString _bindPos, FString _resPath, float _time) 
+	{
+		mEffectId = _id;
+		mUuId = _uuid;
+		mBindPos = _bindPos;
+		mResPath = _resPath;
+		mLeftTime = _time;
+	}
+	int32	mEffectId;
+	int32	mUuId; //唯一识别，区分相同buff移除
+	FString	mBindPos; //特效绑定点
+	FString mResPath; //资源路径
+	float	mLeftTime; //剩余时间
+};
+
 UCLASS()
 class AMyChar : public ACharacter
 {
@@ -32,11 +57,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick( float DeltaSeconds ) override;
 	virtual void Destroyed() override; //用于释放成员，调用Destroy();会立即调用
-public:
-	void	OnCDFinish(UCoolDown* _cd);
-	FDeathMultiNotify&	GetDeathMultiNotify() { return mDeathMultiNotify; }
-	void	AddDeathNotify(const FDeathOneNotify& _notify);
 
+public:
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void	SetUuid(int32 _uuid) { mUuid = _uuid; }
 
@@ -85,6 +107,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		virtual void Reset();
 
+	void	OnCDFinish(UCoolDown* _cd);
+	FDeathMultiNotify&	GetDeathMultiNotify() { return mDeathMultiNotify; }
+	void	AddDeathNotify(const FDeathOneNotify& _notify);
+
+	//特效
+	void	AttachEffect(const FEffectBind& _effBind);
+	void	DetachEffect(int32 _uuid);
+
 public:
 	/* 设置子弹蓝图类 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
@@ -117,6 +147,8 @@ private:
 	FTimerHandle	mTimer;
 	FVector			mTurnToLoc; //用来平滑旋转时保存目标Loc，因为用了内部函数lambda
 	FRotator		mTurnToRot; //用来平滑旋转时保存目标Rotate,
+
+	TArray<FEffectBind>	mEffects; //特效数组
 
 	FDeathMultiNotify mDeathMultiNotify; //绑定： buff管理器等等
 };

@@ -15,6 +15,8 @@ UBufflTemplate::UBufflTemplate() : Super()
 		mBuffTime = 0;
 		mCanDisperse = false;
 		mCanAdd = false;
+		mDurable = true;
+		mBindPos = "";
 
 		mAttrsStr = "";
 		mBeforePkStr = "";
@@ -34,7 +36,7 @@ void UBufflTemplate::BeginDestroy()
 	Super::BeginDestroy();
 }
 
-const TArray<UAbsPkEvent*>& UBufflTemplate::GetAttrs()
+TArray<UAbsPkEvent*>& UBufflTemplate::GetAttrs()
 {
 	if (mAttrs.Num() == 0 && mAttrsStr.Len() > 0)
 	{
@@ -43,7 +45,7 @@ const TArray<UAbsPkEvent*>& UBufflTemplate::GetAttrs()
 	return mAttrs;
 }
 
-const TArray<UAbsPkEvent*>& UBufflTemplate::GetBeforePk()
+TArray<UAbsPkEvent*>& UBufflTemplate::GetBeforePk()
 {
 	if (mBeforePk.Num() == 0 && mBeforePkStr.Len() > 0)
 	{
@@ -52,7 +54,7 @@ const TArray<UAbsPkEvent*>& UBufflTemplate::GetBeforePk()
 	return mBeforePk;
 }
 
-const TArray<UAbsPkEvent*>& UBufflTemplate::GetEndPk()
+TArray<UAbsPkEvent*>& UBufflTemplate::GetEndPk()
 {
 	if (mEndPk.Num() == 0 && mEndPkStr.Len() > 0)
 	{

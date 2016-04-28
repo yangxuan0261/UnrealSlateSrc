@@ -11,7 +11,6 @@ class UAttackPhy : public UAbsPkEvent
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	UAttackPhy();
 	virtual ~UAttackPhy();
 	virtual void BeginDestroy() override;
@@ -19,6 +18,15 @@ public:
 	static UAttackPhy* CreateFunction(const FString& _key);
 	virtual UAbsPkEvent* Clone() override;
 	virtual void Parser(const TArray<FString>& _params) override;
+
+public://buff
+	virtual void RunTick(float DeltaSeconds) override;
+	virtual void RunStart() override;
+	virtual void RunOver() override;
+
+private://buff
+	float		mDtVal; //每帧伤害值
+	bool		mDurable; //是否持续
 
 public:
 	float		mValue;

@@ -193,7 +193,10 @@ void UGolbalFunc::TestArrLambda(FString _str)
 	arr.Add(TEXT("ddd"));
 
 	//lambda表达式条件式查找，返回指针
-	FString* result = arr.FindByPredicate([&](const FString& str)->bool { return str == _str; });
+	FString* result = arr.FindByPredicate([&](const FString& str)->bool { 
+		return str == _str; 
+	});
+
 	if (result != nullptr)
 	{
 		UE_LOG(GolbalFuncLogger, Warning, TEXT("--- Find result:%s"), **result);

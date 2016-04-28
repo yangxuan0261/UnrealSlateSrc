@@ -110,5 +110,4 @@ public:
 		int32				mSpeed;
 private:
 	FVector		mStartPos; //³öÉúµã
-
 };

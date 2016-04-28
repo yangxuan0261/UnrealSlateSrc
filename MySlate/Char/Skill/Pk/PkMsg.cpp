@@ -109,7 +109,7 @@ void UPkMsg::SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _t
 				UE_LOG(BuffLogger, Warning, TEXT("--- UPkMsg::SetData, charDeathCallback, id:%d"), _deathChar->GetUuid());
 			};
 
-			mTargetLocked->AddDeathNotify(FDeathOneNotify::CreateLambda(charDeathCallback));
+			_target->AddDeathNotify(FDeathOneNotify::CreateLambda(charDeathCallback));
 		}
 		else
 		{

@@ -3,8 +3,17 @@
 #include "MySlate.h"
 #include "AttackPhy.h"
 
+#include "../../Buff/Buffs/AbsBuff.h"
+#include "Char/Comp/MyCharDataComp.h"
+#include "Char/MyChar.h"
+
 UAttackPhy::UAttackPhy() : Super()
 {
+	//buff
+	mDtVal = 0.f;
+	mDurable = true;
+
+	//skill
 	mValue = 0.f;
 	mOwner = 1; //攻击者
 	mLimitId = -1; //不限制技能
@@ -45,4 +54,35 @@ void UAttackPhy::Parser(const TArray<FString>& _params)
 	{
 		UE_LOG(FuncLogger, Error, TEXT("--- UAttackPhy::Parser, params num < 2"));
 	}
+}
+
+void UAttackPhy::RunTick(float DeltaSeconds)
+{
+	if (mDurable)
+	{
+		if (mOwnerChar != nullptr) //buff使用mOwnerChar
+		{
+			mOwnerChar->GetDataComp()->Hurt(mDtVal);
+		}
+	}
+}
+
+void UAttackPhy::RunStart()
+{
+	UE_LOG(FuncLogger, Warning, TEXT("--- UAttackPhy::RunStart"));
+	if (mBuff == nullptr)
+	{
+		UE_LOG(FuncLogger, Warning, TEXT("--- UAttackPhy::RunStart, mBuff == nullptr"));
+	}
+
+	mDurable = mBuff->IsDurable();
+	if (mDurable)
+	{
+		mDtVal = mBuff->GetDtVal(mValue);
+	}
+}
+
+void UAttackPhy::RunOver()
+{
+	UE_LOG(FuncLogger, Warning, TEXT("--- UAttackPhy::RunOver"));
 }

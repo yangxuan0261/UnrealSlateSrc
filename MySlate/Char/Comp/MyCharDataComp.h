@@ -40,6 +40,8 @@ public:
 	void		SetHealthMax(float _value) { mHealthMax = _value; }
 	float		GetHealthMax() const { return mHealthMax; }
 
+	//TODO ≤‚ ‘…À∫¶£¨ºı—™
+	void		Hurt(float _value) { mHealth -= _value; }
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
 		UFightData*		mFightData;

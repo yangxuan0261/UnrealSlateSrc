@@ -72,6 +72,11 @@ void AMyChar::Tick( float DeltaTime )
 	{
 		mUsingSkill->Tick(DeltaTime);
 	}
+
+	for (FEffectBind& effBind : mEffects)
+	{
+		effBind.mLeftTime -= DeltaTime;
+	}
 }
 
 void AMyChar::Destroyed()
@@ -102,6 +107,46 @@ void AMyChar::OnCDFinish(UCoolDown* _cd)
 void AMyChar::AddDeathNotify(const FDeathOneNotify& _notify)
 {
 	mDeathMultiNotify.Add(_notify);
+}
+
+//相同特效id只存放时间最长的
+void AMyChar::AttachEffect(const FEffectBind& _effBind)
+{
+	FEffectBind* effBind = mEffects.FindByPredicate([&](const FEffectBind& tmp)->bool { 
+		return tmp.mEffectId == _effBind.mEffectId;
+	});
+
+	bool beAdd = true;
+	if (effBind != nullptr)
+	{
+		if (_effBind.mLeftTime > effBind->mLeftTime
+			&& _effBind.mBindPos == _effBind.mBindPos)
+		{
+			effBind->mLeftTime = _effBind.mLeftTime; //重置时间和新的uuid
+			effBind->mUuId = _effBind.mUuId;
+			beAdd = false;
+			UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::AttachEffect, effect same, effectId:%d"), _effBind.mEffectId);
+		}
+	}
+
+	if (beAdd)
+	{
+		mEffects.Add(FEffectBind(_effBind.mEffectId, _effBind.mUuId, _effBind.mBindPos, _effBind.mResPath, _effBind.mLeftTime));
+	}
+}
+
+void AMyChar::DetachEffect(int32 _uuid)
+{
+	FEffectBind* effBind = mEffects.FindByPredicate([&](const FEffectBind& tmp)->bool {
+		return tmp.mUuId == _uuid;
+	});
+
+	if (effBind != nullptr)
+	{
+		FEffectBind tmp = *effBind;
+		mEffects.Remove(tmp);
+		UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::DetachEffect, effectId:%d"), tmp.mEffectId);
+	}
 }
 
 void AMyChar::SetCharData(int32 _id)

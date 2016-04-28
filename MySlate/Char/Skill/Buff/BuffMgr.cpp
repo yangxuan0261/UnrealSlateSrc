@@ -4,9 +4,9 @@
 #include "BuffMgr.h"
 
 #include "Char/MyChar.h"
-#include "Buffs/AbsBuff.h"
-#include "Buffs/AppendBuff.h"
-#include "Buffs/CommonBuff.h"
+#include "./Buffs/AbsBuff.h"
+#include "./Buffs/AppendBuff.h"
+#include "./Buffs/CommonBuff.h"
 #include "../Utils/SkillDataMgr.h"
 #include "../Template/BufflTemplate.h"
 
@@ -23,14 +23,14 @@ UBuffMgr::~UBuffMgr()
 
 void UBuffMgr::BeginDestroy()
 {
-	for (auto iter = mBuffs.CreateIterator(); iter; ++iter)
+	for (auto Iter = mBuffs.CreateIterator(); Iter; ++Iter)
 	{
-		for (auto tempBuff : iter->Value)
+		for (UAbsBuff* tempBuff : Iter->Value)
 		{
 			tempBuff->RemoveFromRoot();
 			tempBuff->ConditionalBeginDestroy();
 		}
-		iter->Value.Empty();
+		Iter->Value.Empty();
 	}
 	mBuffs.Empty();
 
@@ -47,20 +47,23 @@ void UBuffMgr::Tick(float DeltaTime)
 		for (int32 i = 0;i < buffs.Num(); i++)
 		{
 			buff = buffs[i];
-			if (buff->IsRemoeve())
-			{
-				buff->BuffOver();
-				buffs.RemoveAt(i);
-			}
-			else
+			if (buff->GetState() == EBuffState::Start)
 			{
 				buff->Tick(DeltaTime);//更新buffer
 			}
-		}
+			else if (buff->GetState() == EBuffState::Over
+				|| buff->GetState() == EBuffState::Break) //Break暂时无用
+			{
+				buff->BuffOver();
+				buff->RemoveFromRoot();
+				buff->ConditionalBeginDestroy();
+				buffs.RemoveAt(i);
 
-		if (buffs.Num() == 0)
-		{
-			Iter.RemoveCurrent();
+				if (buffs.Num() == 0)
+				{
+					Iter.RemoveCurrent();
+				}
+			}
 		}
 	}
 }
@@ -85,11 +88,12 @@ void UBuffMgr::RunEndPkBuffs(int32 _charId, UPkMsg* msg)
 
 }
 
-void UBuffMgr::AddBuff(int32 _attackId,int32 _targetId, int32 _skillId, int32 _buffId)
+void UBuffMgr::AddBuff(AMyChar* _attacker, AMyChar* _target, int32 _skillId, int32 _buffId)
 {
 	UBufflTemplate* buffTemp = USkillDataMgr::GetInstance()->GetBuffTemplate(_buffId);
-	if (buffTemp != nullptr)
+	if (buffTemp != nullptr && _target != nullptr)
 	{
+		int32 targetId = _target->GetUuid();
 		UAbsBuff* beAdd = nullptr;
 		if (buffTemp->mCanAdd) //叠加buff
 		{
@@ -99,12 +103,15 @@ void UBuffMgr::AddBuff(int32 _attackId,int32 _targetId, int32 _skillId, int32 _b
 		{
 			beAdd = NewObject<UCommonBuff>(UCommonBuff::StaticClass());
 		}
-		beAdd->SetBuffTemp(buffTemp);
+		beAdd->SetData(buffTemp, _attacker, _target, _skillId);
 
-		TArray<UAbsBuff*>* buffs = mBuffs.Find(_targetId);
+		TArray<UAbsBuff*>* buffs = mBuffs.Find(targetId);
 		if (buffs != nullptr)
 		{
-			UAbsBuff** buff = buffs->FindByPredicate([&](const UAbsBuff* _buff)->bool { return _buff->GetBuffId() == _buffId; });
+			UAbsBuff** buff = buffs->FindByPredicate([&](const UAbsBuff* _buff)->bool {
+				return _buff->GetBuffId() == _buffId; 
+			});
+
 			if (buff != nullptr)//原来已存在这个buffId
 			{
 				UAppendBuff* appBuff = Cast<UAppendBuff>(*buff);
@@ -115,11 +122,13 @@ void UBuffMgr::AddBuff(int32 _attackId,int32 _targetId, int32 _skillId, int32 _b
 				}
 				else //不可缀加，去旧迎新
 				{
-					UAbsBuff* tmpBuff = *buff;
-					tmpBuff->BuffOver();
-					buffs->Remove(tmpBuff);//非常重要：删除是必须把*buff赋值给一个临时对象，不然地址检查不通过导致崩溃
-					tmpBuff->RemoveFromRoot();
-					tmpBuff->ConditionalBeginDestroy();
+					//UAbsBuff* tmpBuff = *buff;
+					//tmpBuff->BuffOver();
+					//buffs->Remove(tmpBuff);//非常重要：删除是必须把*buff赋值给一个临时对象，不然地址检查不通过导致崩溃
+					//tmpBuff->RemoveFromRoot();
+					//tmpBuff->ConditionalBeginDestroy();
+
+					(*buff)->ChangeState(EBuffState::Over);
 
 					beAdd->AddToRoot();
 					beAdd->BuffStart();
@@ -140,7 +149,7 @@ void UBuffMgr::AddBuff(int32 _attackId,int32 _targetId, int32 _skillId, int32 _b
 
 			TArray<UAbsBuff*> tmpBuffs;
 			tmpBuffs.Add(beAdd);
-			mBuffs.Add(_targetId, tmpBuffs);
+			mBuffs.Add(targetId, tmpBuffs);
 		}
 	}
 	else
@@ -154,60 +163,42 @@ UAbsBuff* UBuffMgr::FindBuff(int32 _charId, int32 _buffId)
 	TArray<UAbsBuff*>* buffs = mBuffs.Find(_charId);
 	if (buffs != nullptr)
 	{
-		for (UAbsBuff* buff : *buffs)
-		{
-			if (buff->GetBuffId() == _buffId)
-				return buff;
+		UAbsBuff** buff = buffs->FindByPredicate([&](const UAbsBuff* _buff)->bool {
+			return _buff->GetBuffId() == _buffId; 
+		});
 
-		}
+		return buff != nullptr ? *buff : nullptr;
 	}
 	return nullptr;
 }
 
 //移除某个角色身上的所有buff
-void UBuffMgr::RemoveBuff(int32 _charId, bool _exeBuffOver /* = false */)
+void UBuffMgr::RemoveBuff(int32 _charId)
 {
 	TArray<UAbsBuff*>* buffs = mBuffs.Find(_charId);
 	if (buffs != nullptr)
 	{
 		for (UAbsBuff* buff : *buffs)
 		{
-			if (_exeBuffOver)
-			{
-				buff->BuffOver();
-			}
-			buff->RemoveFromRoot();
-			buff->ConditionalBeginDestroy();
+			buff->ChangeState(EBuffState::Over);
 		}
-
-		mBuffs.Remove(_charId);
 	}
 }
 
 //移除某个角色身上的某个具体buff
-void UBuffMgr::RemoveBuffSpec(int32 _charId, int32 _buffId, bool _exeBuffOver /* = false */)
+void UBuffMgr::RemoveBuffSpec(int32 _charId, int32 _buffId)
 {
 	TArray<UAbsBuff*>* buffs = mBuffs.Find(_charId);
 	if (buffs != nullptr)
 	{
-		for (UAbsBuff* buff : *buffs)
-		{
-			if (buff->GetBuffId() == _buffId)
-			{
-				if (_exeBuffOver)
-				{
-					buff->BuffOver();
-				}
-				buff->RemoveFromRoot();
-				buff->ConditionalBeginDestroy();
-				buffs->Remove(buff);
-				break;
-			}
-		}
+		UAbsBuff** buff = buffs->FindByPredicate([&](const UAbsBuff* _buff)->bool {
+			return _buff->GetBuffId() == _buffId; 
+		});
 
-		if (buffs->Num() == 0) //角色身上buff移光了
+		if (buff != nullptr)
 		{
-			mBuffs.Remove(_charId);
+			(*buff)->ChangeState(EBuffState::Over);
+			UE_LOG(BuffLogger, Warning, TEXT("--- UBuffMgr::RemoveBuffSpec, buffId:%d"), (*buff)->GetBuffId());
 		}
 	}
 }

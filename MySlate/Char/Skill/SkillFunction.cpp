@@ -88,7 +88,7 @@ void USkillFunction::UseSkill(AMyChar* _target, const FVector& _targetLoc)
 		};
 
 
-		mTarget->AddDeathNotify(FDeathOneNotify::CreateLambda(charDeathCallback));
+		_target->AddDeathNotify(FDeathOneNotify::CreateLambda(charDeathCallback));
 	}
 	else
 	{

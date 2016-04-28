@@ -18,9 +18,9 @@ public:
 	virtual ~UBufflTemplate();
 	virtual void BeginDestroy() override;
 
-	const TArray<UAbsPkEvent*>& GetAttrs();
-	const TArray<UAbsPkEvent*>& GetBeforePk();
-	const TArray<UAbsPkEvent*>& GetEndPk();
+	TArray<UAbsPkEvent*>& GetAttrs();
+	TArray<UAbsPkEvent*>& GetBeforePk();
+	TArray<UAbsPkEvent*>& GetEndPk();
 
 	void ParseFuncStr(const FString& _funcStr, TArray<UAbsPkEvent*>& _funcArr);
 
@@ -38,11 +38,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		FString			mDescr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		int32			mBuffTime;
+		int32			mBuffTime; //持续时间
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		bool			mCanDisperse; //是否驱散
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		bool			mCanAdd; //可否缀加
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		bool			mDurable; //是否是持续型buff
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		FString			mBindPos; //特效绑定点
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		FString			mAttrsStr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
