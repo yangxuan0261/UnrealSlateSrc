@@ -1,8 +1,8 @@
 #include "MySlate.h"
 #include "BTNodeExt.h"
 
-#include "Char/MyChar.h"
-#include "Char/AI/MyAIController.h"
+#include "../MyChar.h"
+#include "./MyAIController.h"
 
 UBTNodeExt::UBTNodeExt() : Super()
 {

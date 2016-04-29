@@ -1,10 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "MyCharDataComp.h"
 
 #include "../Skill/Pk/FightData.h"
-#include "BaseDatas/Datas/CharData.h"
+#include "../../BaseDatas/Datas/CharData.h"
 
 UMyCharDataComp::UMyCharDataComp()
 	: Super()

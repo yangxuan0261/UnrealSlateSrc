@@ -1,9 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "AbsAttrFunc.h"
 
-#include "Char/MyChar.h"
+#include "../../../MyChar.h"
 
 UAbsAttrFunc::UAbsAttrFunc() : Super()
 {

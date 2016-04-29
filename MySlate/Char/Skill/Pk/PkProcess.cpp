@@ -1,10 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "PkProcess.h"
 
-#include "PkMsg.h"
-#include "char/MyChar.h"
+#include "./PkMsg.h"
+#include "../../MyChar.h"
 #include "../Filter/AbsFilter.h"
 #include "../Function/Funcs/AbsPkEvent.h"
 #include "../Template/SkillTemplate.h"

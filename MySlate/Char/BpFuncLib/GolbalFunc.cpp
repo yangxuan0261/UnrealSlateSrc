@@ -1,17 +1,15 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "GolbalFunc.h"
 
-#include "Char/Skill/Utils/SkillDataMgr.h"
-#include "Char/Skill/SkillMgr.h"
-#include "Char/CharMgr.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "Char/Skill/Function/FuncFactory.h"
-#include "BaseDatas/BaseDataMgr.h"
-#include "Char/Skill/Buff/BuffMgr.h"
-#include "Char/Res/ResMgr.h"
-#include "Char/MyChar.h"
+#include "../Skill/Utils/SkillDataMgr.h"
+#include "../Skill/SkillMgr.h"
+#include "../CharMgr.h"
+#include "../Skill/Function/FuncFactory.h"
+#include "../../BaseDatas/BaseDataMgr.h"
+#include "../Skill/Buff/BuffMgr.h"
+#include "../Res/ResMgr.h"
+#include "../MyChar.h"
 
 USkillDataMgr*	UGolbalFunc::gSkillDataMgr	= nullptr;
 USkillMgr*		UGolbalFunc::gSkillMgr		= nullptr;
@@ -21,8 +19,6 @@ UBaseDataMgr*	UGolbalFunc::gBaseDataMgr	= nullptr;
 UBuffMgr*		UGolbalFunc::gBuffMgr		= nullptr;
 UResMgr*		UGolbalFunc::gResMgr		= nullptr;
 
-// Sets default values
-//UGolbalFunc::UGolbalFunc(const UGolbalFunc& ObjectInitializer) : Super(ObjectInitializer)
 UGolbalFunc::UGolbalFunc() : Super()
 {
 	
@@ -30,7 +26,14 @@ UGolbalFunc::UGolbalFunc() : Super()
 
 UGolbalFunc::~UGolbalFunc()
 {
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UGolbalFunc::~UGolbalFunc"));
+}
 
+void UGolbalFunc::BeginDestroy()
+{
+
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UGolbalFunc::BeginDestroy"));
+	Super::BeginDestroy();
 }
 
 void UGolbalFunc::InitMgrs()

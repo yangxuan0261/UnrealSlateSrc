@@ -1,5 +1,4 @@
 #pragma once
-#include "AIController.h"
 #include "MyAIController.generated.h"
 
 class UBehaviorTreeComponent;

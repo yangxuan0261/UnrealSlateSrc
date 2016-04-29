@@ -1,12 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
-#include "../Skill/Template/SkillTemplate.h"
 #include "../GameTypes.h"
+#include "../Skill/SkillTypes.h"
 #include "MyAnimInstance.generated.h"
 
 class AMyChar;
+class USkillTemplate;
 
 UCLASS()
 class UMyAnimInstance : public UAnimInstance

@@ -1,8 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-#include "Tickable.h"
 
+#include "Tickable.h"
 #include "BuffMgr.generated.h"
 
 class UPkMsg;
@@ -15,7 +14,6 @@ class UBuffMgr : public UObject, public FTickableGameObject, public USingleton<U
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	UBuffMgr();
 	virtual ~UBuffMgr();
 	virtual void BeginDestroy() override;
@@ -36,6 +34,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
 		UAbsBuff*	FindBuff(int32 _charId, int32 _buffId);
+
+	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
+		void ForceOver(TArray<UAbsBuff*>& _buffArr, UAbsBuff* _buff, bool remove = false);
 
 	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
 		void RemoveBuff(int32 _charId);

@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "PkMsg.h"
@@ -8,6 +7,7 @@
 #include "../../Comp/MyCharDataComp.h"
 #include "../Template/SkillTemplate.h"
 #include "../Utils/SkillDataMgr.h"
+#include "./FightData.h"
 
 
 UParam::UParam()

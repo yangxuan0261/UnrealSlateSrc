@@ -1,7 +1,6 @@
 #pragma once
 
-#include "BehaviorTree/Decorators/BTDecorator_BlueprintBase.h"
-#include "BTNodeExt.h"
+#include "./BTNodeExt.h"
 #include "BTDecorateMyBase.generated.h"
 
 class AMyChar;

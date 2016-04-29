@@ -1,24 +1,36 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "MyChar.h"
 
-#include "MyGameInstance.h"
-#include "Level/MyLevelScriptActor.h"
-#include "Skill/CoolDown/CoolDownComp.h"
-#include "Skill/CoolDown/CoolDown.h"
-#include "Skill/SkillFunction.h"
-#include "Comp/MyCharDataComp.h"
-#include "CharMgr.h"
-#include "BaseDatas/BaseDataMgr.h"
-#include "BaseDatas/Datas/CharData.h"
-#include "Skill/Buff/BuffMgr.h"
-#include "Res/ResMgr.h"
+#include "./Skill/CoolDown/CoolDownComp.h"
+#include "./Skill/CoolDown/CoolDown.h"
+#include "./Skill/SkillFunction.h"
+#include "./Comp/MyCharDataComp.h"
+#include "./CharMgr.h"
+#include "../BaseDatas/BaseDataMgr.h"
+#include "../BaseDatas/Datas/CharData.h"
+#include "./Skill/Buff/BuffMgr.h"
+#include "./Res/ResMgr.h"
 
-// Sets default values
+FEffectBind::FEffectBind(UEffDataElem* _effData, int32 _time, int32 _uuId)
+{
+	mEffData = _effData;
+	mLeftTime = _time;
+	mUuId = _uuId;
+	mPsComp = nullptr;
+	if (_effData != nullptr)
+	{
+		mDelayTime = _effData->mDelayTime;
+	}
+	else
+	{
+		UE_LOG(EffectLogger, Error, TEXT("--- FEffectBind::FEffectBind, _effData == nullptr"));
+	}
+}
+
+//-------------------------- char begin ----------------
 AMyChar::AMyChar() : Super()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	//--------- 
@@ -73,11 +85,6 @@ void AMyChar::Tick( float DeltaTime )
 	{
 		mUsingSkill->Tick(DeltaTime);
 	}
-
-	for (FEffectBind& effBind : mEffects)
-	{
-		effBind.mLeftTime -= DeltaTime;
-	}
 }
 
 void AMyChar::Destroyed()
@@ -108,53 +115,6 @@ void AMyChar::OnCDFinish(UCoolDown* _cd)
 void AMyChar::AddDeathNotify(const FDeathOneNotify& _notify)
 {
 	mDeathMultiNotify.Add(_notify);
-}
-
-//相同特效id只存放时间最长的
-void AMyChar::AttachEffect(const FEffectBind& _effBind)
-{
-	FEffectBind* effBind = mEffects.FindByPredicate([&](const FEffectBind& tmp)->bool { 
-		return tmp.mEffectId == _effBind.mEffectId;
-	});
-
-	bool beAdd = true;
-	if (effBind != nullptr)
-	{
-		if (_effBind.mLeftTime > effBind->mLeftTime
-			&& _effBind.mBindPos == _effBind.mBindPos)
-		{
-			effBind->mLeftTime = _effBind.mLeftTime; //重置时间和新的uuid
-			effBind->mUuId = _effBind.mUuId;
-			beAdd = false;
-			UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::AttachEffect, effect same, effectId:%d"), _effBind.mEffectId);
-		}
-	}
-
-	if (beAdd)
-	{
-		UParticleSystem* ps = UResMgr::GetInstance()->GetParticle(_effBind.mEffectId);
-		if (ps != nullptr)
-		{
-			auto psComp = UGameplayStatics::SpawnEmitterAttached(ps, GetMesh(), FName(*_effBind.mBindPos), FVector::ZeroVector, FRotator::ZeroRotator);
-			mEffects.Add(FEffectBind(_effBind.mEffectId, _effBind.mUuId, _effBind.mBindPos, _effBind.mResPath, _effBind.mLeftTime, psComp));
-		}
-	}
-}
-
-void AMyChar::DetachEffect(int32 _uuid)
-{
-	FEffectBind* effBind = mEffects.FindByPredicate([&](const FEffectBind& tmp)->bool {
-		return tmp.mUuId == _uuid;
-	});
-
-	if (effBind != nullptr)
-	{
-		FEffectBind tmp = *effBind;
-		tmp.mPsComp->DetachFromParent();
-		tmp.mPsComp->DestroyComponent();
-		mEffects.Remove(tmp);
-		UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::DetachEffect, effectId:%d"), tmp.mEffectId);
-	}
 }
 
 void AMyChar::SetCharData(int32 _id)

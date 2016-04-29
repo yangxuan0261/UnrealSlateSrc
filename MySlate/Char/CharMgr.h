@@ -1,10 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
-#include "Common/ISingleton.h"
-#include "GameTypes.h"
-#include "Skill/SkillTypes.h"
+#include "../Common/ISingleton.h"
+#include "./GameTypes.h"
+#include "./Skill/SkillTypes.h"
 
 #include "CharMgr.generated.h"
 
@@ -16,7 +15,6 @@ class UCharMgr : public UObject, public USingleton<UCharMgr>
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	UCharMgr();
 	virtual ~UCharMgr();
 	virtual void BeginDestroy() override;

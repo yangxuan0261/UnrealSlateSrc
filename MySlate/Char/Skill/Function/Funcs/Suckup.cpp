@@ -1,11 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "Suckup.h"
 
 #include "../../Buff/Buffs/AbsBuff.h"
-#include "Char/Comp/MyCharDataComp.h"
-#include "Char/MyChar.h"
+#include "../../../Comp/MyCharDataComp.h"
+#include "../../../MyChar.h"
+#include "../../Template/BufflTemplate.h"
 
 USuckup::USuckup() : Super()
 {
@@ -55,16 +55,13 @@ void USuckup::Parser(const TArray<FString>& _params)
 
 void USuckup::RunTick(float DeltaSeconds)
 {
-	if (mDurable)
+	if (mOwnerChar != nullptr) //buff使用mOwnerChar
 	{
-		if (mOwnerChar != nullptr) //buff使用mOwnerChar
-		{
-			mOwnerChar->GetDataComp()->Hurt(mDtVal);
-		}
-		if (mAttacker != nullptr)
-		{
-			mAttacker->GetDataComp()->Hurt(-mDtVal);
-		}
+		mOwnerChar->GetDataComp()->Hurt(mDtVal);
+	}
+	if (mAttacker != nullptr)
+	{
+		mAttacker->GetDataComp()->Hurt(-mDtVal);
 	}
 }
 
@@ -76,11 +73,10 @@ void USuckup::RunStart()
 		UE_LOG(FuncLogger, Warning, TEXT("--- USuckup::RunStart, mBuff == nullptr"));
 	}
 
-	mDurable = mBuff->IsDurable();
-	if (mDurable)
-	{
-		mDtVal = mBuff->GetDtVal(mValue);
-	}
+		if (mBuff->GetBuffTemp()->mInterType == EIntervalType::Durable)
+		{
+			//	mDtVal = mBuff->GetDtVal(mValue);
+		}
 }
 
 void USuckup::RunOver()

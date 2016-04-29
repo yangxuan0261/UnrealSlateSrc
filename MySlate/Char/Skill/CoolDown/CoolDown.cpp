@@ -1,14 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "CoolDown.h"
 
-#include "Char/MyChar.h"
-#include "Char/Skill/Utils/SkillDataMgr.h"
-#include "Char/Skill/Template/SkillTemplate.h"
-#include "Char/Skill/Template/BufflTemplate.h"
-#include "Char/Skill/SkillFunction.h"
-#include "Char/CharMgr.h"
+#include "../../MyChar.h"
+#include "../Utils/SkillDataMgr.h"
+#include "../Template/SkillTemplate.h"
+#include "../Template/BufflTemplate.h"
+#include "../SkillFunction.h"
+#include "../../CharMgr.h"
 
 UCoolDown::UCoolDown() : Super()
 {

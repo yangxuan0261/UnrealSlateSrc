@@ -1,14 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "MyBullet.h"
 
-#include "AI/MyAIController.h"
-#include "Char/MyChar.h"
-#include "Char/Comp/MyCharDataComp.h"
-#include "Char/Skill/Template/SkillTemplate.h"
-#include "CharMgr.h"
-#include "Skill/Pk/PkMsg.h"
+#include "./AI/MyAIController.h"
+#include "./MyChar.h"
+#include "./Comp/MyCharDataComp.h"
+#include "./Skill/Template/SkillTemplate.h"
+#include "./CharMgr.h"
+#include "./Skill/Pk/PkMsg.h"
 //#include "Skill/Pk/PkProcess.h"
 
 AMyBullet::AMyBullet()
@@ -200,7 +199,7 @@ void AMyBullet::CreatePk()
 	}
 	return; //for test
 
-	//TODO: 结算
+	//TODO: 暂时不做结算
 	if (mPkProcess == nullptr)
 	{
 		if (target != nullptr)
@@ -208,8 +207,7 @@ void AMyBullet::CreatePk()
 			UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CreatePk, target lock != null, id:%d"), target->GetUuid());
 
 			mPkProcess = NewObject<UPkProcess>(UPkProcess::StaticClass());
-			mPkProcess->GetPkOverDlg().BindUObject(this, &AMyBullet::CallbackPkOver);
-
+			mPkProcess->SetPkOverDlg(FPkOverDlg::CreateUObject(this, &AMyBullet::CallbackPkOver));
 			mPkMsg->SetTarget(target);
 			mPkProcess->SetMsg(mPkMsg);
 			mPkProcess->Run();
@@ -221,7 +219,6 @@ void AMyBullet::CreatePk()
 		{
 			UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CreatePk, target lock is null"));
 		}
-
 	}
 }
 

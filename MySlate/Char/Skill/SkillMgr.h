@@ -1,13 +1,32 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
-#include "Common/ISingleton.h"
 #include "Tickable.h"
+#include "../../Common/ISingleton.h"
+#include "./Effect/UBehavData.h"
 
 #include "SkillMgr.generated.h"
 
-class UBehaviorData;
+class UBehavData;
+class AMyChar;
+
+USTRUCT()
+struct FEffectBind
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FEffectBind() {}
+	bool operator ==(const FEffectBind& _cp) //重载==操作符，TArray remove中需要用到
+	{
+		return mUuId == _cp.mUuId;
+	}
+	FEffectBind(UEffDataElem* _effData, int32 _time, int32 mUuId);
+	int32	mUuId;		//唯一识别，区分相同buff移除
+	float	mDelayTime; //延迟时间
+	float	mLeftTime;	//剩余时间
+	UEffDataElem*	mEffData;
+	UParticleSystemComponent* mPsComp; //生成的粒子组件
+};
 
 UCLASS()
 class USkillMgr : public UObject, public FTickableGameObject, public USingleton<USkillMgr>
@@ -28,13 +47,24 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "USkillMgr")
-		UBehaviorData* GetBehaviorData(int32 _id);
+		UBehavData*	GetBehaviorData(int32 _id);
+
+	UFUNCTION(BlueprintCallable, Category = "USkillMgr")
+		TArray<int32>	AttachBehavData(AMyChar* _target, int32 _behavDataId, float _time);
+
+	UFUNCTION(BlueprintCallable, Category = "USkillMgr")
+		void			CreateEffBind(AMyChar* _target, UEffDataElem* _ele, float _time, TArray<FEffectBind>& _bindArr, TArray<int32>& _arr);
+
+	UFUNCTION(BlueprintCallable, Category = "USkillMgr")
+		void			DetachEffect(int32 _targetId, const TArray<int32>& _effuuids);
+
+	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
+		void			CharDeathNotify(AMyChar* _char);
+private:
+	UBehavData* LoadBehaviorData(int32 _id);
 
 private:
-	UBehaviorData* LoadBehaviorData(int32 _id);
+	TMap<int32, TArray<FEffectBind>>	mEffectBindMap; //特效数组
 
-private:
-	float		mCounter;
-
-	TMap<int32, UBehaviorData*>		mBehaviorDataMap;//存放技能数据
+	TMap<int32, UBehavData*>		mBehaviorDataMap;//存放技能数据
 };

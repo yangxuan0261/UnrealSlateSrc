@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Common/ISingleton.h"
+#include "../../Common/ISingleton.h"
 
 #include "ResMgr.generated.h"
 

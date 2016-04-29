@@ -1,26 +1,21 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "AbsBuff.h"
 
 #include "../../Function/Funcs/AbsPkEvent.h"
 #include "../../Pk/PkMsg.h"
-#include "Char/CharMgr.h"
-#include "Char/MyChar.h"
+#include "../../../CharMgr.h"
+#include "../../../MyChar.h"
 #include "../../Template/BufflTemplate.h"
-
-static int32 gEffectUuid = 1;
-static int32 IdGeneratorEffect()
-{
-	return gEffectUuid++;
-}
+#include "../../Effect/UBehavData.h"
+#include "../../SkillMgr.h"
 
 UAbsBuff::UAbsBuff() : Super()
 {
 	mBuffId = 0;
 	mSkillId = 0;
-	mOwnerId = 0;
-	mAttackerId = 0;
+	//mOwnerId = 0;
+	//mAttackerId = 0;
 	mBuffTemp = nullptr;
 	mTimer = 0.f;
 	mTotalTime = 0.f;
@@ -28,7 +23,6 @@ UAbsBuff::UAbsBuff() : Super()
 	mAttacker = nullptr;
 	mOwnerChar = nullptr;
 	mBuffState = EBuffState::Idle;
-	mEffectUUid = 0;
 }
 
 UAbsBuff::~UAbsBuff()
@@ -45,6 +39,11 @@ void UAbsBuff::BeginDestroy()
 void UAbsBuff::Tick(float DeltaSeconds)
 {
 	//持续或间隔伤害
+	if (mBuffTemp->mInterType == EIntervalType::Once)
+	{
+		return;
+	}
+
 	const TArray<UAbsPkEvent*>& funcs = mBuffTemp->GetAttrs();
 	for (UAbsPkEvent* func : funcs)
 	{
@@ -69,10 +68,8 @@ void UAbsBuff::BuffStart()
 		func->RunStart();
 	}
 
-	//TODO 特效绑定
-	mEffectUUid = ::IdGeneratorEffect();
-	FEffectBind eb(1, mEffectUUid, mBuffTemp->mBindPos, "", 10.f, nullptr);
-	mOwnerChar->AttachEffect(eb);
+	//特效绑定
+	mEffectUUids = USkillMgr::GetInstance()->AttachBehavData(mOwnerChar, mBuffTemp->mBehavDataId, mBuffTemp->mBuffTime);
 }
 
 void UAbsBuff::BuffOver()
@@ -83,7 +80,8 @@ void UAbsBuff::BuffOver()
 		func->RunOver();
 	}
 
-	mOwnerChar->DetachEffect(mEffectUUid);
+	//解除特效绑定
+	USkillMgr::GetInstance()->DetachEffect(mOwnerChar->GetUuid(), mEffectUUids);
 }
 
 void UAbsBuff::RunBeforePk(UPkMsg* msg)
@@ -99,11 +97,6 @@ void UAbsBuff::RunEndPk(UPkMsg* msg)
 AMyChar* UAbsBuff::GetOwnerChar()
 {
 	return mOwnerChar;
-}
-
-bool UAbsBuff::IsDurable() const
-{
-	return mBuffTemp->mDurable;
 }
 
 float UAbsBuff::GetDtVal(float _value)
@@ -135,6 +128,7 @@ void UAbsBuff::SetData(UBufflTemplate* _buffTemp, AMyChar* _attacker, AMyChar* _
 	if (_target != nullptr)
 	{
 		mOwnerChar = _target;
+		//mOwnerId = _target->GetUuid();
 
 		//死亡回调
 		auto charDeathCallback = [&](AMyChar* _deathChar)->void {

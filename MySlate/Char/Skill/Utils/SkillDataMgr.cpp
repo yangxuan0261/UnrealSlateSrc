@@ -1,12 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "SkillDataMgr.h"
 
-#include "Common/CommonHeader.h"
-#include "Char/Skill/Template/SkillTemplate.h"
-#include "Char/Skill/Template/BufflTemplate.h"
-#include "Char/Skill/SkillTypes.h"
+#include "../../../Common/CommonHeader.h"
+#include "../Template/SkillTemplate.h"
+#include "../Template/BufflTemplate.h"
+#include "../SkillTypes.h"
 
 USkillDataMgr::USkillDataMgr() : Super()
 {

@@ -1,34 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
-#include "Common/CommonHeader.h"
-#include "Char/Skill/SkillTypes.h"
+#include "../../../Common/CommonHeader.h"
+#include "../SkillTypes.h"
 #include "../Utils/CommonDef.h"
 
 #include "SkillTemplate.generated.h"
 
 class UAbsPkEvent;
 class UAbsFilter;
-
-UENUM()
-enum class EAnimType : uint8 //¼¼ÄÜ¶¯»­
-{
-	None = 0,
-	Skill_1,
-	Skill_2,
-	Skill_3,
-	Skill_4,
-	Skill_5,
-	Skill_6,
-	Skill_7,
-	Injure_1,
-	Injure_2,
-	Victory_1,
-	Victory_2,
-	Victory_3,
-	Count,
-};
 
 UCLASS(Blueprintable, BlueprintType)
 class USkillTemplate : public UObject

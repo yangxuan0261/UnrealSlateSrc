@@ -1,10 +1,10 @@
 #include "MySlate.h"
 #include "BTServiceMyBase.h"
 
-#include "Char/MyChar.h"
-#include "Char/CharMgr.h"
-#include "Char/Comp/MyCharDataComp.h"
-#include "Char/AI/MyAIController.h"
+#include "../MyChar.h"
+#include "../CharMgr.h"
+#include "../Comp/MyCharDataComp.h"
+#include "./MyAIController.h"
 
 UBTServiceMyBase::UBTServiceMyBase() : Super()
 {

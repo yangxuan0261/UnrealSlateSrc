@@ -1,7 +1,6 @@
 #pragma once
 
-#include "AbsAttrFunc.h"
-
+#include "./AbsAttrFunc.h"
 #include "AbsPkEvent.generated.h"
 
 class UPkMsg;

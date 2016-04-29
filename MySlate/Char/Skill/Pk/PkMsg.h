@@ -1,15 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "Char/Skill/SkillTypes.h"
-#include "FightData.h"
 #include "Char/GameTypes.h"
 
 #include "PkMsg.generated.h"
 
 class AMyChar;
 class USkillTemplate;
+class UFightData;
 
 UCLASS()
 class UParam : public UObject

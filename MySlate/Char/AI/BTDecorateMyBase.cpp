@@ -1,12 +1,11 @@
 #include "MySlate.h"
 #include "BTDecorateMyBase.h"
 
-#include "Char/AI/MyAIController.h"
-#include "Char/MyChar.h"
-#include "Char/Skill/CoolDown/CoolDownComp.h"
-#include "Char/Skill/Template/SkillTemplate.h"
-#include "Char/Skill/CoolDown/CoolDown.h"
-#include "Char/AI/MyAIController.h"
+#include "./MyAIController.h"
+#include "../MyChar.h"
+#include "../Skill/CoolDown/CoolDownComp.h"
+#include "../Skill/Template/SkillTemplate.h"
+#include "../Skill/CoolDown/CoolDown.h"
 
 UBTDecorateMyBase::UBTDecorateMyBase()
 	: Super()

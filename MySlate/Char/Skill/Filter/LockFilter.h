@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AbsFilter.h"
+#include "./AbsFilter.h"
 #include "LockFilter.generated.h"
 
 class AMyChar;

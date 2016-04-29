@@ -1,7 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "SkillTemplate.h"
+
 #include "../Function/FuncFactory.h"
 #include "../Filter/AbsFilter.h"
 #include "../Utils/CommonDef.h"

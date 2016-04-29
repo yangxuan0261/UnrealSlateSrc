@@ -1,11 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "AttackPhy.h"
 
 #include "../../Buff/Buffs/AbsBuff.h"
-#include "Char/Comp/MyCharDataComp.h"
-#include "Char/MyChar.h"
+#include "../../../Comp/MyCharDataComp.h"
+#include "../../../MyChar.h"
 
 UAttackPhy::UAttackPhy() : Super()
 {
@@ -75,11 +74,11 @@ void UAttackPhy::RunStart()
 		UE_LOG(FuncLogger, Warning, TEXT("--- UAttackPhy::RunStart, mBuff == nullptr"));
 	}
 
-	mDurable = mBuff->IsDurable();
-	if (mDurable)
-	{
-		mDtVal = mBuff->GetDtVal(mValue);
-	}
+	//mDurable = mBuff->IsDurable();
+	//if (mDurable)
+	//{
+	//	mDtVal = mBuff->GetDtVal(mValue);
+	//}
 }
 
 void UAttackPhy::RunOver()

@@ -1,9 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "../GameTypes.h"
-#include "MyBaseComp.h"
 #include "MyCharDataComp.generated.h"
 
 class UCoolDown;

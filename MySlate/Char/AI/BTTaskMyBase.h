@@ -1,12 +1,10 @@
 #pragma once
 
-#include "BehaviorTree/Tasks/BTTask_BlueprintBase.h"
 #include "BTTaskMyBase.generated.h"
 
 class AMyChar;
 class UBehaviorTreeComponent;
 
-// Bot AI task that tries to find a location near the current enemy
 UCLASS(Blueprintable)
 class UBTTaskMyBase : public UBTTask_BlueprintBase
 {

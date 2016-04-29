@@ -3,14 +3,13 @@
 #include "MySlate.h"
 #include "CoolDownComp.h"
 
-#include "CoolDown.h"
-#include "Char/MyChar.h"
-#include "Char/Skill/Utils/SkillDataMgr.h"
-#include "Char/Skill/Template/SkillTemplate.h"
-#include "Char/Skill/Template/BufflTemplate.h"
-#include "Char/Skill/SkillFunction.h"
+#include "./CoolDown.h"
+#include "../../MyChar.h"
+#include "../Utils/SkillDataMgr.h"
+#include "../Template/SkillTemplate.h"
+#include "../Template/BufflTemplate.h"
+#include "../SkillFunction.h"
 
-// Sets default values
 UCoolDownComp::UCoolDownComp()
 	: Super()
 {

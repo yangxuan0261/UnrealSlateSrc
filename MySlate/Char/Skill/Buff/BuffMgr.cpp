@@ -1,14 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "BuffMgr.h"
 
-#include "Char/MyChar.h"
+#include "../../MyChar.h"
 #include "./Buffs/AbsBuff.h"
 #include "./Buffs/AppendBuff.h"
 #include "./Buffs/CommonBuff.h"
 #include "../Utils/SkillDataMgr.h"
 #include "../Template/BufflTemplate.h"
+#include "../SkillTypes.h"
 
 
 UBuffMgr::UBuffMgr() : Super()
@@ -54,11 +54,7 @@ void UBuffMgr::Tick(float DeltaTime)
 			else if (buff->GetState() == EBuffState::Over
 				|| buff->GetState() == EBuffState::Break) //Break暂时无用
 			{
-				buff->BuffOver();
-				buff->RemoveFromRoot();
-				buff->ConditionalBeginDestroy();
-				buffs.RemoveAt(i);
-
+				ForceOver(buffs, buff, true);
 				if (buffs.Num() == 0)
 				{
 					Iter.RemoveCurrent();
@@ -172,6 +168,17 @@ UAbsBuff* UBuffMgr::FindBuff(int32 _charId, int32 _buffId)
 	return nullptr;
 }
 
+void UBuffMgr::ForceOver(TArray<UAbsBuff*>& _buffArr, UAbsBuff* _buff, bool remove /* = false */)
+{
+	_buff->BuffOver();
+	_buff->RemoveFromRoot();
+	_buff->ConditionalBeginDestroy();
+	if (remove)
+	{
+		_buffArr.Remove(_buff);
+	}
+}
+
 //移除某个角色身上的所有buff
 void UBuffMgr::RemoveBuff(int32 _charId)
 {
@@ -180,8 +187,10 @@ void UBuffMgr::RemoveBuff(int32 _charId)
 	{
 		for (UAbsBuff* buff : *buffs)
 		{
-			buff->ChangeState(EBuffState::Over);
+			ForceOver(*buffs, buff);
 		}
+		buffs->Empty();
+		mBuffs.Remove(_charId);
 	}
 }
 
@@ -197,7 +206,11 @@ void UBuffMgr::RemoveBuffSpec(int32 _charId, int32 _buffId)
 
 		if (buff != nullptr)
 		{
-			(*buff)->ChangeState(EBuffState::Over);
+			ForceOver(*buffs, *buff, true);
+			if (buffs->Num() == 0)
+			{
+				mBuffs.Remove(_charId);
+			}
 			UE_LOG(BuffLogger, Warning, TEXT("--- UBuffMgr::RemoveBuffSpec, buffId:%d"), (*buff)->GetBuffId());
 		}
 	}

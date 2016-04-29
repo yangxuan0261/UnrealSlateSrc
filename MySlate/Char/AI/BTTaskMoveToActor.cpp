@@ -1,7 +1,7 @@
 #include "MySlate.h"
 #include "BTTaskMoveToActor.h"
 
-#include "MyAIController.h"
+#include "./MyAIController.h"
 
 UBTTaskMoveToActor::UBTTaskMoveToActor()
 	: Super()

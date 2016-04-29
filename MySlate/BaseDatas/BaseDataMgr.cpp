@@ -1,10 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "BaseDataMgr.h"
 
-#include "Datas/CharData.h"
-#include "Char/Skill/Pk/FightData.h"
+#include "./Datas/CharData.h"
+#include "../Char/Skill/Pk/FightData.h"
 
 UBaseDataMgr::UBaseDataMgr() : Super()
 {

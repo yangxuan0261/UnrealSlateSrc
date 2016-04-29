@@ -1,8 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
-#include "Common/ISingleton.h"
+#include "../../../Common/ISingleton.h"
 #include "FuncFactory.generated.h"
 
 //== —°»À A ==
@@ -94,7 +93,6 @@ class UFuncFactory : public UObject, public USingleton<UFuncFactory>
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	UFuncFactory();
 	virtual ~UFuncFactory();
 	virtual void BeginDestroy() override;

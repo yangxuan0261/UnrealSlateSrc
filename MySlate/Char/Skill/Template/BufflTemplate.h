@@ -1,8 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
-#include "Common/CommonHeader.h"
+#include "../../../Common/CommonHeader.h"
+#include "../SkillTypes.h"
 
 #include "BufflTemplate.generated.h"
 
@@ -44,9 +44,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		bool			mCanAdd; //可否缀加
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		bool			mDurable; //是否是持续型buff
+		EIntervalType	mInterType; //buff周期性
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		FString			mBindPos; //特效绑定点
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		int32			mBehavDataId; //表现数据id
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		FString			mAttrsStr;

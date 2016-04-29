@@ -1,11 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "CharMgr.h"
 
-#include "MyChar.h"
-#include "Comp/MyCharDataComp.h"
-#include "Skill/Template/SkillTemplate.h"
+#include "./MyChar.h"
+#include "./Comp/MyCharDataComp.h"
+#include "./Skill/Template/SkillTemplate.h"
 
 static int32 uuid = 1;
 static int32 IdGenerator()

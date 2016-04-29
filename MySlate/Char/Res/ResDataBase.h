@@ -43,7 +43,6 @@ class UResDataBase : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	UResDataBase();
 	virtual ~UResDataBase();
 	virtual void BeginDestroy() override;

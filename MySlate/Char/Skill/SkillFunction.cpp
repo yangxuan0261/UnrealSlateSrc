@@ -1,16 +1,15 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "SkillFunction.h"
 
-#include "Template/SkillTemplate.h"
-#include "Pk/PkMsg.h"
+#include "./Template/SkillTemplate.h"
+#include "./Pk/PkMsg.h"
 #include "../MyBullet.h"
 #include "../CharMgr.h"
 #include "../MyChar.h"
 #include "../Comp/MyCharDataComp.h"
-#include "CoolDown/CoolDown.h"
-#include "Function/Funcs/AbsPkEvent.h"
+#include "./CoolDown/CoolDown.h"
+#include "./Function/Funcs/AbsPkEvent.h"
 
 USkillFunction::USkillFunction() : Super()
 {

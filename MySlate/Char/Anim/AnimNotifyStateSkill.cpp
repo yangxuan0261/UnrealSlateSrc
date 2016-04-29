@@ -1,9 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "AnimNotifyStateSkill.h"
 
-#include "Char/MyChar.h"
+#include "../MyChar.h"
 #include "../Skill/SkillFunction.h"
 
 UAnimNotifyStateSkill::UAnimNotifyStateSkill(): Super()

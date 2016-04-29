@@ -1,22 +1,13 @@
 
 #pragma once
 
+#include "../../SkillTypes.h"
 #include "AbsBuff.generated.h"
 
 class UAbsPkEvent;
 class AMyChar;
 class UBufflTemplate;
 class UPkMsg;
-
-
-UENUM()
-enum class EBuffState : uint8 //buff状态
-{
-	Idle = 0,
-	Start,
-	Break,
-	Over,
-};
 
 UCLASS()
 class UAbsBuff : public UObject
@@ -36,9 +27,8 @@ public:
 	virtual void RunEndPk(UPkMsg* msg);
 
 	AMyChar*	GetOwnerChar();
-
+	UBufflTemplate*	GetBuffTemp() const { return mBuffTemp; }
 	int32		GetBuffId() const { return mBuffId; }
-	bool		IsDurable() const;
 	float		GetDtVal(float _value); //计算每帧伤害值
 	void		ChangeState(EBuffState _state) { mBuffState = _state; }
 	EBuffState	GetState() const { return mBuffState; }
@@ -48,9 +38,9 @@ public:
 private:
 	int32		mBuffId;		//
 	int32		mSkillId;		//
-	int32		mOwnerId;		//中招者
+	//int32		mOwnerId;		//中招者
 	AMyChar*	mOwnerChar;		//中招者ptr
-	int32		mAttackerId;	//释放者
+	//int32		mAttackerId;	//释放者
 	AMyChar*	mAttacker;		//释放者ptr //issue 释放这个可能有多个，这里先暂时一个
 	UBufflTemplate*	mBuffTemp;
 
@@ -60,5 +50,5 @@ private:
 
 	EBuffState	mBuffState;		//buff状态
 
-	int32		mEffectUUid;
+	TArray<int32>	mEffectUUids;
 };

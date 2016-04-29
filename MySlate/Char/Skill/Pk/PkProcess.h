@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -27,8 +26,8 @@ public:
 		mIsMagDmgImmunity = false;
 	}
 
-	int32	mTargetId;//目标唯一id
-	ESkillAttackType	type;		//伤害类型 (物理伤害、魔法伤害、治疗、吸血)
+	int32	mTargetId;			//目标唯一id
+	ESkillAttackType	type;	//伤害类型 (物理伤害、魔法伤害、治疗、吸血)
 	float	mValue;				//伤害值
 	bool	mIsDodge;			//闪避
 	bool	mIsCrit;			//暴击
@@ -49,6 +48,7 @@ public:
 	void SetMsg(UPkMsg* _pkMsg);
 	void Run();
 	FPkOverDlg&	GetPkOverDlg() { return mCallBack; }
+	void SetPkOverDlg(const FPkOverDlg& _dlg) { mCallBack = _dlg; }
 
 private:
 	bool CheckCanPk();//判断能否pk

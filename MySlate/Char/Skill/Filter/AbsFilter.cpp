@@ -1,11 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "AbsFilter.h"
 
-#include "Char/BpFuncLib/GolbalFunc.h"
-#include "Char/MyChar.h"
-#include "Char/CharMgr.h"
+#include "../../BpFuncLib/GolbalFunc.h"
+#include "../../MyChar.h"
+#include "../../CharMgr.h"
 #include "../Pk/PkMsg.h"
 
 UAbsFilter::UAbsFilter()

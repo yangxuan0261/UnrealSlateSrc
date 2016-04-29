@@ -1,11 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
-#include "Tickable.h"
-#include "Char/Skill/SkillTypes.h"
+#include "../SkillTypes.h"
+#include "../../Comp/MyBaseComp.h"
 
-#include "Char/Comp/MyBaseComp.h"
 #include "CoolDownComp.generated.h"
 
 class UCoolDown;

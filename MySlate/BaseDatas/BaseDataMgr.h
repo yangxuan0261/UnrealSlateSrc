@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "Common/ISingleton.h"
+#include "../Common/ISingleton.h"
 #include "BaseDataMgr.generated.h"
 
 class UCharData;

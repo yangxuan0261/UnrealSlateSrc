@@ -18,9 +18,16 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Bool.h"
+#include "BehaviorTree/Decorators/BTDecorator_BlueprintBase.h"
+#include "BehaviorTree/Services/BTService_BlueprintBase.h"
+#include "BehaviorTree/BTNode.h"
+#include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
+#include "BehaviorTree/Tasks/BTTask_BlueprintBase.h"
+#include "AIController.h"
 
 //----- Animation Begin -----
 #include "Animation/AnimInstance.h"
+#include "Animation/AnimNotifies/AnimNotifyState.h"
 
 //----- Component Begin -----
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -46,6 +53,7 @@ DECLARE_LOG_CATEGORY_EXTERN(PkLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(AILogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(GolbalFuncLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(ResLogger, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(EffectLogger, Log, All);
 
 //use logger
 //UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::~USkillFunction:%d"), mSkillId);

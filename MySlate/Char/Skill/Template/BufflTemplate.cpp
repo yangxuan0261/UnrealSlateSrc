@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "BufflTemplate.h"
@@ -15,8 +14,9 @@ UBufflTemplate::UBufflTemplate() : Super()
 		mBuffTime = 0;
 		mCanDisperse = false;
 		mCanAdd = false;
-		mDurable = true;
+		mInterType = EIntervalType::Once;
 		mBindPos = "";
+		mBehavDataId = 0;
 
 		mAttrsStr = "";
 		mBeforePkStr = "";

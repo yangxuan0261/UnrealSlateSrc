@@ -2,7 +2,8 @@
 
 #include "MySlate.h"
 #include "CharData.h"
-#include "Char/Skill/Pk/FightData.h"
+
+#include "../../Char/Skill/Pk/FightData.h"
 
 UCharData::UCharData() : Super()
 {

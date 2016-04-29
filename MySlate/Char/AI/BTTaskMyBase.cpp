@@ -1,11 +1,11 @@
 #include "MySlate.h"
 #include "BTTaskMyBase.h"
 
-#include "Char/MyChar.h"
-#include "Char/AI/MyAIController.h"
-#include "Char/Skill/CoolDown/CoolDownComp.h"
-#include "Char/Skill/Template/SkillTemplate.h"
-#include "Char/Skill/CoolDown/CoolDown.h"
+#include "../MyChar.h"
+#include "./MyAIController.h"
+#include "../Skill/CoolDown/CoolDownComp.h"
+#include "../Skill/Template/SkillTemplate.h"
+#include "../Skill/CoolDown/CoolDown.h"
 
 UBTTaskMyBase::UBTTaskMyBase()
 	: Super()

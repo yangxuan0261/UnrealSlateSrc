@@ -1,6 +1,5 @@
 #pragma once
 
-#include "BehaviorTree/Services/BTService_BlueprintBase.h"
 #include "BTServiceMyBase.generated.h"
 
 class AMyChar;

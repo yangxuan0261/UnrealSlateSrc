@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -6,7 +5,6 @@
 
 #include "CoolDown.generated.h"
 
-//cd finish notify Char
 class UCoolDown;
 DECLARE_DELEGATE_OneParam(FCDFinishDlg, UCoolDown*);
 
