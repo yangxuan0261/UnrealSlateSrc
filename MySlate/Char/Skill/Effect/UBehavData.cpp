@@ -5,11 +5,12 @@
 UEffDataElem::UEffDataElem()
 {
 	mId = 0;
+	mResId = 0;
 	mEffectType = ESkillEffectType::SelfFollow;
 	mBindPoint = "";
 	mDelayTime = 0.f;
 	mLoc = FVector::ZeroVector;
-	mScale = FVector::ZeroVector;
+	mScale = FVector(1.f, 1.f, 1.f);
 	mRotate = FRotator::ZeroRotator;
 }
 

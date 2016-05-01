@@ -77,8 +77,8 @@ enum class EFilterType : uint8 //选人类型
 UENUM()
 enum class ESelectType : uint8 //选人标记
 {
-	Enemy = 0,	//受击方
-	Self,		//攻击方
+	Enemy = 0,	//敌
+	Self,		//我
 	Count,
 };
 

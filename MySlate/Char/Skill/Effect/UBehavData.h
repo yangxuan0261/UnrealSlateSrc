@@ -15,8 +15,8 @@ enum class ESkillEffectType : uint8 //特效类型
 	Count,
 };
 
-UCLASS()
-class UEffDataElem : public UObject //特效元素
+UCLASS(BlueprintType)
+class UEffDataElem : public UObject //特效元素，给特效编辑器编辑的数据
 {
 	GENERATED_BODY()
 public:
@@ -24,13 +24,22 @@ public:
 	virtual ~UEffDataElem();
 	virtual void BeginDestroy() override;
 
-	int32		mId;					//特效id
-	ESkillEffectType	mEffectType;	//特效类型
-	FString		mBindPoint;				//绑定骨骼
-	float		mDelayTime;			//延时时长
-	FVector		mLoc;					//矩阵信息
-	FVector		mScale;
-	FRotator	mRotate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UEffDataElem")
+		int32		mId;					//元素id
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UEffDataElem")
+		int32		mResId;					//粒子资源id
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UEffDataElem")
+		ESkillEffectType	mEffectType;	//特效类型
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UEffDataElem")
+		FString		mBindPoint;				//绑定骨骼
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UEffDataElem")
+		float		mDelayTime;			//延时时长
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UEffDataElem")
+		FVector		mLoc;					//矩阵信息
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UEffDataElem")
+		FVector		mScale;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UEffDataElem")
+		FRotator	mRotate;
 };
 
 UCLASS()
@@ -47,6 +56,8 @@ public:
 
 	void loadEffecs();
 public:
-	int32		mId;//特效id
-	TArray<UEffDataElem*>	mEffElems; //特效集
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBehavData")
+		int32		mId;//特效id
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBehavData")
+		TArray<UEffDataElem*>	mEffElems; //特效集
 };

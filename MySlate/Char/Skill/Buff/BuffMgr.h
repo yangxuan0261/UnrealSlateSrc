@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Tickable.h"
+#include "../../../Common/ISingleton.h"
 #include "BuffMgr.generated.h"
 
 class UPkMsg;

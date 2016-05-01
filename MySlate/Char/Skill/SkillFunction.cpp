@@ -196,7 +196,7 @@ void USkillFunction::SkillBegin()
 		func->RunBeforeSkill(mPkMsg);
 	}
 
-	//step2 - 运行buff前置事件 一般用于放技能前要buff，运行给攻击者自己加buff的func
+	//step2 - 运行释放者pk前置事件，一般用于放技能前要buff，运行给攻击者自己加buff的func
 	const TArray<UAbsPkEvent*>& functions = mSkillTemplate->GetBeforePk();
 	for (UAbsPkEvent* func : functions)
 	{
@@ -243,7 +243,7 @@ void USkillFunction::BulletShoot()
 {
 	if (mBullet != nullptr && mPkMsg != nullptr)
 	{
-		//step3 - 运行给攻击者自己提升攻击力的func
+		//step3 - 运行给攻击者自己提升攻击力的func，对每个单体目标而言
 		const TArray<UAbsPkEvent*>& functions = mSkillTemplate->GetBeforeEvns();
 		for (UAbsPkEvent* func : functions)
 		{
@@ -267,7 +267,7 @@ void USkillFunction::BulletShoot()
 void USkillFunction::SkillEnd()
 {
 	//切换状态，使用中的技能置空
-	//step6 - 运行技能后置func, 比如瞬间移动移回原地
+	//step6 - 运行技能后置事件, 比如瞬间移动移回原地
 	const TArray<UAbsPkEvent*>& functions2 = mSkillTemplate->GetEndSkill();
 	for (UAbsPkEvent* func : functions2)
 	{	//issue mPkMsg is nullptr befor

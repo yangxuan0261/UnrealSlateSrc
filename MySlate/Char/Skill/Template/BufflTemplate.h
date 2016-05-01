@@ -46,6 +46,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		EIntervalType	mInterType; //buff周期性
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		float			mInterTime; //buff周期性
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		FString			mBindPos; //特效绑定点
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		int32			mBehavDataId; //表现数据id

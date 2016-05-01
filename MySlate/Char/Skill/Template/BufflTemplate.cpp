@@ -15,6 +15,7 @@ UBufflTemplate::UBufflTemplate() : Super()
 		mCanDisperse = false;
 		mCanAdd = false;
 		mInterType = EIntervalType::Once;
+		mInterTime = 0.f;
 		mBindPos = "";
 		mBehavDataId = 0;
 

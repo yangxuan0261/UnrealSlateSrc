@@ -197,7 +197,7 @@ void AMyBullet::CreatePk()
 	{
 		target->TempNotifyB();
 	}
-	return; //for test
+	//return; //for test
 
 	//TODO: 暂时不做结算
 	if (mPkProcess == nullptr)

@@ -38,14 +38,14 @@ public:
 private:
 	int32		mBuffId;		//
 	int32		mSkillId;		//
-	//int32		mOwnerId;		//中招者
+	int32		mOwnerId;		//中招者 
 	AMyChar*	mOwnerChar;		//中招者ptr
 	//int32		mAttackerId;	//释放者
 	AMyChar*	mAttacker;		//释放者ptr //issue 释放这个可能有多个，这里先暂时一个
 	UBufflTemplate*	mBuffTemp;
 
 	float		mTimer;		//计数器
-	float		mTotalTime;	//总时间
+	float		mInterTimer;//间隔计数器
 	int32		mLessTimes;	//剩余次数
 
 	EBuffState	mBuffState;		//buff状态

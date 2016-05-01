@@ -13,6 +13,23 @@ static int32 IdGeneratorEffect()
 	return gEffectUuid++;
 }
 
+FEffectBind::FEffectBind(UEffDataElem* _effData, int32 _lefTtime, int32 _uuId, UParticleSystemComponent* _psComp)
+{
+	mEffData = _effData;
+	mLeftTimer = _lefTtime;
+	mUuId = _uuId;
+	mPsComp = _psComp;
+	if (_effData != nullptr)
+	{
+		mDelayTimer = _effData->mDelayTime;
+	}
+	else
+	{
+		UE_LOG(EffectLogger, Error, TEXT("--- FEffectBind::FEffectBind, _effData == nullptr"));
+	}
+}
+
+//------------------------- skill mgr begin -----------------------
 USkillMgr::USkillMgr() : Super()
 {
 
@@ -25,6 +42,13 @@ USkillMgr::~USkillMgr()
 
 void USkillMgr::BeginDestroy()
 {
+	for (TMap<int32, UBehavData*>::TConstIterator Iter = mBehaviorDataMap.CreateConstIterator(); Iter; ++Iter)
+	{
+		Iter->Value->RemoveFromRoot();
+		Iter->Value->ConditionalBeginDestroy();
+	}
+	mBehaviorDataMap.Empty();
+
 
 	UE_LOG(SkillLogger, Warning, TEXT("--- USkillMgr::BeginDestroy"));
 	Super::BeginDestroy();
@@ -33,10 +57,13 @@ void USkillMgr::BeginDestroy()
 void USkillMgr::Tick(float DeltaTime)
 {
 	//特效剩余时间
-	//for (FEffectBind& effBind : mEffects)
-	//{
-	//	effBind.mLeftTime -= DeltaTime;
-	//}
+	for (auto Iter = mEffectBindMap.CreateIterator(); Iter; ++Iter)
+	{
+		for (FEffectBind& effBind : Iter->Value)
+		{
+			effBind.mLeftTimer -= DeltaTime;
+		}
+	}
 }
 
 bool USkillMgr::IsTickable() const
@@ -61,8 +88,8 @@ UBehavData* USkillMgr::GetBehaviorData(int32 _id)
 	return *bPtr;
 }
 
-//相同特效id只存放时间最长的
-TArray<int32> USkillMgr::AttachBehavData(AMyChar* _target, int32 _behavDataId, float _time)
+//循环特效，相同特效id只存放时间最长的，_time < 0.f表示不是循环特效，不需要主动释放
+TArray<int32> USkillMgr::AttachBehavData(AMyChar* _target, int32 _behavDataId, float _time /* = -1.f */)
 {
 	TArray<int32> dstEffUuids;
 	UBehavData* behavData = GetBehaviorData(_behavDataId);
@@ -70,6 +97,12 @@ TArray<int32> USkillMgr::AttachBehavData(AMyChar* _target, int32 _behavDataId, f
 	{
 		UE_LOG(SkillLogger, Error, TEXT("--- USkillMgr::AttachBehavData, behavData == nullptr, id:%d"), _behavDataId);
 		return TArray<int32>();
+	}
+
+	bool isOnce = _time > 0.f ? false : AttachBehavDataOnce(_target, behavData);
+	if (isOnce)
+	{
+		return dstEffUuids;
 	}
 
 	TArray<UEffDataElem*>& elems = behavData->GetEffElems(); //表现数据中的特效集
@@ -84,22 +117,26 @@ TArray<int32> USkillMgr::AttachBehavData(AMyChar* _target, int32 _behavDataId, f
 		{
 			ele = elems[i];
 
-			//绑定位置和特效id相同，只为其续命，不spwan新的粒子组件
+			//有绑定位置，且特效资源id相同，只为其续命，不spwan新的粒子组件
 			FEffectBind* dstEff = effs->FindByPredicate([&](const FEffectBind& tmp)->bool {
-				return tmp.mEffData->mId == ele->mId && tmp.mEffData->mBindPoint == ele->mBindPoint;
+				return tmp.mEffData->mResId == ele->mResId
+					&& tmp.mEffData->mBindPoint.Len() > 0
+					&& tmp.mEffData->mBindPoint == ele->mBindPoint;
 			});
 
-			bool needSpwan = true;
+			bool needSpwan = true; //-1:之前不存在，
 			if (dstEff != nullptr)
 			{
-				if (_time >= dstEff->mLeftTime)
+				if (_time >= dstEff->mLeftTimer)
 				{
 					int32 newUuid = ::IdGeneratorEffect();
 					dstEff->mUuId = newUuid; //换个新id，让老的找不到
-					dstEff->mUuId = _time; //续命
+					dstEff->mLeftTimer = _time; //续命
+					dstEff->mDelayTimer = _time; //续命
 					dstEffUuids.Add(newUuid);
-					needSpwan = false;
 				}
+
+				needSpwan = false;
 			}
 
 			if (needSpwan)
@@ -122,10 +159,34 @@ TArray<int32> USkillMgr::AttachBehavData(AMyChar* _target, int32 _behavDataId, f
 	return dstEffUuids;
 }
 
-void USkillMgr::CreateEffBind(AMyChar* _target, UEffDataElem* _ele, float _time, TArray<FEffectBind>& _bindArr, TArray<int32>& _dstUuids)
+//一次性特效
+bool USkillMgr::AttachBehavDataOnce(AMyChar* _target, UBehavData* _behavData)
 {
-	UParticleSystem* ps = UResMgr::GetInstance()->GetParticle(_ele->mId);
-	auto psComp = ps != nullptr ?
+	TArray<FEffectBind> tmpA;
+	TArray<int32> tmpB;
+
+	TArray<UEffDataElem*>& elems = _behavData->GetEffElems(); //表现数据中的特效集
+	UEffDataElem* ele = nullptr;
+	for (int32 i = 0; i < elems.Num(); ++i)
+	{
+		ele = elems[i];
+		CreateEffBind(_target, ele, 0.f, tmpA, tmpB, false);
+	}
+	return true;
+}
+
+void USkillMgr::CreateEffBind(AMyChar* _target, UEffDataElem* _ele, float _time, TArray<FEffectBind>& _bindArr, TArray<int32>& _dstUuids, bool _isDurable /* = true */)
+{
+	if (_ele == nullptr)
+	{
+		UE_LOG(SkillLogger, Error, TEXT("--- USkillMgr::CreateEffBind, _ele == nullptr"));
+		return;
+	}
+
+	UParticleSystem* ps = UResMgr::GetInstance()->GetParticle(_ele->mResId);
+	UParticleSystemComponent* psComp = nullptr;
+
+	psComp = ps != nullptr ?
 		UGameplayStatics::SpawnEmitterAttached(ps
 			, _target->GetMesh()
 			, FName(*(_ele->mBindPoint))
@@ -134,27 +195,51 @@ void USkillMgr::CreateEffBind(AMyChar* _target, UEffDataElem* _ele, float _time,
 
 	if (ps != nullptr && psComp != nullptr)
 	{
-		psComp->SetRelativeScale3D(_ele->mScale);
-		int32 newUuid = ::IdGeneratorEffect();
-		_dstUuids.Add(newUuid);
+		if (_ele->mDelayTime > 0.f) //延时可见
+		{
+			psComp->SetVisibility(false);
+		}
+		else
+		{
+			psComp->SetVisibility(true);
+		}
 
-		//TODO 遍历中增加可能有问题，待验证
-		_bindArr.Add(FEffectBind(_ele, _time, newUuid));
+		psComp->SetRelativeScale3D(_ele->mScale);
+
+		if (_isDurable)
+		{
+			int32 newUuid = ::IdGeneratorEffect();
+			_dstUuids.Add(newUuid);
+
+			//TODO 遍历中增加可能有问题，待验证
+			_bindArr.Add(FEffectBind(_ele, _time, newUuid, psComp));
+		}
 	}
 	else
 	{
-		UE_LOG(SkillLogger, Error, TEXT("--- USkillMgr::AttachBehavData, eff == null, id:%d"), _ele->mId);
+		UE_LOG(SkillLogger, Error, TEXT("--- USkillMgr::AttachBehavData, eff == null, resId:%d"), _ele->mResId);
 	}
 }
 
 void USkillMgr::DetachEffect(int32 _targetId, const TArray<int32>& _effuuids)
 {
+	if (_effuuids.Num() == 0)
+	{
+		return;
+	}
+
 	TArray<FEffectBind>* effBinds = mEffectBindMap.Find(_targetId);
 	if (effBinds != nullptr)
 	{
 		FEffectBind* findEff = nullptr;
 		for (int32 delId : _effuuids)
 		{
+	/*		for (int32 i = 0; i < effBinds->Num(); ++i)
+			{
+
+			}*/
+
+
 			findEff = effBinds->FindByPredicate([&](const FEffectBind& tmp)->bool {
 				return tmp.mUuId == delId;
 			});
@@ -166,6 +251,11 @@ void USkillMgr::DetachEffect(int32 _targetId, const TArray<int32>& _effuuids)
 				tmp.mPsComp->DestroyComponent();
 				effBinds->Remove(tmp);
 				UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::DetachEffect, effectId:%d"), tmp.mEffData->mId);
+
+				if (effBinds->Num() == 0)
+				{
+					mEffectBindMap.Remove(_targetId);
+				}
 			}
 		}
 	}
@@ -174,6 +264,15 @@ void USkillMgr::DetachEffect(int32 _targetId, const TArray<int32>& _effuuids)
 void USkillMgr::CharDeathNotify(AMyChar* _char)
 {
 
+}
+
+UBehavData* USkillMgr::CreateBehavData(int32 _id)
+{
+	UBehavData* data = NewObject<UBehavData>(UBehavData::StaticClass());
+	data->mId = _id;
+	data->AddToRoot();
+	mBehaviorDataMap.Add(_id, data);
+	return data;
 }
 
 UBehavData* USkillMgr::LoadBehaviorData(int32 _id)

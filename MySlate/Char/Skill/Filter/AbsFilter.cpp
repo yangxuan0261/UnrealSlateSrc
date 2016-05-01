@@ -4,6 +4,7 @@
 
 #include "../../BpFuncLib/GolbalFunc.h"
 #include "../../MyChar.h"
+#include "../../Comp/MyCharDataComp.h"
 #include "../../CharMgr.h"
 #include "../Pk/PkMsg.h"
 
@@ -87,7 +88,7 @@ void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::
 			}
 
 			tmpTarget = Cast<AMyChar>(destTarget);
-			if (tmpTarget && tmpTarget->IsAlive())
+			if (tmpTarget && tmpTarget->IsAlive() && tmpTarget->GetDataComp()->GetTeamType() != ignoreTeam) //测试时会主动调用Death, 血量没减
 			{
 				_msg->AddTarget(tmpTarget);
 				mDestChars.Add(tmpTarget);

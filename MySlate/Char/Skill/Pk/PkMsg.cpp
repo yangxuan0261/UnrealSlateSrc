@@ -57,6 +57,7 @@ UPkMsg::UPkMsg()
 	mSkillTemp = nullptr;
 	mCurrTarget = nullptr;
 	mTargetLocked = nullptr;
+	mAttacker = nullptr;
 }
 
 UPkMsg::~UPkMsg()
@@ -92,6 +93,9 @@ void UPkMsg::BeginDestroy()
 void UPkMsg::SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _target, const FVector& _targetLoc)
 {
 	mSkillTemp = _skillTemp;
+	mAttacker = _attacker;
+	mTargetLocked = _target;
+
 	if (mSkillTemp)
 	{
 		mSkillId = _skillTemp->mId;
@@ -99,8 +103,7 @@ void UPkMsg::SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _t
 		//target 
 		if (_target != nullptr)
 		{
-			mTargetLocked = _target; //防止，发动技能过程中，目标死亡的情况
-			mTargetId = _target->GetUuid();
+			mTargetId = _target->GetUuid(); //防止，发动技能过程中，目标死亡的情况
 			mTargetLoc = mTargetLocked->GetActorLocation();
 
 			//死亡回调
@@ -120,6 +123,14 @@ void UPkMsg::SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _t
 		if (_attacker != nullptr)
 		{
 			mAttackerId = _attacker->GetUuid();
+
+			//死亡回调
+			auto charDeathCallback = [&](AMyChar* _deathChar)->void {
+				mAttacker = nullptr;
+				UE_LOG(BuffLogger, Warning, TEXT("--- UPkMsg::SetData, charDeathCallback, id:%d"), _deathChar->GetUuid());
+			};
+
+			_attacker->AddDeathNotify(FDeathOneNotify::CreateLambda(charDeathCallback));
 		}
 		else
 		{

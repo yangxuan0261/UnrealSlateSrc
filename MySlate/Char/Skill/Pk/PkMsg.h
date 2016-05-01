@@ -45,8 +45,7 @@ public:
 	//void	ExeNullDlg();
 	void	SetAttackerData(UFightData* _data);
 	UFightData*	GetAttackerData() const { return mAttackerData; }
-	void	SetAttackerId(int32 _id) { mAttackerId = _id; }
-	int32	GetAttackerId() const { return mAttackerId;}
+	AMyChar*	GetAttacker() const { return mAttacker; }
 	void	SetTarget(AMyChar* _char) {  mTargetLocked = _char; } //设置被锁定的目标
 	AMyChar*	GetTarget() const { return mTargetLocked; }
 	void	SetTargetLoc(const FVector& _Loc) { mTargetLoc = _Loc; } //设置被锁定的Loc
@@ -56,7 +55,7 @@ public:
 	void	SetAttackerTeam(const ETeam& _type) { mTeamType = _type; }
 	const ETeam&	GetAttackerTeam() const { return mTeamType; }
 	void	SetCurrTarget(UParam* _target);
-
+	UParam*	GetCurrTarget() const { return mCurrTarget; }
 
 	//--------------- Begin
 	void SetAttackDmgValue(float _value, int _limitId = -1, bool _isAdd = true);			//伤害增加(数值)(受击者)
@@ -68,6 +67,7 @@ private:
 	USkillTemplate*	mSkillTemp;		
 	ESkillAttackType	mSkillLogicType;			//技能逻辑类型 SKILL_ATTACK_TYPE
 	int32			mAttackerId;					//攻击者 唯一id
+	AMyChar*		mAttacker;						//攻击者
 	int32			mTargetId;						//锁定目标者 唯一id
 	AMyChar*		mTargetLocked;					//锁定目标者
 	TArray<UParam*>	mTargetArr;						//目标集

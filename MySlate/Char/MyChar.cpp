@@ -10,25 +10,7 @@
 #include "../BaseDatas/BaseDataMgr.h"
 #include "../BaseDatas/Datas/CharData.h"
 #include "./Skill/Buff/BuffMgr.h"
-#include "./Res/ResMgr.h"
 
-FEffectBind::FEffectBind(UEffDataElem* _effData, int32 _time, int32 _uuId)
-{
-	mEffData = _effData;
-	mLeftTime = _time;
-	mUuId = _uuId;
-	mPsComp = nullptr;
-	if (_effData != nullptr)
-	{
-		mDelayTime = _effData->mDelayTime;
-	}
-	else
-	{
-		UE_LOG(EffectLogger, Error, TEXT("--- FEffectBind::FEffectBind, _effData == nullptr"));
-	}
-}
-
-//-------------------------- char begin ----------------
 AMyChar::AMyChar() : Super()
 {
 	PrimaryActorTick.bCanEverTick = true;

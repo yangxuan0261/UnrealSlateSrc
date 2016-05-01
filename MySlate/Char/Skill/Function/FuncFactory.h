@@ -14,7 +14,9 @@
 //== 选人 B ==
 //== 技能 A ==
 #define Func_Attack			TEXT("attack")
-#define Func_Phyattack		TEXT("phyattack")
+#define Func_AttackPhy		TEXT("phyattack")
+#define Func_AddBuff		TEXT("addbuff")		
+
 #define Func_Mgattack		TEXT("mgattack")
 #define Func_Damagebyhp		TEXT("damagebyhp")
 #define Func_Damagebychop	TEXT("damagebychop")

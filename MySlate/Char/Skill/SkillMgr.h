@@ -20,10 +20,10 @@ public:
 	{
 		return mUuId == _cp.mUuId;
 	}
-	FEffectBind(UEffDataElem* _effData, int32 _time, int32 mUuId);
+	FEffectBind(UEffDataElem* _effData, int32 _lefTtime, int32 _uuId, UParticleSystemComponent* _psComp);
 	int32	mUuId;		//唯一识别，区分相同buff移除
-	float	mDelayTime; //延迟时间
-	float	mLeftTime;	//剩余时间
+	float	mDelayTimer; //延迟时间 计步器
+	float	mLeftTimer;	//剩余时间 计步器
 	UEffDataElem*	mEffData;
 	UParticleSystemComponent* mPsComp; //生成的粒子组件
 };
@@ -50,16 +50,23 @@ public:
 		UBehavData*	GetBehaviorData(int32 _id);
 
 	UFUNCTION(BlueprintCallable, Category = "USkillMgr")
-		TArray<int32>	AttachBehavData(AMyChar* _target, int32 _behavDataId, float _time);
+		TArray<int32>	AttachBehavData(AMyChar* _target, int32 _behavDataId, float _time = -1.f);
 
 	UFUNCTION(BlueprintCallable, Category = "USkillMgr")
-		void			CreateEffBind(AMyChar* _target, UEffDataElem* _ele, float _time, TArray<FEffectBind>& _bindArr, TArray<int32>& _arr);
+		bool			AttachBehavDataOnce(AMyChar* _target, UBehavData* _behavData);
+
+	UFUNCTION(BlueprintCallable, Category = "USkillMgr")
+		void			CreateEffBind(AMyChar* _target, UEffDataElem* _ele, float _time, TArray<FEffectBind>& _bindArr, TArray<int32>& _dstUuids, bool _isDurable = true);
 
 	UFUNCTION(BlueprintCallable, Category = "USkillMgr")
 		void			DetachEffect(int32 _targetId, const TArray<int32>& _effuuids);
 
-	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
+	UFUNCTION(BlueprintCallable, Category = "USkillMgr")
 		void			CharDeathNotify(AMyChar* _char);
+
+	UFUNCTION(BlueprintCallable, Category = "USkillMgr")
+		UBehavData*		CreateBehavData(int32 _id);
+
 private:
 	UBehavData* LoadBehaviorData(int32 _id);
 

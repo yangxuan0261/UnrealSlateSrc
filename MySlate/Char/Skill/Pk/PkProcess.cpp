@@ -8,6 +8,7 @@
 #include "../Function/Funcs/AbsPkEvent.h"
 #include "../Template/SkillTemplate.h"
 #include "../Buff/BuffMgr.h"
+#include "./FightData.h"
 
 UPkProcess::UPkProcess() : Super()
 {
@@ -40,15 +41,17 @@ void UPkProcess::SetMsg(UPkMsg* _pkMsg)
 
 void UPkProcess::Run()
 {
-	AMyChar* targetActor = nullptr;
+	UParam* currtarge = nullptr;
 	
 	Filter();
 	const TArray<UParam*>& targets = mPkMsg->GetTargets();
 	for (int32 i = 0; i < targets.Num(); ++i)
 	{
-		targetActor = targets[i]->mTarget;
+		currtarge = targets[i];
+		mPkMsg->SetCurrTarget(currtarge);
 
-		RunEndEvns();
+		PkLogic();//pk逻辑运算，之前的方法已把对象消耗的值算好,还有是否闪避和暴击等，这里不用再计算，直接进行逻辑运算即可
+		RunEndEvns(); //每个受击者加buff
 	}
 
 	RunEndPk(); //给攻击者加buff
@@ -77,10 +80,11 @@ void UPkProcess::Filter()
 
 void UPkProcess::RunEndEvns()
 {
-	//step5 - 运行对目标集中的每个个体的func，pk逻辑完成后技能逻辑，如吸血，加蓝等
 	const TArray<UAbsPkEvent*>& functions2 = mPkMsg->GetSkillTemp()->GetEndEvns();
 	for (UAbsPkEvent* func : functions2)
 	{
+
+		//step4 - 运行对目标集中的每个个体的func
 		func->RunEndEvns(mPkMsg);
 	}
 }
@@ -94,7 +98,7 @@ void UPkProcess::PkLogic()
 
 void UPkProcess::RunEndPk()
 {
-	//step4 - 运行对目标集中的每个个体的func
+	//step5 - 运行释放者pk后置事件
 	USkillTemplate* skillTemp = mPkMsg->GetSkillTemp();
 	const TArray<UAbsPkEvent*> functions = skillTemp->GetEndPk();
 	for (UAbsPkEvent* func : functions)
@@ -102,7 +106,7 @@ void UPkProcess::RunEndPk()
 		func->RunEndPk(mPkMsg);
 	}
 
-	UBuffMgr::GetInstance()->RunEndPkBuffs(mPkMsg->GetAttackerId(), mPkMsg);
+	//UBuffMgr::GetInstance()->RunEndPkBuffs(mPkMsg->GetAttackerId(), mPkMsg);
 }
 
 void UPkProcess::PkPrice()

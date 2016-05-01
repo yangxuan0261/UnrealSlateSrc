@@ -75,7 +75,7 @@ void USuckup::RunStart()
 
 		if (mBuff->GetBuffTemp()->mInterType == EIntervalType::Durable)
 		{
-			//	mDtVal = mBuff->GetDtVal(mValue);
+			mDtVal = mBuff->GetDtVal(mValue);
 		}
 }
 
