@@ -31,6 +31,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "USkillDataMgr")
 		UBufflTemplate*		GetBuffTemplate(int32 _buffId);
 
+	UFUNCTION(BlueprintCallable, Category = "USkillDataMgr")
+		void				LoadSkillData();
+
+	UFUNCTION(BlueprintCallable, Category = "USkillDataMgr")
+		void				LoadBuffData();
+
 private:
 	void				InitFakeDate();//不在这里模拟数据，在蓝图中生产
 

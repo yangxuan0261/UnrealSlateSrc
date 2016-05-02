@@ -7,6 +7,17 @@
 
 struct FStreamableManager;
 class UResDataBase;
+class UDataTable;
+
+UENUM()
+enum class EInfoType : uint8 //加载不同表的枚举
+{
+	None = 0,
+	Skill,
+	Buff,
+	Behav,
+	EffElem,
+};
 
 UCLASS()
 class UResMgr : public UObject, public USingleton<UResMgr>
@@ -29,6 +40,8 @@ public:
 
 	FStreamableManager*		GetAssetLoader() const { return mAssetLoader; }
 	UParticleSystem*		GetParticle(int32 _id);
+
+	UDataTable*				GetInfoTable(EInfoType _infoType);
 
 private:
 	FStreamableManager*		mAssetLoader;

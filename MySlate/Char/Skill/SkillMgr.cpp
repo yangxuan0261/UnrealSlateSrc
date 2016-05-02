@@ -3,7 +3,7 @@
 #include "SkillMgr.h"
 
 #include "./Common/CommonHeader.h"
-#include "./Effect/UBehavData.h"
+#include "./Effect/Effects/UBehavData.h"
 #include "../MyChar.h"
 #include "../Res/ResMgr.h"
 

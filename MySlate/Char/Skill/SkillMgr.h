@@ -3,7 +3,7 @@
 
 #include "Tickable.h"
 #include "../../Common/ISingleton.h"
-#include "./Effect/UBehavData.h"
+#include "./Effect/Effects/UBehavData.h"
 
 #include "SkillMgr.generated.h"
 

@@ -3,7 +3,10 @@
 #include "ResMgr.h"
 
 #include "./ResDataBase.h"
-#include "./TestData.h"
+#include "./Infos/TestData.h"
+#include "./Infos/SkillInfo.h"
+#include "./Infos/BuffInfo.h"
+#include "./Infos/BehavInfo.h"
 
 UResMgr::UResMgr() : Super()
 {
@@ -90,5 +93,37 @@ UParticleSystem* UResMgr::GetParticle(int32 _id)
 	}
 
 	return dstps;
+}
+
+UDataTable* UResMgr::GetInfoTable(EInfoType _infoType)
+{
+	FString path;
+	switch (_infoType)
+	{
+	case EInfoType::Skill:
+		path = mResDB->mSkillInfo.ToString();
+		break;
+	case EInfoType::Buff:
+		path = mResDB->mBuffInfo.ToString();
+		break;
+	case EInfoType::Behav:
+		path = mResDB->mBehavInfo.ToString();
+		break;
+	case EInfoType::EffElem:
+		path = mResDB->mEffElemInfo.ToString();
+		break;
+	default:
+		return nullptr;
+	}
+
+	FStringAssetReference ref(path);
+	UObject* obj = mAssetLoader->SynchronousLoad(ref);
+	if (obj != nullptr)
+	{
+		UE_LOG(ResLogger, Warning, TEXT("--- UResMgr::GetInfoTable success, type:%d"), (int32)_infoType);
+		return Cast<UDataTable>(obj);
+	}
+	return nullptr;
+	//return obj != nullptr ? Cast<UDataTable>(obj) : nullptr;
 }
 

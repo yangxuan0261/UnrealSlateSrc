@@ -7,7 +7,7 @@
 #include "../../../CharMgr.h"
 #include "../../../MyChar.h"
 #include "../../Template/BufflTemplate.h"
-#include "../../Effect/UBehavData.h"
+#include "../../Effect/Effects/UBehavData.h"
 #include "../../SkillMgr.h"
 
 UAbsBuff::UAbsBuff() : Super()

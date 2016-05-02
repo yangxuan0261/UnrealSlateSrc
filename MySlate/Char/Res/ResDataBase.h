@@ -59,6 +59,18 @@ public:
 		TArray<FParticleItem>	mParticleList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
+		TAssetPtr<UDataTable>	mSkillInfo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
+		TAssetPtr<UDataTable>	mBuffInfo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
+		TAssetPtr<UDataTable>	mBehavInfo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
+		TAssetPtr<UDataTable>	mEffElemInfo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
 		TAssetPtr<UDataTable>	mTestData;
 
 private:

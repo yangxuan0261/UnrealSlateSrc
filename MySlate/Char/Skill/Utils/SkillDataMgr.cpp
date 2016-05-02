@@ -6,6 +6,10 @@
 #include "../Template/SkillTemplate.h"
 #include "../Template/BufflTemplate.h"
 #include "../SkillTypes.h"
+#include "../../Res/ResMgr.h"
+#include "../../Res/Infos/SkillInfo.h"
+#include "../../Res/Infos/BuffInfo.h"
+#include "../../Res/Infos/BehavInfo.h"
 
 USkillDataMgr::USkillDataMgr() : Super()
 {
@@ -39,62 +43,13 @@ void USkillDataMgr::BeginDestroy()
 
 void USkillDataMgr::InitFakeDate()
 {
-	//USkillTemplate* skill1 = NewObject<USkillTemplate>(USkillTemplate::StaticClass());
-	//skill1->mId = 10001;
-	//skill1->mName = TEXT("Skill1 Name");
-	//skill1->mDescr = TEXT("Skill1 Descr");
-	//skill1->mCoolDown = 3;
-	//skill1->mLockedType = ELockedType::Char;
-	//skill1->mAttackDist = 100;
-	//skill1->mTolerance = 5;
-	//skill1->mBulletSpeed = 400;
-	//skill1->mFlyDist = 0;
-	//skill1->mSkillType = ESkillType::Normal;
-	//skill1->mFilterStr = TEXT("circle,0,-1,500");
-	//skill1->mAttachPoint = TEXT("BulletPos");
-	//skill1->mAnimType = EAnimType::Skill_1;
 
-	//USkillTemplate* skill2 = NewObject<USkillTemplate>(USkillTemplate::StaticClass());
-	//skill2->mId = 10002;
-	//skill2->mName = TEXT("Skill2 Name");
-	//skill2->mDescr = TEXT("Skill2 Descr");
-	//skill2->mCoolDown = 7;
-	//skill2->mLockedType = ELockedType::Loc;
-	//skill2->mAttackDist = 50;
-	//skill2->mTolerance = 5;
-	//skill2->mBulletSpeed = 5;
-	//skill2->mFlyDist = 50;
-	//skill2->mSkillType = ESkillType::Initiative;
-	//skill2->mFilterStr = TEXT("circle,0,-1,500");
-	//skill2->mAttachPoint = TEXT("BulletPos");
-	//skill2->mAnimType = EAnimType::Skill_2;
-
-	//USkillTemplate* skill3 = NewObject<USkillTemplate>(USkillTemplate::StaticClass());
-	//skill3->mId = 10003;
-	//skill3->mName = TEXT("Skill3 Name");
-	//skill3->mDescr = TEXT("Skill3 Descr");
-	//skill3->mCoolDown = 5;
-	//skill3->mLockedType = ELockedType::Char;
-	//skill3->mAttackDist = 80;
-	//skill3->mTolerance = 5;
-	//skill3->mBulletSpeed = 5;
-	//skill3->mFlyDist = 0;
-	//skill3->mSkillType = ESkillType::Initiative;
-	//skill3->mFilterStr = TEXT("circle,0,-1,200");
-	//skill3->mAttachPoint = TEXT("lhand");
-	//skill3->mAnimType = EAnimType::Skill_3;
 }
 
 USkillTemplate* USkillDataMgr::CreateSkillTemp(int32 _id)
 {
 	USkillTemplate* skill1 = NewObject<USkillTemplate>(USkillTemplate::StaticClass());
 	skill1->mId = _id;
-	//USkillTemplate** skillTemp = mSkillTempMap.Find(_skillTemp->mId); //
-	//if (skillTemp != nullptr)
-	//{
-	//	UE_LOG(GolbalFuncLogger, Error, TEXT("--- USkillDataMgr::AddSkillTemp, add same id data, id:%"), skillTemp->mId);
-	//	return;
-	//}
 	skill1->AddToRoot();
 	mSkillTempMap.Add(skill1->mId, skill1);
 	return skill1;
@@ -121,4 +76,79 @@ UBufflTemplate * USkillDataMgr::GetBuffTemplate(int32 _buffId)
 	return tempPtr != nullptr ? *tempPtr : nullptr;
 }
 
+void USkillDataMgr::LoadSkillData()
+{
+	UDataTable* dataTab = UResMgr::GetInstance()->GetInfoTable(EInfoType::Skill);
+	if (dataTab != nullptr)
+	{
+		FSkillInfo* tmpPtr = nullptr;
+		for (auto Iter : dataTab->RowMap)
+		{
+			tmpPtr = (FSkillInfo*)(Iter.Value);
+			USkillTemplate* skill1 = NewObject<USkillTemplate>(USkillTemplate::StaticClass());
+			skill1->mId = tmpPtr->mId;
+			skill1->mName = tmpPtr->mName;
+			skill1->mDescr = tmpPtr->mDescr;
+			skill1->mCoolDown = tmpPtr->mCoolDown;
+			skill1->mLockedType = (ELockedType)tmpPtr->mLockedType;
+			skill1->mAttackDist = tmpPtr->mAttackDist;
+			skill1->mTolerance = tmpPtr->mTolerance;
+			skill1->mBulletSpeed = tmpPtr->mBulletSpeed;
+			skill1->mFlyDist = tmpPtr->mFlyDist;
+			skill1->mSkillType = (ESkillType)tmpPtr->mSkillType;
+			skill1->mAttachPoint = tmpPtr->mAttachPoint;
+			skill1->mAnimType = (EAnimType)tmpPtr->mAnimType;
+			skill1->mFilterStr = tmpPtr->mFilterStr;
+			skill1->mBeforeSkillStr = tmpPtr->mBeforeSkillStr;
+			skill1->mBeforePkStr = tmpPtr->mBeforePkStr;
+			skill1->mBeforeEvnsStr = tmpPtr->mBeforeEvnsStr;
+			skill1->mEndEvnsStr = tmpPtr->mEndEvnsStr;
+			skill1->mEndPkStr = tmpPtr->mEndPkStr;
+			skill1->mEndSkillStr = tmpPtr->mEndSkillStr;
+
+			skill1->AddToRoot();
+			mSkillTempMap.Add(skill1->mId, skill1);
+			UE_LOG(ResLogger, Warning, TEXT("--- key:%d, name:%s"), tmpPtr->mId, *tmpPtr->mName);
+		}
+
+	}
+	else
+	{
+		UE_LOG(GolbalFuncLogger, Warning, TEXT("--- USkillDataMgr::LoadSkillData, dataTab is nullptr"));
+	}
+}
+
+void USkillDataMgr::LoadBuffData()
+{
+	UDataTable* dataTab = UResMgr::GetInstance()->GetInfoTable(EInfoType::Buff);
+	if (dataTab != nullptr)
+	{
+		FBuffInfo* tmpPtr = nullptr;
+		for (auto Iter : dataTab->RowMap)
+		{
+			tmpPtr = (FBuffInfo*)(Iter.Value);
+			UBufflTemplate* buff1 = NewObject<UBufflTemplate>(UBufflTemplate::StaticClass());
+			buff1->mId = tmpPtr->mId;
+			buff1->mName = tmpPtr->mName;
+			buff1->mDescr = tmpPtr->mDescr;
+			buff1->mBuffTime = tmpPtr->mBuffTime;
+			buff1->mCanDisperse = tmpPtr->mCanDisperse;
+			buff1->mCanAdd = tmpPtr->mCanAdd;
+			buff1->mInterType = (EIntervalType)tmpPtr->mInterType;
+			buff1->mInterTime = tmpPtr->mInterTime;
+			buff1->mBehavDataId = tmpPtr->mBehavDataId;
+			buff1->mAttrsStr = tmpPtr->mAttrsStr;
+			buff1->mBeforePkStr = tmpPtr->mBeforePkStr;
+			buff1->mEndPkStr = tmpPtr->mEndPkStr;
+
+			buff1->AddToRoot();
+			mBuffTempMap.Add(buff1->mId, buff1);
+			UE_LOG(ResLogger, Warning, TEXT("--- key:%d, name:%s"), tmpPtr->mId, *tmpPtr->mName);
+		}
+	}
+	else
+	{
+		UE_LOG(GolbalFuncLogger, Warning, TEXT("--- USkillDataMgr::LoadSkillData, dataTab is nullptr"));
+	}
+}
 
