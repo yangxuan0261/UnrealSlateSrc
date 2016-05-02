@@ -3,6 +3,8 @@
 
 #include "ResDataBase.generated.h"
 
+class UDataTable;
+
 USTRUCT()
 struct FMeshItem
 {
@@ -51,10 +53,13 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
-		TArray<FMeshItem> mMeshList;
+		TArray<FMeshItem>		mMeshList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
-		TArray<FParticleItem> mParticleList;
+		TArray<FParticleItem>	mParticleList;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
+		TAssetPtr<UDataTable>	mTestData;
 
 private:
 

@@ -24,6 +24,9 @@ public:
 	void AsyncCallback();
 
 
+	UFUNCTION(BlueprintCallable, Category = "UResMgr")
+		void TestloadCSV();
+
 	FStreamableManager*		GetAssetLoader() const { return mAssetLoader; }
 	UParticleSystem*		GetParticle(int32 _id);
 
