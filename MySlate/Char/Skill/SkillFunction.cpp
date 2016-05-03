@@ -10,6 +10,7 @@
 #include "../Comp/MyCharDataComp.h"
 #include "./CoolDown/CoolDown.h"
 #include "./Function/Funcs/AbsPkEvent.h"
+#include "./Pk/FightData.h"
 
 USkillFunction::USkillFunction() : Super()
 {

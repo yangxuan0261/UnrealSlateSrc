@@ -23,9 +23,10 @@ enum class EAnimType : uint8 //技能动画
 };
 
 UENUM()
-enum class ESkillEffectType : uint8 //特效类型
+enum class EFollowType : uint8 //特效类型
 {
-	SelfFollow = 0,
+	None = 0,
+	SelfFollow,
 	SelfUnfollow,
 	TargetFollow,
 	TargetUnfollow,

@@ -8,7 +8,7 @@
 UEffDataElem::UEffDataElem()
 {
 	mResId = 0;
-	mEffectType = ESkillEffectType::SelfFollow;
+	mFollowType = EFollowType::SelfFollow;
 	mBindPoint = "";
 	mDelayTime = 0.f;
 	mLoc = FVector::ZeroVector;

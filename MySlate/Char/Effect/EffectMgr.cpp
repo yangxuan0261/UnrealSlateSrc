@@ -79,8 +79,8 @@ void UEffectMgr::Tick(float DeltaTime)
 				effBind.mDelayTimer -= DeltaTime;
 				if (effBind.mDelayTimer < 0.f)
 				{
+					effBind.mPsComp->CustomTimeDilation = 1.f;
 					effBind.mPsComp->SetVisibility(true);
-					effBind.mHasDelay = false;
 				}
 			}
 		}
@@ -106,8 +106,8 @@ void UEffectMgr::loadBehavInfo()
 		FBehavInfo* tmpPtr = nullptr;
 		for (auto Iter : dataTab->RowMap)
 		{
-			tmpPtr->mId = FCString::Atoi(*Iter.Key.ToString());
 			tmpPtr = (FBehavInfo*)(Iter.Value);
+			tmpPtr->mId = FCString::Atoi(*Iter.Key.ToString());
 			UBehavData* behav1 = NewObject<UBehavData>(UBehavData::StaticClass());
 			behav1->mId = tmpPtr->mId;
 
@@ -118,7 +118,7 @@ void UEffectMgr::loadBehavInfo()
 
 				UEffDataElem* effElem = NewObject<UEffDataElem>(UEffDataElem::StaticClass());
 				effElem->mResId = elem->mResId;
-				effElem->mEffectType = elem->mEffectType;
+				effElem->mFollowType = elem->mFollowType;
 				effElem->mBindPoint = elem->mBindPoint;
 				effElem->mDelayTime = elem->mDelayTime;
 				effElem->mLoc = elem->mLoc;
@@ -253,10 +253,12 @@ void UEffectMgr::CreateEffBind(AMyChar* _target, UEffDataElem* _ele, float _time
 		if (_ele->mDelayTime > 0.f) //ÑÓÊ±¿É¼û
 		{
 			psComp->SetVisibility(false);
+			psComp->CustomTimeDilation = 0.f;
 		}
 		else
 		{
 			psComp->SetVisibility(true);
+			psComp->CustomTimeDilation = 1.f;
 		}
 
 		psComp->SetRelativeScale3D(_ele->mScale);

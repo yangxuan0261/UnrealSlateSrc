@@ -18,7 +18,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FEffElemInfo")
 		int32		mResId;					//粒子资源id
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FEffElemInfo")
-		ESkillEffectType		mEffectType;	//特效类型
+		EFollowType	mFollowType;			//特效类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FEffElemInfo")
 		FString		mBindPoint;				//绑定骨骼
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FEffElemInfo")
