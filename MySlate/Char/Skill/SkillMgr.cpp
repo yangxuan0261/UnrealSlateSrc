@@ -84,6 +84,7 @@ void USkillMgr::LoadSkillData()
 		FSkillInfo* tmpPtr = nullptr;
 		for (auto Iter : dataTab->RowMap)
 		{
+			tmpPtr->mId = FCString::Atoi(*Iter.Key.ToString());
 			tmpPtr = (FSkillInfo*)(Iter.Value);
 			USkillTemplate* skill1 = NewObject<USkillTemplate>(USkillTemplate::StaticClass());
 			skill1->mId = tmpPtr->mId;
@@ -125,6 +126,7 @@ void USkillMgr::LoadBuffData()
 		FBuffInfo* tmpPtr = nullptr;
 		for (auto Iter : dataTab->RowMap)
 		{
+			tmpPtr->mId = FCString::Atoi(*Iter.Key.ToString());
 			tmpPtr = (FBuffInfo*)(Iter.Value);
 			UBufflTemplate* buff1 = NewObject<UBufflTemplate>(UBufflTemplate::StaticClass());
 			buff1->mId = tmpPtr->mId;

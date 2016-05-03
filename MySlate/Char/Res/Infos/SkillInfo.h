@@ -15,7 +15,6 @@ public:
 
 public:
 	//∂¡±Ì Ù–‘
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
 		int32			mId;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
 		FString			mName;

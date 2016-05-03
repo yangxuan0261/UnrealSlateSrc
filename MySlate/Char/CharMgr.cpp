@@ -165,6 +165,7 @@ void UCharMgr::LoadCharData()
 		FCharInfo* tmpPtr = nullptr;
 		for (auto Iter : dataTab->RowMap)
 		{
+			tmpPtr->mId = FCString::Atoi(*Iter.Key.ToString());
 			tmpPtr = (FCharInfo*)(Iter.Value);
 			UCharData* char1 = NewObject<UCharData>(UCharData::StaticClass());
 			char1->mId = tmpPtr->mId;

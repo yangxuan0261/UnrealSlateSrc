@@ -41,7 +41,6 @@ public:
 
 public:
 	//读表属性
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBehavInfo")
 		int32		mId;//表现id
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBehavInfo")
 		TArray<FEffElemInfo>	mEffectVec;

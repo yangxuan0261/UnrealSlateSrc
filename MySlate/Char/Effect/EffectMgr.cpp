@@ -102,9 +102,11 @@ void UEffectMgr::loadBehavInfo()
 	UDataTable* dataTab = UResMgr::GetInstance()->GetInfoTable(EInfoType::Behav);
 	if (dataTab != nullptr)
 	{
+		//dataTab->FindRow
 		FBehavInfo* tmpPtr = nullptr;
 		for (auto Iter : dataTab->RowMap)
 		{
+			tmpPtr->mId = FCString::Atoi(*Iter.Key.ToString());
 			tmpPtr = (FBehavInfo*)(Iter.Value);
 			UBehavData* behav1 = NewObject<UBehavData>(UBehavData::StaticClass());
 			behav1->mId = tmpPtr->mId;

@@ -33,7 +33,6 @@ public:
 
 public:
 	//∂¡±Ì Ù–‘
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FCharInfo")
 		int32		mId;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FCharInfo")
 		FString		mName;
