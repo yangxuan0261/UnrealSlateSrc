@@ -3,13 +3,12 @@
 
 #include "GolbalFunc.generated.h"
 
-class USkillDataMgr;
 class USkillMgr;
 class UCharMgr;
 class UFuncFactory;
-class UBaseDataMgr;
 class UBuffMgr;
 class UResMgr;
+class UEffectMgr;
 class AMyChar;
 
 UCLASS()
@@ -28,9 +27,6 @@ public:
 		static void					DestroyMgrs();
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static USkillDataMgr*		GetSkillDataMgr() { return gSkillDataMgr; }
-
-	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static USkillMgr*			GetSkillMgr() { return gSkillMgr; }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
@@ -40,10 +36,10 @@ public:
 		static UCharMgr*			GetCharMgr() { return gCharMgr; }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static UBaseDataMgr*		GetBaseDataMgr() { return gBaseDataMgr; }
+		static UResMgr*				GetResMgr() { return gResMgr; }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static UResMgr*				GetResMgr() { return gResMgr; }
+		static UEffectMgr*			GetEffectMgr() { return gEffectMgr; }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TurnForward(AActor* _actor, const FVector& _targetLoc);
@@ -74,12 +70,10 @@ public:
 		static void					TestArrLambda(FString _str);
 
 private:
-	static USkillDataMgr*			gSkillDataMgr;
 	static USkillMgr*				gSkillMgr;
 	static UCharMgr*				gCharMgr;
 	static UFuncFactory*			gFunctionMgr;
-	static UBaseDataMgr*			gBaseDataMgr;
 	static UBuffMgr*				gBuffMgr;
 	static UResMgr*					gResMgr;
-
+	static UEffectMgr*				gEffectMgr;
 };

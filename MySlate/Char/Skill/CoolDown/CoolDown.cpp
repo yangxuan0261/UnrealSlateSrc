@@ -3,9 +3,7 @@
 #include "CoolDown.h"
 
 #include "../../MyChar.h"
-#include "../Utils/SkillDataMgr.h"
 #include "../Template/SkillTemplate.h"
-#include "../Template/BufflTemplate.h"
 #include "../SkillFunction.h"
 #include "../../CharMgr.h"
 

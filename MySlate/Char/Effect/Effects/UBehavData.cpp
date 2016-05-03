@@ -2,9 +2,11 @@
 #include "MySlate.h"
 #include "UBehavData.h"
 
+#include "../../Skill/Utils/CommonDef.h"
+#include "../EffectMgr.h"
+
 UEffDataElem::UEffDataElem()
 {
-	mId = 0;
 	mResId = 0;
 	mEffectType = ESkillEffectType::SelfFollow;
 	mBindPoint = "";
@@ -21,7 +23,7 @@ UEffDataElem::~UEffDataElem()
 
 void UEffDataElem::BeginDestroy()
 {
-	UE_LOG(EffectLogger, Warning, TEXT("--- UEffDataElem::BeginDestroy, id:%d"), mId);
+	UE_LOG(EffectLogger, Warning, TEXT("--- UEffDataElem::BeginDestroy, id:%d"), mResId);
 	Super::BeginDestroy();
 }
 
@@ -46,8 +48,8 @@ void UBehavData::Tick(float DeltaTime)
 
 }
 
-void UBehavData::loadEffecs()
+TArray<UEffDataElem*>& UBehavData::GetEffElems()
 {
-
+	return mEffElemVec;
 }
 

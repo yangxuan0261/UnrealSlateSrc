@@ -6,9 +6,9 @@
 #include "./Skill/CoolDown/CoolDown.h"
 #include "./Skill/SkillFunction.h"
 #include "./Comp/MyCharDataComp.h"
+#include "./AI/MyAIController.h"
 #include "./CharMgr.h"
-#include "../BaseDatas/BaseDataMgr.h"
-#include "../BaseDatas/Datas/CharData.h"
+#include "./CharData.h"
 #include "./Skill/Buff/BuffMgr.h"
 
 AMyChar::AMyChar() : Super()
@@ -101,8 +101,7 @@ void AMyChar::AddDeathNotify(const FDeathOneNotify& _notify)
 
 void AMyChar::SetCharData(int32 _id)
 {
-	UCharData* data = UBaseDataMgr::GetInstance()->GetCharData(_id);
-	mDataComp->SetCharData(data);
+	mDataComp->SetCharData(_id);
 }
 
 bool AMyChar::IsAlive() const

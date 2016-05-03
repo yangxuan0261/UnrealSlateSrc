@@ -68,7 +68,7 @@ public:
 		TAssetPtr<UDataTable>	mBehavInfo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
-		TAssetPtr<UDataTable>	mEffElemInfo;
+		TAssetPtr<UDataTable>	mCharInfo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
 		TAssetPtr<UDataTable>	mTestData;

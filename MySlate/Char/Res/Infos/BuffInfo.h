@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Engine/DataTable.h"
+#include "../../Skill/SkillTypes.h"
 #include "BuffInfo.generated.h"
 
 USTRUCT(Blueprintable)
@@ -27,7 +28,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBuffInfo")
 		bool			mCanAdd; //可否缀加
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBuffInfo")
-		int32			mInterType; //buff周期性
+		EIntervalType	mInterType; //buff周期性
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBuffInfo")
 		float			mInterTime; //buff周期性
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBuffInfo")

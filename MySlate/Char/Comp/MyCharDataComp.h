@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../GameTypes.h"
+#include "./MyBaseComp.h"
 #include "MyCharDataComp.generated.h"
 
 class UCoolDown;
@@ -28,7 +29,7 @@ public:
 	void		SetFightData(UFightData* _data) { mFightData = _data; }
 	UFightData*	GetFigthData() const { return mFightData; }
 
-	void		SetCharData(UCharData* _data);
+	void		SetCharData(int32 _id);
 	UCharData*	GetCharhData() const { return mCharData; }
 
 	const ETeam& GetTeamType() const { return mTeam; }

@@ -8,6 +8,7 @@
 #include "CharMgr.generated.h"
 
 class AMyChar;
+class UCharData;
 
 UCLASS()
 class UCharMgr : public UObject, public USingleton<UCharMgr>
@@ -45,6 +46,12 @@ public:
 
 	const TMap<int32, AMyChar*>&	GetAllChars() const { return mAllCharMap; }
 
+	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
+		UCharData*	GetCharData(int32 _id);
+
+	UFUNCTION(BlueprintCallable, Category = "UCharMgr")
+		void		LoadCharData();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharManager")
 		TArray<AMyChar*>		mSelfCharArr;
@@ -55,4 +62,5 @@ public:
 
 private:
 	TMap<int32, AMyChar*> mAllCharMap;
+	TMap<int32, UCharData*> mCharDataMap;
 };

@@ -109,8 +109,8 @@ UDataTable* UResMgr::GetInfoTable(EInfoType _infoType)
 	case EInfoType::Behav:
 		path = mResDB->mBehavInfo.ToString();
 		break;
-	case EInfoType::EffElem:
-		path = mResDB->mEffElemInfo.ToString();
+	case EInfoType::Char:
+		path = mResDB->mCharInfo.ToString();
 		break;
 	default:
 		return nullptr;

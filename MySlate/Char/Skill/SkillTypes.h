@@ -23,6 +23,18 @@ enum class EAnimType : uint8 //技能动画
 };
 
 UENUM()
+enum class ESkillEffectType : uint8 //特效类型
+{
+	SelfFollow = 0,
+	SelfUnfollow,
+	TargetFollow,
+	TargetUnfollow,
+	Bullet,
+	SceneCamera,
+	Count,
+};
+
+UENUM()
 enum class EIntervalType : uint8 //buff类型周期
 {
 	Once = 0,	//一次性

@@ -5,6 +5,10 @@
 #include "./MyChar.h"
 #include "./Comp/MyCharDataComp.h"
 #include "./Skill/Template/SkillTemplate.h"
+#include "./Res/Infos/CharInfo.h"
+#include "./Res/ResMgr.h"
+#include "./CharData.h"
+#include "./Skill/Pk/FightData.h"
 
 static int32 uuid = 1;
 static int32 IdGenerator()
@@ -28,8 +32,15 @@ void UCharMgr::BeginDestroy()
 	{
 		Iter->Value->Destroy();
 	}
-
 	mAllCharMap.Empty();
+
+	for (TMap<int32, UCharData*>::TConstIterator Iter = mCharDataMap.CreateConstIterator(); Iter; ++Iter)
+	{
+		Iter->Value->RemoveFromRoot();
+		Iter->Value->ConditionalBeginDestroy();
+	}
+	mCharDataMap.Empty();
+
 	mSelfCharArr.Empty();
 	mTeamCharArr.Empty();
 	mEnemyCharArr.Empty();
@@ -137,5 +148,42 @@ void UCharMgr::ConvertActorsToChars(UPARAM(ref) const TArray<AActor*>& _srcActor
 		{
 			_outChars.Add(target);
 		}
+	}
+}
+
+UCharData* UCharMgr::GetCharData(int32 _id)
+{
+	UCharData** data = mCharDataMap.Find(_id);
+	return data != nullptr ? *data : nullptr;
+}
+
+void UCharMgr::LoadCharData()
+{
+	UDataTable* dataTab = UResMgr::GetInstance()->GetInfoTable(EInfoType::Char);
+	if (dataTab != nullptr)
+	{
+		FCharInfo* tmpPtr = nullptr;
+		for (auto Iter : dataTab->RowMap)
+		{
+			tmpPtr = (FCharInfo*)(Iter.Value);
+			UCharData* char1 = NewObject<UCharData>(UCharData::StaticClass());
+			char1->mId = tmpPtr->mId;
+			char1->mName = tmpPtr->mName;
+			char1->mDescr = tmpPtr->mDescr;
+			char1->mHeath = tmpPtr->mHeath;
+			char1->mHeathMax = tmpPtr->mHeathMax;
+
+			//Õ½¶·»ù´¡ÊôÐÔ
+			char1->mFightData->mLv = tmpPtr->mFightInfo.mLv;
+			char1->mFightData->mAttackPhy = tmpPtr->mFightInfo.mAttackPhy;
+
+			char1->AddToRoot();
+			mCharDataMap.Add(char1->mId, char1);
+			UE_LOG(GolbalFuncLogger, Warning, TEXT("--- key:%d, name:%s"), tmpPtr->mId, *tmpPtr->mName);
+		}
+	}
+	else
+	{
+		UE_LOG(GolbalFuncLogger, Warning, TEXT("--- USkillDataMgr::LoadSkillData, dataTab is nullptr"));
 	}
 }

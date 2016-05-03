@@ -2,22 +2,20 @@
 #include "MySlate.h"
 #include "GolbalFunc.h"
 
-#include "../Skill/Utils/SkillDataMgr.h"
 #include "../Skill/SkillMgr.h"
 #include "../CharMgr.h"
 #include "../Skill/Function/FuncFactory.h"
-#include "../../BaseDatas/BaseDataMgr.h"
 #include "../Skill/Buff/BuffMgr.h"
 #include "../Res/ResMgr.h"
+#include "../Effect/EffectMgr.h"
 #include "../MyChar.h"
 
-USkillDataMgr*	UGolbalFunc::gSkillDataMgr	= nullptr;
 USkillMgr*		UGolbalFunc::gSkillMgr		= nullptr;
 UCharMgr*		UGolbalFunc::gCharMgr		= nullptr;
 UFuncFactory*	UGolbalFunc::gFunctionMgr	= nullptr;
-UBaseDataMgr*	UGolbalFunc::gBaseDataMgr	= nullptr;
 UBuffMgr*		UGolbalFunc::gBuffMgr		= nullptr;
 UResMgr*		UGolbalFunc::gResMgr		= nullptr;
+UEffectMgr*		UGolbalFunc::gEffectMgr		= nullptr;
 
 UGolbalFunc::UGolbalFunc() : Super()
 {
@@ -38,32 +36,29 @@ void UGolbalFunc::BeginDestroy()
 
 void UGolbalFunc::InitMgrs()
 {
-	gSkillDataMgr = USkillDataMgr::GetInstance();
 	gSkillMgr = USkillMgr::GetInstance();
 	gCharMgr = UCharMgr::GetInstance();
 	gFunctionMgr = UFuncFactory::GetInstance();
 	gFunctionMgr->InitFuncAndFilters();
-	gBaseDataMgr = UBaseDataMgr::GetInstance();
 	gBuffMgr = UBuffMgr::GetInstance();
 	gResMgr = UResMgr::GetInstance();
+	gEffectMgr = UEffectMgr::GetInstance();
 }
 
 void UGolbalFunc::DestroyMgrs()
 {
-	USkillDataMgr::ReleaseInstance();
 	USkillMgr::ReleaseInstance();
 	UCharMgr::ReleaseInstance();
 	UFuncFactory::ReleaseInstance();
-	UBaseDataMgr::ReleaseInstance();
 	UBuffMgr::ReleaseInstance();
 	UResMgr::ReleaseInstance();
-	gSkillDataMgr = nullptr;
+	UEffectMgr::ReleaseInstance();
 	gSkillMgr = nullptr;
 	gCharMgr = nullptr;
 	gFunctionMgr = nullptr;
-	gBaseDataMgr = nullptr;
 	gBuffMgr = nullptr;
 	gResMgr = nullptr;
+	gEffectMgr = nullptr;
 }
 
 void UGolbalFunc::TurnForward(AActor* _actor, const FVector& _targetLoc)

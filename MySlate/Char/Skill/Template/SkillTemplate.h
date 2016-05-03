@@ -62,21 +62,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		int32			mCoolDown;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		ELockedType		mLockedType; //TODO: 技编数据 锁定 人or地
+		ELockedType		mLockedType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		int32			mAttackDist; //TODO: 技编数据
+		int32			mAttackDist; 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		int32			mTolerance; //TODO: 技编数据 //子弹到targetLoc的容许误差
+		int32			mTolerance;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		int32			mBulletSpeed; //TODO: 技编数据
+		int32			mBulletSpeed; 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		int32			mFlyDist; //TODO: 技编数据 子弹飞行距离
+		int32			mFlyDist; 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		ESkillType		mSkillType;	//TODO: 技编数据
+		ESkillType		mSkillType;	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		FString			mAttachPoint;//TODO: 技编数据 子弹绑定点
+		FString			mAttachPoint;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		EAnimType		mAnimType;//TODO: 技编数据 相同类型动画的不同动作枚举
+		EAnimType		mAnimType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		FString			mFilterStr;

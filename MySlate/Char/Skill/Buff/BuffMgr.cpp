@@ -6,7 +6,7 @@
 #include "./Buffs/AbsBuff.h"
 #include "./Buffs/AppendBuff.h"
 #include "./Buffs/CommonBuff.h"
-#include "../Utils/SkillDataMgr.h"
+#include "../SkillMgr.h"
 #include "../Template/BufflTemplate.h"
 #include "../SkillTypes.h"
 
@@ -86,7 +86,7 @@ void UBuffMgr::RunEndPkBuffs(int32 _charId, UPkMsg* msg)
 
 void UBuffMgr::AddBuff(AMyChar* _attacker, AMyChar* _target, int32 _skillId, int32 _buffId)
 {
-	UBufflTemplate* buffTemp = USkillDataMgr::GetInstance()->GetBuffTemplate(_buffId);
+	UBufflTemplate* buffTemp = USkillMgr::GetInstance()->GetBuffTemplate(_buffId);
 	if (buffTemp != nullptr && _target != nullptr)
 	{
 		int32 targetId = _target->GetUuid();

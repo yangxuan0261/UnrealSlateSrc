@@ -11,7 +11,6 @@ UCLASS(Blueprintable)
 class UCharData : public UObject
 {
 	GENERATED_BODY()
-
 public:
 	UCharData();
 	virtual ~UCharData();

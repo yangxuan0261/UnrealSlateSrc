@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Engine/DataTable.h"
+#include "../../Skill/SkillTypes.h"
 #include "SkillInfo.generated.h"
 
 USTRUCT(Blueprintable)
@@ -23,7 +24,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
 		int32			mCoolDown;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
-		int32			mLockedType; //TODO: 技编数据 锁定 人or地
+		ELockedType		mLockedType; //TODO: 技编数据 锁定 人or地
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
 		int32			mAttackDist; //TODO: 技编数据
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
@@ -33,11 +34,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
 		int32			mFlyDist; //TODO: 技编数据 子弹飞行距离
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
-		int32			mSkillType;	//TODO: 技编数据
+		ESkillType		mSkillType;	//TODO: 技编数据
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
 		FString			mAttachPoint;//TODO: 技编数据 子弹绑定点
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
-		int32			mAnimType;//TODO: 技编数据 相同类型动画的不同动作枚举
+		EAnimType		mAnimType;//TODO: 技编数据 相同类型动画的不同动作枚举
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
 		FString			mFilterStr;

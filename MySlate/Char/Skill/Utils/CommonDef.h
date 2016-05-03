@@ -13,7 +13,7 @@ public:
 	virtual ~UEmpty() {}
 };
 
-#define  Split_Com		TEXT(",")
+//#define  Split_Com		TEXT(",")
 #define  Split_Line		TEXT("_")
 #define  Split_Pound	TEXT("#")
 #define  Split_Sem		TEXT(";")

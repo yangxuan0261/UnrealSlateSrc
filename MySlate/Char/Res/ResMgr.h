@@ -2,7 +2,6 @@
 #pragma once
 
 #include "../../Common/ISingleton.h"
-
 #include "ResMgr.generated.h"
 
 struct FStreamableManager;
@@ -16,7 +15,7 @@ enum class EInfoType : uint8 //加载不同表的枚举
 	Skill,
 	Buff,
 	Behav,
-	EffElem,
+	Char,
 };
 
 UCLASS()

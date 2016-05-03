@@ -6,7 +6,6 @@
 #include "../../MyChar.h"
 #include "../../Comp/MyCharDataComp.h"
 #include "../Template/SkillTemplate.h"
-#include "../Utils/SkillDataMgr.h"
 #include "./FightData.h"
 
 

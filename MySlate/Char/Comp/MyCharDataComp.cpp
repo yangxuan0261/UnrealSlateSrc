@@ -3,7 +3,8 @@
 #include "MyCharDataComp.h"
 
 #include "../Skill/Pk/FightData.h"
-#include "../../BaseDatas/Datas/CharData.h"
+#include "../CharData.h"
+#include "../CharMgr.h"
 
 UMyCharDataComp::UMyCharDataComp()
 	: Super()
@@ -51,10 +52,19 @@ void UMyCharDataComp::DestroyComponent(bool bPromoteChildren /*= false*/)
 	Super::DestroyComponent(bPromoteChildren);
 }
 
-void UMyCharDataComp::SetCharData(UCharData* _data)
+void UMyCharDataComp::SetCharData(int32 _id)
 {
-	mCharData = _data;
-	mHealth = _data->mHeath;
-	mHealthMax = _data->mHeathMax;
-	mFightData->Copy(mCharData->GetFightData());//角色模板中的基础数据拷到 战斗数据对象中
+	UCharData* data = UCharMgr::GetInstance()->GetCharData(_id);
+
+	if (data != nullptr)
+	{
+		mCharData = data;
+		mHealth = data->mHeath;
+		mHealthMax = data->mHeathMax;
+		mFightData->Copy(data->GetFightData());//角色模板中的基础数据拷到 战斗数据对象中
+	}
+	else
+	{
+		UE_LOG(CompLogger, Error, TEXT("--- UMyCharDataComp::SetCharData, data == nullptr, id:%d"), _id);
+	}
 }

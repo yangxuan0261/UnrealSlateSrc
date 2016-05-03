@@ -1,13 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "CoolDownComp.h"
 
 #include "./CoolDown.h"
 #include "../../MyChar.h"
-#include "../Utils/SkillDataMgr.h"
+#include "../SkillMgr.h"
 #include "../Template/SkillTemplate.h"
-#include "../Template/BufflTemplate.h"
 #include "../SkillFunction.h"
 
 UCoolDownComp::UCoolDownComp()
@@ -118,10 +116,10 @@ void UCoolDownComp::RemoveCDById(int32 _skillId)
 
 void UCoolDownComp::AddCD(int32 _skillId, bool _isRestartCD)
 {
-	USkillTemplate* skillTemp = USkillDataMgr::GetInstance()->GetSkillTemplate(_skillId);
+	USkillTemplate* skillTemp = USkillMgr::GetInstance()->GetSkillTemplate(_skillId);
 	if (skillTemp)
 	{
-		////清楚旧的
+		//清除旧的
 		RemoveCDById(_skillId);
 
 		UCoolDown* cd = NewObject<UCoolDown>(UCoolDown::StaticClass());
