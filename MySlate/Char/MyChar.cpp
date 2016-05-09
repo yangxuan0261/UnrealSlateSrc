@@ -10,6 +10,7 @@
 #include "./CharMgr.h"
 #include "./CharData.h"
 #include "./Skill/Buff/BuffMgr.h"
+#include "./Effect/Effects/BehavElem.h"
 
 AMyChar::AMyChar() : Super()
 {
@@ -56,8 +57,9 @@ void AMyChar::BeginPlay()
 
 void AMyChar::Tick( float DeltaTime )
 {
-	Super::Tick( DeltaTime );
-	
+	AActor::Tick( DeltaTime );
+	IBehavInterface::BehavTick(DeltaTime);
+
 	if (mCDComp != nullptr)
 	{
 		mCDComp->MyTick(DeltaTime);
@@ -67,7 +69,7 @@ void AMyChar::Tick( float DeltaTime )
 	{
 		mUsingSkill->Tick(DeltaTime);
 	}
-}
+}	
 
 void AMyChar::Destroyed()
 {
@@ -191,6 +193,7 @@ void AMyChar::FaceToTargetLoc(const FVector& _targetLoc, bool _smooth /* = false
 void AMyChar::Death()
 {
 	mDeathMultiNotify.Broadcast(this);//通知所有绑定了的代理
+	IBehavInterface::RemoveBehavElemAll();
 
 	//施放技能中被打死，释放创建的子弹和pkMsg
 	if (mUsingSkill != nullptr)

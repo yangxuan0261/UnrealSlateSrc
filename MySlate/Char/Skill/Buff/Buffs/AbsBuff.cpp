@@ -7,7 +7,7 @@
 #include "../../../CharMgr.h"
 #include "../../../MyChar.h"
 #include "../../Template/BufflTemplate.h"
-#include "../../../Effect/Effects/UBehavData.h"
+#include "../../../Effect/Effects/BehavData.h"
 #include "../../../Effect/EffectMgr.h"
 
 UAbsBuff::UAbsBuff() : Super()
@@ -87,8 +87,7 @@ void UAbsBuff::BuffStart()
 	}
 
 	//特效绑定
-	float _buffTime = mBuffTemp->mInterType == EIntervalType::Once ? -1.f : mBuffTemp->mBuffTime;
-	mEffectUUids = UEffectMgr::GetInstance()->AttachBehavData2(mOwnerChar, mBuffTemp->mBehavDataId, _buffTime);
+	//mEffectUUids = UEffectMgr::GetInstance()->AttachBehavData2(mOwnerChar, mBuffTemp->mBehavDataId, EOwnType::Self);
 }
 
 void UAbsBuff::BuffOver()
@@ -102,7 +101,7 @@ void UAbsBuff::BuffOver()
 	}
 
 	//解除特效绑定
-	UEffectMgr::GetInstance()->DetachEffect(mOwnerChar->GetUuid(), mEffectUUids);
+	//UEffectMgr::GetInstance()->DetachEffect(mOwnerChar->GetUuid(), mEffectUUids);
 }
 
 void UAbsBuff::RunBeforePk(UPkMsg* msg)

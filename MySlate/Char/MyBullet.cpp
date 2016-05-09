@@ -59,11 +59,13 @@ void AMyBullet::BeginPlay()
 void AMyBullet::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	IBehavInterface::BehavTick(DeltaSeconds);
 
 	if (!mFlying)
 	{
 		return;
 	}
+
 
 	if (mTargetId > 0) //Ëø¶¨Ä¿±ê
 	{
@@ -246,6 +248,7 @@ void AMyBullet::BulletJump()
 
 void AMyBullet::DestroyBullet()
 {
+	IBehavInterface::RemoveBehavElemAll();
 
 	if (mPkProcess != nullptr)
 	{
@@ -259,6 +262,7 @@ void AMyBullet::DestroyBullet()
 		mPkMsg->ConditionalBeginDestroy();
 		mPkMsg = nullptr;
 	}
+
 
 	OnProjectileDestroyed();
 	Destroy();

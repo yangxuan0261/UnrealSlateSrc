@@ -4,38 +4,24 @@
 
 #include "../Res/ResMgr.h"
 #include "../Res/Infos/BehavInfo.h"
-#include "./Effects/UBehavData.h"
+#include "./Effects/BehavData.h"
+#include "./Effects/BehavElem.h"
 #include "../MyChar.h"
+#include "../MyBullet.h"
 
 static int32 gEffectUuid = 1;
 static int32 IdGeneratorEffect()
 {      
+	if (gEffectUuid == 65534)
+	{
+		gEffectUuid = 1;
+	}
+
 	return gEffectUuid++;
-}
+} 
 
-FEffectBind::FEffectBind()
-{
+static const int32 gSceneEffectId = (1 << 4) + 1;
 
-}
-
-FEffectBind::FEffectBind(UEffDataElem* _effData, int32 _lefTtime, int32 _uuId, UParticleSystemComponent* _psComp)
-{
-	mEffData = _effData;
-	mLeftTimer = _lefTtime;
-	mUuId = _uuId;
-	mPsComp = _psComp;
-	if (_effData != nullptr)
-	{
-		mDelayTimer = _effData->mDelayTime;
-		mHasDelay = mDelayTimer > 0.f ? true : false;
-	}
-	else
-	{
-		UE_LOG(EffectLogger, Error, TEXT("--- FEffectBind::FEffectBind, _effData == nullptr"));
-	}
-}
-
-//------------------------- UEffectMgr Begin -----------------------
 UEffectMgr::UEffectMgr()
 {
 
@@ -50,11 +36,6 @@ void UEffectMgr::BeginDestroy()
 {
 	for (TMap<int32, UBehavData*>::TConstIterator iter = mBehavMap.CreateConstIterator(); iter; ++iter)
 	{
-		for (UEffDataElem* elem : iter->Value->mEffElemVec)
-		{
-			elem->RemoveFromRoot();
-			elem->ConditionalBeginDestroy();
-		}
 		iter->Value->RemoveFromRoot();
 		iter->Value->ConditionalBeginDestroy();
 	}
@@ -71,8 +52,6 @@ void UEffectMgr::Tick(float DeltaTime)
 	{
 		for (FEffectBind& effBind : Iter->Value)
 		{
-			effBind.mLeftTimer -= DeltaTime;
-
 			//延时可见
 			if (effBind.mHasDelay)
 			{
@@ -81,6 +60,19 @@ void UEffectMgr::Tick(float DeltaTime)
 				{
 					effBind.mPsComp->CustomTimeDilation = 1.f;
 					effBind.mPsComp->SetVisibility(true);
+					effBind.mHasDelay = false;
+				}
+			}
+
+			//总时长到了自动回收，为场景特效服务
+			if (effBind.mHasTotal)
+			{
+				if (effBind.mTotalTimer < 0.f)
+				{
+					//TODO: 销毁场景特效
+
+					effBind.mTotalTimer = false;
+
 				}
 			}
 		}
@@ -102,7 +94,6 @@ void UEffectMgr::loadBehavInfo()
 	UDataTable* dataTab = UResMgr::GetInstance()->GetInfoTable(EInfoType::Behav);
 	if (dataTab != nullptr)
 	{
-		//dataTab->FindRow
 		FBehavInfo* tmpPtr = nullptr;
 		for (auto Iter : dataTab->RowMap)
 		{
@@ -111,29 +102,66 @@ void UEffectMgr::loadBehavInfo()
 			UBehavData* behav1 = NewObject<UBehavData>(UBehavData::StaticClass());
 			behav1->mId = tmpPtr->mId;
 
-			FEffElemInfo* elem = nullptr;
-			for (int32 i = 0; i<tmpPtr->mEffectVec.Num(); ++i)
-			{
-				elem = &tmpPtr->mEffectVec[i];
+			CopyEffInfoToData(tmpPtr->mAtkEffVec, behav1->mAtkEffVec);
+			CopyEffInfoToData(tmpPtr->mBltEffVec, behav1->mBltEffVec);
+			CopyEffInfoToData(tmpPtr->mTarEffVec, behav1->mTarEffVec);
+			CopyEffInfoToData(tmpPtr->mSceEffVec, behav1->mSceEffVec);
 
-				UEffDataElem* effElem = NewObject<UEffDataElem>(UEffDataElem::StaticClass());
-				effElem->mResId = elem->mResId;
-				effElem->mFollowType = elem->mFollowType;
-				effElem->mBindPoint = elem->mBindPoint;
-				effElem->mDelayTime = elem->mDelayTime;
-				effElem->mLoc = elem->mLoc;
-				effElem->mScale = elem->mScale;
-				effElem->mRotate = elem->mRotate;
+			CopyShkInfoToData(tmpPtr->mAtkShkVec, behav1->mAtkShkVec);
+			CopyShkInfoToData(tmpPtr->mBltShkVec, behav1->mBltShkVec);
+			CopyShkInfoToData(tmpPtr->mTarShkVec, behav1->mTarShkVec);
+			CopyShkInfoToData(tmpPtr->mSceShkVec, behav1->mSceShkVec);
 
-				effElem->AddToRoot();
-				behav1->mEffElemVec.Add(effElem);
-				UE_LOG(EffectLogger, Warning, TEXT("--- resId:%d, bindPoint:%s"), elem->mResId, *elem->mBindPoint);
-			}
 
 			behav1->AddToRoot();
 			mBehavMap.Add(behav1->mId, behav1);
-			UE_LOG(EffectLogger, Warning, TEXT("--- key:%d, effNum:%d"), tmpPtr->mId, tmpPtr->mEffectVec.Num());
+			UE_LOG(EffectLogger, Warning, TEXT("--- UBehavData load over, key:%d"), tmpPtr->mId);
 		}
+	}
+}
+
+void UEffectMgr::CopyEffInfoToData(TArray<FEffElemInfo>& _info, TArray<UEffDataElem*>& _dstVec)
+{
+	FEffElemInfo* elem = nullptr;
+	UEffDataElem* effElem = nullptr;
+	for (int32 i = 0; i < _info.Num(); ++i)
+	{
+		elem = &_info[i];
+
+		effElem = NewObject<UEffDataElem>(UEffDataElem::StaticClass());
+		effElem->mResId = elem->mResId;
+		effElem->mOwnType = elem->mOwnType;
+		effElem->mFollowType = elem->mFollowType;
+		effElem->mBindPoint = elem->mBindPoint;
+		effElem->mDelayTime = elem->mDelayTime;
+		effElem->mLoc = elem->mLoc;
+		effElem->mScale = elem->mScale;
+		effElem->mRotate = elem->mRotate;
+
+		effElem->AddToRoot();
+		_dstVec.Add(effElem);
+		UE_LOG(EffectLogger, Warning, TEXT("--- resId:%d, bindPoint:%s"), elem->mResId, *elem->mBindPoint);
+	}
+}
+
+void UEffectMgr::CopyShkInfoToData(TArray<FShakeInfo>& _info, TArray<UShakeElem*>& _dstVec)
+{
+	FShakeInfo* shakerElem = nullptr;
+	UShakeElem* elem = nullptr;
+	for (int32 i = 0; i < _info.Num(); ++i)
+	{
+		shakerElem = &_info[i];
+
+		elem = NewObject<UShakeElem>(UShakeElem::StaticClass());
+		elem->mA = shakerElem->mA;
+		elem->mW = shakerElem->mW;
+		elem->mTime = shakerElem->mTime;
+		elem->mIsX = shakerElem->mIsX;
+		elem->mOwnType = shakerElem->mOwnType;
+
+		elem->AddToRoot();
+		_dstVec.Add(elem);
+		UE_LOG(EffectLogger, Warning, TEXT("--- shake, time:%f"), shakerElem->mTime);
 	}
 }
 
@@ -143,138 +171,148 @@ UBehavData* UEffectMgr::GetBehav(int32 _key)
 	return behav != nullptr ? *behav : nullptr;
 }
 
-//循环特效，相同特效id只存放时间最长的，_time < 0.f表示不是循环特效，不需要主动释放
-TArray<int32> UEffectMgr::AttachBehavData(AMyChar* _target, int32 _behavDataId, float _time /* = -1.f */)
+void UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _tarBullet, int32 _behavDataId)
 {
-	TArray<int32> dstEffUuids;
-	UBehavData* behavData = UEffectMgr::GetInstance()->GetBehav(_behavDataId);
+	UBehavData* behavData = GetBehav(_behavDataId);
 	if (behavData == nullptr)
 	{
-		UE_LOG(SkillLogger, Error, TEXT("--- USkillMgr::AttachBehavData, behavData == nullptr, id:%d"), _behavDataId);
-		return TArray<int32>();
-	}
-
-	bool isOnce = _time > 0.f ? false : AttachBehavDataOnce(_target, behavData);
-	if (isOnce)
-	{
-		return dstEffUuids;
-	}
-
-	TArray<UEffDataElem*>& elems = behavData->GetEffElems(); //表现数据中的特效集
-	int targetId = _target->GetUuid();
-	TArray<FEffectBind>* effs = mEffectBindMap.Find(targetId);
-	if (effs != nullptr)
-	{
-		FEffectBind* dstEff = nullptr;
-		UEffDataElem* ele = nullptr;
-		int32 len = elems.Num();
-		for (int32 i = 0; i < len; ++i)
-		{
-			ele = elems[i];
-
-			//有绑定位置，且特效资源id相同，只为其续命，不spwan新的粒子组件
-			FEffectBind* dstEff = effs->FindByPredicate([&](const FEffectBind& tmp)->bool {
-				return tmp.mEffData->mResId == ele->mResId
-					&& tmp.mEffData->mBindPoint.Len() > 0
-					&& tmp.mEffData->mBindPoint == ele->mBindPoint;
-			});
-
-			bool needSpwan = true; //-1:之前不存在，
-			if (dstEff != nullptr)
-			{
-				if (_time >= dstEff->mLeftTimer)
-				{
-					int32 newUuid = ::IdGeneratorEffect();
-					dstEff->mUuId = newUuid; //换个新id，让老的找不到
-					dstEff->mLeftTimer = _time; //续命
-					dstEff->mDelayTimer = _time; //续命
-					dstEffUuids.Add(newUuid);
-				}
-
-				needSpwan = false;
-			}
-
-			if (needSpwan)
-			{
-				CreateEffBind(_target, ele, _time, *effs, dstEffUuids);
-			}
-		}
-	}
-	else
-	{
-		TArray<FEffectBind> newBinds;
-		for (UEffDataElem* ele : elems)
-		{
-			CreateEffBind(_target, ele, _time, newBinds, dstEffUuids);
-		}
-
-		mEffectBindMap.Add(targetId, newBinds);
-	}
-
-	return dstEffUuids;
-}
-
-//一次性特效
-bool UEffectMgr::AttachBehavDataOnce(AMyChar* _target, UBehavData* _behavData)
-{
-	TArray<FEffectBind> tmpA;
-	TArray<int32> tmpB;
-
-	TArray<UEffDataElem*>& elems = _behavData->GetEffElems(); //表现数据中的特效集
-	UEffDataElem* ele = nullptr;
-	for (int32 i = 0; i < elems.Num(); ++i)
-	{
-		ele = elems[i];
-		CreateEffBind(_target, ele, 0.f, tmpA, tmpB, false);
-	}
-	return true;
-}
-
-void UEffectMgr::CreateEffBind(AMyChar* _target, UEffDataElem* _ele, float _time, TArray<FEffectBind>& _bindArr, TArray<int32>& _dstUuids, bool _isDurable /* = true */)
-{
-	if (_ele == nullptr)
-	{
-		UE_LOG(SkillLogger, Error, TEXT("--- USkillMgr::CreateEffBind, _ele == nullptr"));
+		UE_LOG(EffectLogger, Error, TEXT("--- UEffectMgr::AttachBehavData, behavData == nullptr, id:%d"), _behavDataId);
 		return;
 	}
 
-	UParticleSystem* ps = UResMgr::GetInstance()->GetParticle(_ele->mResId);
-	UParticleSystemComponent* psComp = nullptr;
+	int32 groupId = ::IdGeneratorEffect(); //本次行为数据的识别id
 
-	psComp = ps != nullptr ?
-		UGameplayStatics::SpawnEmitterAttached(ps
-			, _target->GetMesh()
-			, FName(*(_ele->mBindPoint))
-			, _ele->mLoc
-			, _ele->mRotate) : nullptr;
-
-	if (ps != nullptr && psComp != nullptr)
+	//------------- char
+	if (_tarChar != nullptr)
 	{
-		if (_ele->mDelayTime > 0.f) //延时可见
+		TArray<UEffDataElem*> effectVec = _ownType == EOwnType::Self ? behavData->mAtkEffVec : behavData->mTarEffVec;
+		TArray<UShakeElem*> shakeVec = _ownType == EOwnType::Self ? behavData->mAtkShkVec : behavData->mTarShkVec;
+		//StrArr.Append(Arr, ARRAY_COUNT(Arr));
+		for (UEffDataElem* effect : effectVec)
 		{
-			psComp->SetVisibility(false);
-			psComp->CustomTimeDilation = 0.f;
+			UParticleSystem* ps = UResMgr::GetInstance()->GetParticle(effect->mResId);
+			if (ps == nullptr )
+			{
+				UE_LOG(EffectLogger, Error, TEXT("--- UEffectMgr::AttachBehavData, ps == nullptr, resId:%d"), effect->mResId);
+				continue;
+			}
+
+			effect = effect->Clone();
+			effect->mGroupId = groupId;
+			UParticleSystemComponent* psComp = nullptr;
+			if (effect->mFollowType == EFollowType::Follow) //跟随char
+			{
+				USceneComponent* dstComp = nullptr;
+				if (effect->mBindPoint.Len() > 0) //绑定骨骼
+				{
+					dstComp = _tarChar->GetMesh();
+				}
+				else //没绑定骨骼则绑定char的capsule组件
+				{
+					dstComp = _tarChar->GetCapsuleComponent();
+				}
+				psComp = UGameplayStatics::SpawnEmitterAttached(ps
+						, _tarChar->GetMesh()
+						, FName(*(effect->mBindPoint))
+						, effect->mLoc
+						, effect->mRotate);
+				if (psComp != nullptr)
+				{
+					psComp->SetRelativeScale3D(effect->mScale);
+				}
+			}
+			else if (effect->mFollowType == EFollowType::UnFollow) //不跟随，相对char当前transform进行偏移，scale除外
+			{
+				FTransform srcTran = _tarChar->GetTransform();
+				FTransform dstTran(effect->mRotate + srcTran.Rotator(), effect->mLoc + srcTran.GetTranslation(), effect->mScale);
+				psComp = UGameplayStatics::SpawnEmitterAtLocation(
+						GWorld
+						, ps
+						, dstTran);
+			}
+			else
+			{
+				UE_LOG(EffectLogger, Error, TEXT("--- UEffectMgr::AttachBehav, mFollowType == %d"), (int32)effect->mFollowType);
+			}
+
+			if (psComp != nullptr)
+			{
+				effect->SetActor(_tarChar);
+				effect->SetData(psComp);
+				effect->Start();
+			}
 		}
-		else
+
+		for (UShakeElem* shake: shakeVec)
 		{
-			psComp->SetVisibility(true);
-			psComp->CustomTimeDilation = 1.f;
-		}
-
-		psComp->SetRelativeScale3D(_ele->mScale);
-
-		if (_isDurable)
-		{
-			int32 newUuid = ::IdGeneratorEffect();
-			_dstUuids.Add(newUuid);
-
-			//TODO 遍历中增加可能有问题，待验证
-			_bindArr.Add(FEffectBind(_ele, _time, newUuid, psComp));
+			shake = shake->Clone();
+			shake->mGroupId = groupId;
+			shake->SetActor(_tarChar);
+			shake->Start();
 		}
 	}
-	else
+
+	//------------- bullet
+	if (_tarBullet != nullptr)
 	{
-		UE_LOG(SkillLogger, Error, TEXT("--- USkillMgr::AttachBehavData, eff == null, resId:%d"), _ele->mResId);
+		TArray<UEffDataElem*> effectVec = behavData->mBltEffVec;
+		TArray<UShakeElem*> shakeVec = behavData->mBltShkVec;
+
+		for (UEffDataElem* effect : effectVec)
+		{
+			if (effect->mFollowType == EFollowType::UnFollow) //子弹特效一般都是跟随
+			{
+				UParticleSystem* ps = UResMgr::GetInstance()->GetParticle(effect->mResId);
+				if (ps == nullptr)
+				{
+					UE_LOG(EffectLogger, Error, TEXT("--- UEffectMgr::AttachBehavData, ps == nullptr, resId:%d"), effect->mResId);
+					continue;
+				}
+
+				 UParticleSystemComponent* psComp = UGameplayStatics::SpawnEmitterAttached(ps
+						, _tarBullet->GetRootComponent() //绑道子弹根组件
+						, FName(*(effect->mBindPoint))
+						, effect->mLoc
+						, effect->mRotate);
+				if (psComp != nullptr)
+				{
+					effect = effect->Clone();
+					effect->mGroupId = groupId;
+					psComp->SetRelativeScale3D(effect->mScale);
+					effect->SetActor(_tarChar);
+					effect->SetData(psComp);
+					effect->Start();
+				}
+			}
+			else
+			{
+				UE_LOG(EffectLogger, Error, TEXT("--- UEffectMgr::AttachBehav, bullet mFollowType != EFollowType::UnFollow"));
+			}
+		}
+
+		for (UShakeElem* shake : shakeVec)
+		{
+			shake = shake->Clone();
+			shake->mGroupId = groupId;
+			shake->SetActor(_tarBullet);
+			shake->Start();
+		}
+	}
+
+	//------------- scene
+	TArray<UEffDataElem*> effectVec = behavData->mSceEffVec;
+	TArray<UShakeElem*> shakeVec = behavData->mSceShkVec;
+
+	for (UEffDataElem* effect : effectVec)
+	{
+		effect = effect->Clone();
+		effect->mGroupId = groupId;
+	}
+
+	for (UShakeElem* shake : shakeVec)
+	{
+		shake = shake->Clone();
+		shake->mGroupId = groupId;
 	}
 }
 
@@ -301,7 +339,7 @@ void UEffectMgr::DetachEffect(int32 _targetId, const TArray<int32>& _effuuids)
 				tmp.mPsComp->DetachFromParent();
 				tmp.mPsComp->DestroyComponent();
 				effBinds->Remove(tmp);
-				UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::DetachEffect, effectId:%d"), tmp.mEffData->mResId);
+				UE_LOG(EffectLogger, Warning, TEXT("--- AMyChar::DetachEffect, effectId:%d"), tmp.mEffData->mResId);
 
 				if (effBinds->Num() == 0)
 				{
@@ -312,43 +350,25 @@ void UEffectMgr::DetachEffect(int32 _targetId, const TArray<int32>& _effuuids)
 	}
 }
 
-TArray<int32> UEffectMgr::AttachBehavData2(AMyChar* _target, int32 _behavDataId, float _time /*= -1.f*/)
+UShakeElem* UEffectMgr::TestShake(AMyChar* _actor, int32 _id)
 {
-	TArray<int32> dstEffUuids;
-	UBehavData* behavData = UEffectMgr::GetInstance()->GetBehav(_behavDataId);
-	if (behavData == nullptr)
+	UBehavData* behavData = GetBehav(_id);
+	if (behavData != nullptr)
 	{
-		UE_LOG(SkillLogger, Error, TEXT("--- USkillMgr::AttachBehavData, behavData == nullptr, id:%d"), _behavDataId);
-		return TArray<int32>();
-	}
-
-	bool isOnce = _time > 0.f ? false : AttachBehavDataOnce(_target, behavData);
-	if (isOnce)
-	{
-		return dstEffUuids;
-	}
-
-	TArray<UEffDataElem*>& elems = behavData->GetEffElems(); //表现数据中的特效集
-	int targetId = _target->GetUuid();
-	TArray<FEffectBind>* effs = mEffectBindMap.Find(targetId);
-	if (effs != nullptr)
-	{
-		FEffectBind* dstEff = nullptr;
-		for (int32 i = 0; i < elems.Num(); ++i)
+		TArray<UShakeElem*>& shakeVec = behavData->GetTestShake();
+		if (shakeVec.Num() > 0)
 		{
-			CreateEffBind(_target, elems[i], _time, *effs, dstEffUuids);
+			UShakeElem* shake = shakeVec[0]->Clone();
+			shake->SetActor(_actor);
+			shake->Start();
+			return shake;
 		}
 	}
-	else
-	{
-		TArray<FEffectBind> newBinds;
-		for (UEffDataElem* ele : elems)
-		{
-			CreateEffBind(_target, ele, _time, newBinds, dstEffUuids);
-		}
 
-		mEffectBindMap.Add(targetId, newBinds);
-	}
+	return nullptr;
+}
 
-	return dstEffUuids;
+FEffectBind::FEffectBind(UEffDataElem* _effData, int32 _uuId, UParticleSystemComponent* _psComp)
+{
+
 }

@@ -3,8 +3,6 @@
 #include "SkillMgr.h"
 
 #include "./Common/CommonHeader.h"
-#include "../Effect/Effects/UBehavData.h"
-#include "../Effect/EffectMgr.h"
 #include "../MyChar.h"
 #include "./Template/SkillTemplate.h"
 #include "./Template/BufflTemplate.h"

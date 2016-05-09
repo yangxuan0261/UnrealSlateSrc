@@ -1,6 +1,8 @@
 
 #pragma once
-#include "Skill/Pk/PkProcess.h"
+
+#include "./Skill/Pk/PkProcess.h"
+#include "./BehavInter.h"
 
 #include "MyBullet.generated.h"
 
@@ -11,6 +13,7 @@ class USkillTemplate;
 class UPkMsg;
 class UPkProcess;
 //struct FDamageInfo;
+class UBehavElem;
 
 /*
 set target order
@@ -20,7 +23,7 @@ SetSpeed
 */
 
 UCLASS()
-class AMyBullet : public AActor
+class AMyBullet : public AActor, public IBehavInterface
 {
 	GENERATED_BODY()
 
@@ -109,4 +112,5 @@ public:
 		int32				mSpeed;
 private:
 	FVector		mStartPos; //³öÉúµã
+	TMap<int32, TArray<UBehavElem*>>	mBehavMap;
 };

@@ -11,6 +11,7 @@
 #include "./CoolDown/CoolDown.h"
 #include "./Function/Funcs/AbsPkEvent.h"
 #include "./Pk/FightData.h"
+#include "../Effect/EffectMgr.h"
 
 USkillFunction::USkillFunction() : Super()
 {
@@ -169,9 +170,10 @@ void USkillFunction::CancelSkill()
 
 void USkillFunction::SkillBegin()
 {
-	if (mPkMsg != nullptr)
+	if (mPkMsg != nullptr || mAttacker == nullptr)
 	{
 		UE_LOG(SkillLogger, Error, TEXT("--- USkillFunction::BulletCreate, mPkMsg != nullptr before"));
+		return;
 	}
 
 	//TODO: 技编数据, 做技能表现
@@ -194,50 +196,53 @@ void USkillFunction::SkillBegin()
 	const TArray<UAbsPkEvent*>& functions2 = mSkillTemplate->GetBeforeSkill();
 	for (UAbsPkEvent* func : functions2)
 	{
-		func->RunBeforeSkill(mPkMsg);
+		func->RunBeforeSkill(pkMsg);
 	}
 
 	//step2 - 运行释放者pk前置事件，一般用于放技能前要buff，运行给攻击者自己加buff的func
 	const TArray<UAbsPkEvent*>& functions = mSkillTemplate->GetBeforePk();
 	for (UAbsPkEvent* func : functions)
 	{
-		func->RunBeforePk(mPkMsg);
+		func->RunBeforePk(pkMsg);
 	}
+
+	//---------- 生产子弹
+	//TODO: 创建子弹,带上pk信息, 绑定到身体的某个socket部位上
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	mBullet = GWorld->SpawnActor<AMyBullet>(mAttacker->BulletClass, SpawnInfo);
+	mBullet->SetPkMsg(pkMsg);
+	mBullet->SetSkillTemplate(mSkillTemplate);
+	mBullet->SetTargetAndLoc(pkMsg->GetTarget(), pkMsg->GetTargetLoc());
+	mBullet->SetSpeed(mSkillTemplate->mBulletSpeed);
+	mBullet->SetActorHiddenInGame(true); //创建子弹是才开始显示
+
+	if (mSkillTemplate->mAttachPoint.Len() > 0) //有绑定部位
+	{
+		//TODO: 技编数据, 设置矩阵信息transform
+		mBullet->AttachRootComponentTo(mAttacker->GetMesh(), FName(*mSkillTemplate->mAttachPoint));
+		mBullet->SetActorRelativeLocation(FVector::ZeroVector);
+		mBullet->SetActorRelativeRotation(FRotator::ZeroRotator);
+		mBullet->SetActorRelativeScale3D(FVector(1.f, 1.f, 1.f));
+	}
+	else
+	{
+		mBullet->SetActorLocation(mAttacker->GetActorLocation());
+		mBullet->SetActorRotation(mAttacker->GetActorRotation());
+	}
+
+	//---------- 技编 数据逻辑
+
 }
 
 void USkillFunction::BulletCreate()
 {
-	if (mBullet != nullptr)
+	if (mBullet == nullptr)
 	{
-		UE_LOG(SkillLogger, Error, TEXT("--- USkillFunction::BulletCreate, mBullet != nullptr before"));
+		UE_LOG(SkillLogger, Error, TEXT("--- USkillFunction::BulletCreate, mBullet == nullptr before"));
+		return;
 	}
-
-	if (mAttacker)
-	{
-		//TODO: 创建子弹,带上pk信息, 绑定到身体的某个socket部位上
-		FActorSpawnParameters SpawnInfo;
-		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		mBullet = GWorld->SpawnActor<AMyBullet>(mAttacker->BulletClass, SpawnInfo);
-		mBullet->SetPkMsg(mPkMsg);
-		mBullet->SetSkillTemplate(mSkillTemplate);
-		mBullet->SetTargetAndLoc(mPkMsg->GetTarget(), mPkMsg->GetTargetLoc());
-		mBullet->SetSpeed(mSkillTemplate->mBulletSpeed);
-		mBullet->SetFly(false);
-
-		if (mSkillTemplate->mAttachPoint.Len() > 0) //有绑定部位
-		{
-			//TODO: 技编数据, 设置矩阵信息transform
-			mBullet->AttachRootComponentTo(mAttacker->GetMesh(), FName(*mSkillTemplate->mAttachPoint));
-			mBullet->SetActorRelativeLocation(FVector::ZeroVector);
-			mBullet->SetActorRelativeRotation(FRotator::ZeroRotator);
-			mBullet->SetActorRelativeScale3D(FVector(1.f, 1.f, 1.f));
-		}
-		else
-		{
-			mBullet->SetActorLocation(mAttacker->GetActorLocation());
-			mBullet->SetActorRotation(mAttacker->GetActorRotation());
-		}
-	}
+	mBullet->SetActorHiddenInGame(false);
 }
 
 void USkillFunction::BulletShoot()

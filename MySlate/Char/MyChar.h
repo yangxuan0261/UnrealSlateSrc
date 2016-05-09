@@ -2,6 +2,7 @@
 #pragma once
 
 #include "GameTypes.h"
+#include "./BehavInter.h"
 
 #include "MyChar.generated.h"
 
@@ -14,12 +15,13 @@ class USkillFunction;
 class UCharMgr;
 class UCharData;
 class USkeletalMeshComponent;
+class UBehavElem;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FDeathMultiNotify, AMyChar*);
 DECLARE_DELEGATE_OneParam(FDeathOneNotify, AMyChar*);
 
 UCLASS()
-class AMyChar : public ACharacter
+class AMyChar : public ACharacter, public IBehavInterface
 {
 	GENERATED_BODY()
 
@@ -116,6 +118,8 @@ private:
 	FTimerHandle	mTimer;
 	FVector			mTurnToLoc; //用来平滑旋转时保存目标Loc，因为用了内部函数lambda
 	FRotator		mTurnToRot; //用来平滑旋转时保存目标Rotate,
+
+
 
 	FDeathMultiNotify mDeathMultiNotify; //绑定： buff管理器等等
 };
