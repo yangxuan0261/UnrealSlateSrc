@@ -9,6 +9,7 @@ class UFuncFactory;
 class UBuffMgr;
 class UResMgr;
 class UEffectMgr;
+class UObjMgr;
 class AMyChar;
 
 UCLASS()
@@ -42,6 +43,9 @@ public:
 		static UEffectMgr*			GetEffectMgr() { return gEffectMgr; }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static UObjMgr*			GetObjtMgr() { return gObjMgr; }
+
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TurnForward(AActor* _actor, const FVector& _targetLoc);
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
@@ -69,6 +73,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TestArrLambda(FString _str);
 
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static void					TestGetName(UObject* _obj);
+
 private:
 	static USkillMgr*				gSkillMgr;
 	static UCharMgr*				gCharMgr;
@@ -76,4 +83,5 @@ private:
 	static UBuffMgr*				gBuffMgr;
 	static UResMgr*					gResMgr;
 	static UEffectMgr*				gEffectMgr;
+	static UObjMgr*					gObjMgr;
 };

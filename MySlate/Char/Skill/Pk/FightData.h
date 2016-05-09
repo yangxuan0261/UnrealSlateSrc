@@ -1,10 +1,12 @@
 #pragma once
 
 #include "../Utils/CommonDef.h"
+#include "../../Object/ObjInter.h"
+
 #include "FightData.generated.h"
 
 UCLASS()
-class UFightData : public UObject
+class UFightData : public UObject, public IObjInterface
 {
 	GENERATED_BODY()
 
@@ -13,9 +15,12 @@ public:
 	virtual ~UFightData();
 	virtual void BeginDestroy() override;
 
+	//obj interface
+	virtual void Reset() override;
+
 	UFightData* Clone();
 	void Copy(UFightData* _fightData);
-	void Reset();
+	
 
 	float GetAttackPhy() const { return mAttackPhy; }
 	float GetLv() const { return mLv; }

@@ -8,6 +8,7 @@
 #include "../Skill/Buff/BuffMgr.h"
 #include "../Res/ResMgr.h"
 #include "../Effect/EffectMgr.h"
+#include "../Object/ObjMgr.h"
 #include "../MyChar.h"
 
 USkillMgr*		UGolbalFunc::gSkillMgr		= nullptr;
@@ -16,6 +17,7 @@ UFuncFactory*	UGolbalFunc::gFunctionMgr	= nullptr;
 UBuffMgr*		UGolbalFunc::gBuffMgr		= nullptr;
 UResMgr*		UGolbalFunc::gResMgr		= nullptr;
 UEffectMgr*		UGolbalFunc::gEffectMgr		= nullptr;
+UObjMgr*		UGolbalFunc::gObjMgr		= nullptr;
 
 UGolbalFunc::UGolbalFunc() : Super()
 {
@@ -43,6 +45,7 @@ void UGolbalFunc::InitMgrs()
 	gBuffMgr = UBuffMgr::GetInstance();
 	gResMgr = UResMgr::GetInstance();
 	gEffectMgr = UEffectMgr::GetInstance();
+	gObjMgr = UObjMgr::GetInstance();
 }
 
 void UGolbalFunc::DestroyMgrs()
@@ -53,12 +56,14 @@ void UGolbalFunc::DestroyMgrs()
 	UBuffMgr::ReleaseInstance();
 	UResMgr::ReleaseInstance();
 	UEffectMgr::ReleaseInstance();
+	UObjMgr::ReleaseInstance();
 	gSkillMgr = nullptr;
 	gCharMgr = nullptr;
 	gFunctionMgr = nullptr;
 	gBuffMgr = nullptr;
 	gResMgr = nullptr;
 	gEffectMgr = nullptr;
+	gObjMgr = nullptr;
 }
 
 void UGolbalFunc::TurnForward(AActor* _actor, const FVector& _targetLoc)
@@ -212,5 +217,11 @@ void UGolbalFunc::TestArrLambda(FString _str)
 	{
 		UE_LOG(GolbalFuncLogger, Warning, TEXT("--- not Find result"));
 	}
+}
+
+void UGolbalFunc::TestGetName(UObject* _obj)
+{
+	FString name = _obj->GetClass()->GetName();
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("----- uobject name:%s"), *name);
 }
 

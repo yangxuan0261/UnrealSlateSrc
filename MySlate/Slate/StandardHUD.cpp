@@ -7,6 +7,7 @@
 #include "Char/CharMgr.h"
 #include "Char/MyChar.h"
 #include "Char/Comp/MyCharDataComp.h"
+#include "Char/Object/ObjMgr.h"
 
 AStandardHUD::AStandardHUD()
 {
@@ -61,6 +62,7 @@ void AStandardHUD::DrawHUD()
 	mUIScale = ViewportSize.X / 1024.0f;
 
 	DrawActorsHealth();
+	DrawObjInfo();
 }
 
 void AStandardHUD::DrawActorsHealth()
@@ -132,6 +134,21 @@ void AStandardHUD::DrawHealthBar(AMyChar* ForActor, int32 BarHeight, int32 Offse
 	Y = Center2D.Y - (OffsetY + BarHeight + 45);
 	FString idStr = FString::Printf(TEXT("id:%d"), uuid);
 	FCanvasTextItem TextItemUuid(FVector2D(X, Y), FText::FromString(idStr), customFont, FLinearColor::Yellow);
+	TextItemUuid.Scale = FVector2D(1.5f, 1.5f);
+	TextItemUuid.BlendMode = SE_BLEND_Translucent;
+	Canvas->DrawItem(TextItemUuid);
+}
+
+void AStandardHUD::DrawObjInfo()
+{
+	auto& objMap = UObjMgr::GetInstance()->GetObjMap();
+	FString dstStr = TEXT("");
+	for (auto Iter = objMap.CreateConstIterator(); Iter; ++Iter)
+	{
+		dstStr.Append(FString::Printf(TEXT("num:%d,\t clsName:%s\n"), Iter->Value.Num(), *Iter->Key));
+	}
+
+	FCanvasTextItem TextItemUuid(FVector2D(100, 100), FText::FromString(dstStr), customFont, FLinearColor::Yellow);
 	TextItemUuid.Scale = FVector2D(1.5f, 1.5f);
 	TextItemUuid.BlendMode = SE_BLEND_Translucent;
 	Canvas->DrawItem(TextItemUuid);

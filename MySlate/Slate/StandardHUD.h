@@ -39,6 +39,7 @@ public:
 
 	void DrawActorsHealth();
 	void DrawHealthBar(AMyChar* ForActor, int32 BarHeight, int32 OffsetY = 0) const;
+	void DrawObjInfo();
 	float mUIScale;
 
 };
