@@ -70,7 +70,7 @@ void UBehavElem::Start()
 void UBehavElem::SetActor(IBehavInterface* _actor)
 {
 	mTarget = _actor;
-	//mOverDlg.BindUObject(_actor, &AMyChar::RemoveBehavElem);
+	mOverDlg.BindRaw(_actor, &AMyChar::RemoveBehavElem);
 }
 
 //--------------- UShakeElem Begin ------------
@@ -124,12 +124,12 @@ void UShakeElem::Tick(float DeltaTime)
 			{
 				mDtLoc.Y = dtVal;
 			}
-			mTarget->SetActorLocation(mLoc + mDtLoc);
+			mTarget->GetActor()->SetActorLocation(mLoc + mDtLoc);
 		}
 		else
 		{
 			mState = EElemState::Over;
-			UE_LOG(EffectLogger, Warning, TEXT("--- End pos y=%f"), mTarget->GetActorLocation().Y);
+			UE_LOG(EffectLogger, Warning, TEXT("--- End pos y=%f"), mTarget->GetActor()->GetActorLocation().Y);
 		}
 	}
 }
@@ -139,11 +139,11 @@ void UShakeElem::Start()
 	if (mTarget != nullptr)
 	{
 		Super::Start();
-		mLoc = mTarget->GetActorLocation();
+		mLoc = mTarget->GetActor()->GetActorLocation();
 		mDtLoc = FVector::ZeroVector;
 		mRunTimer = 0.f;
 		mDelayer = 0.f;
-		UE_LOG(EffectLogger, Warning, TEXT("--- Start pos y=%f"), mTarget->GetActorLocation().Y);
+		UE_LOG(EffectLogger, Warning, TEXT("--- Start pos y=%f"), mTarget->GetActor()->GetActorLocation().Y);
 	}
 	else
 	{
@@ -195,6 +195,21 @@ void UEffDataElem::Start()
 		mState = EElemState::Over;
 		UE_LOG(EffectLogger, Error, TEXT("--- UEffDataElem::Start, mPsComp == nullptr"));
 	}
+}
+
+void UEffDataElem::MyDestroy(bool _needNotify /*= true*/)
+{
+	if (mPsComp != nullptr)
+	{
+		mPsComp->DetachFromParent();
+		mPsComp->DestroyComponent();
+	}
+	Super::MyDestroy(_needNotify);
+}
+
+void UEffDataElem::SetActor(IBehavInterface* _actor)
+{
+	Super::SetActor(_actor);
 }
 
 void UEffDataElem::SetData(UParticleSystemComponent* _psComp)

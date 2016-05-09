@@ -23,6 +23,7 @@ UAbsBuff::UAbsBuff() : Super()
 	mAttacker = nullptr;
 	mOwnerChar = nullptr;
 	mBuffState = EBuffState::Idle;
+	mBehavGroupId = 0;
 }
 
 UAbsBuff::~UAbsBuff()
@@ -87,7 +88,7 @@ void UAbsBuff::BuffStart()
 	}
 
 	//特效绑定
-	//mEffectUUids = UEffectMgr::GetInstance()->AttachBehavData2(mOwnerChar, mBuffTemp->mBehavDataId, EOwnType::Self);
+	mBehavGroupId = UEffectMgr::GetInstance()->AttachBehav(mOwnerChar, EOwnType::Self, nullptr, mBuffTemp->mBehavDataId);
 }
 
 void UAbsBuff::BuffOver()
@@ -101,7 +102,7 @@ void UAbsBuff::BuffOver()
 	}
 
 	//解除特效绑定
-	//UEffectMgr::GetInstance()->DetachEffect(mOwnerChar->GetUuid(), mEffectUUids);
+	UEffectMgr::GetInstance()->DetachBehav(mOwnerChar, mBehavGroupId);
 }
 
 void UAbsBuff::RunBeforePk(UPkMsg* msg)

@@ -54,6 +54,8 @@ void AMyBullet::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//特效接口部分
+	IBehavInterface::SetActor(this);
 }
 
 void AMyBullet::Tick(float DeltaSeconds)

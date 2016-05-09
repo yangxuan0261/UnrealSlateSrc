@@ -31,9 +31,9 @@ public:
 	virtual void Tick(float DeltaTime);
 	virtual void Start();
 	virtual void SetActor(IBehavInterface* _actor);
+	virtual void MyDestroy(bool _needNotify = true);
 
 	void AddOverDlg(FBehavElemDlg _dlg);
-	void MyDestroy(bool _needNotify = true);
 
 public:
 	int32		mGroupId;		//特效组id，每一次behav都分配一个mGroupId，以便索引删除
@@ -55,7 +55,9 @@ public:
 	virtual ~UShakeElem();
 	virtual void BeginDestroy() override;
 
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintCallable, Category = "UShakeElem")
+		virtual void Tick(float DeltaTime) override;
+
 	virtual void Start() override;
 
 	UShakeElem* Clone();
@@ -75,7 +77,6 @@ public:
 		float		mDelayTime;				//延时时长
 
 private:
-		AActor*		mTarget;				//振动者
 		FVector		mLoc;
 		FVector		mDtLoc;
 		float		mRunTimer;
@@ -92,6 +93,8 @@ public:
 	
 	virtual void Tick(float DeltaTime) override;
 	virtual void Start() override;
+	virtual void MyDestroy(bool _needNotify = true) override;
+	virtual void SetActor(IBehavInterface* _actor) override;
 
 	void SetData(UParticleSystemComponent* _psComp);
 	void OnCompleted(UParticleSystemComponent* _psComp);

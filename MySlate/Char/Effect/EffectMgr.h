@@ -61,10 +61,10 @@ public:
 		UBehavData*		GetBehav(int32 _key);
 
 	UFUNCTION(BlueprintCallable, Category = "UEffectMgr")
-		void			AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _tarBullet, int32 _behavDataId);
+		int32			AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _tarBullet, int32 _behavDataId);
 
-	UFUNCTION(BlueprintCallable, Category = "UEffectMgr")
-		void			DetachEffect(int32 _targetId, const TArray<int32>& _effuuids);
+	//UFUNCTION(BlueprintCallable, Category = "UEffectMgr")
+		void			DetachBehav(IBehavInterface* _actor, int32 _groupId);
 
 	UFUNCTION(BlueprintCallable, Category = "UEffectMgr")
 		UShakeElem*	TestShake(AMyChar* _actor, int32 _id);

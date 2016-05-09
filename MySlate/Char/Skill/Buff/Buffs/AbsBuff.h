@@ -50,5 +50,5 @@ private:
 
 	EBuffState	mBuffState;		//buff×´Ì¬
 
-	TArray<int32>	mEffectUUids;
+	int32		mBehavGroupId;	//ÌØÐ§key
 };

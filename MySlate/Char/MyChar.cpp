@@ -53,6 +53,9 @@ void AMyChar::BeginPlay()
 	//绑定buff管理器
 	mDeathMultiNotify.Add(FDeathOneNotify::CreateUObject(UBuffMgr::GetInstance(), &UBuffMgr::CharDeathNotify));
 	//GetMesh()->SetSkeletalMesh(nullptr);
+
+	//特效接口部分
+	IBehavInterface::SetActor(this);
 }
 
 void AMyChar::Tick( float DeltaTime )

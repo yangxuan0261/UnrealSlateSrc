@@ -171,13 +171,13 @@ UBehavData* UEffectMgr::GetBehav(int32 _key)
 	return behav != nullptr ? *behav : nullptr;
 }
 
-void UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _tarBullet, int32 _behavDataId)
+int32 UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _tarBullet, int32 _behavDataId)
 {
 	UBehavData* behavData = GetBehav(_behavDataId);
 	if (behavData == nullptr)
 	{
 		UE_LOG(EffectLogger, Error, TEXT("--- UEffectMgr::AttachBehavData, behavData == nullptr, id:%d"), _behavDataId);
-		return;
+		return 0;
 	}
 
 	int32 groupId = ::IdGeneratorEffect(); //本次行为数据的识别id
@@ -190,6 +190,8 @@ void UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _t
 		//StrArr.Append(Arr, ARRAY_COUNT(Arr));
 		for (UEffDataElem* effect : effectVec)
 		{
+
+
 			UParticleSystem* ps = UResMgr::GetInstance()->GetParticle(effect->mResId);
 			if (ps == nullptr )
 			{
@@ -314,39 +316,15 @@ void UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _t
 		shake = shake->Clone();
 		shake->mGroupId = groupId;
 	}
+
+	return groupId;
 }
 
-void UEffectMgr::DetachEffect(int32 _targetId, const TArray<int32>& _effuuids)
+void UEffectMgr::DetachBehav(IBehavInterface* _actor, int32 _groupId)
 {
-	if (_effuuids.Num() == 0)
+	if (_actor != nullptr)
 	{
-		return;
-	}
-
-	TArray<FEffectBind>* effBinds = mEffectBindMap.Find(_targetId);
-	if (effBinds != nullptr)
-	{
-		FEffectBind* findEff = nullptr;
-		for (int32 delId : _effuuids)
-		{
-			findEff = effBinds->FindByPredicate([&](const FEffectBind& tmp)->bool {
-				return tmp.mUuId == delId;
-			});
-
-			if (findEff != nullptr)
-			{
-				FEffectBind tmp = *findEff;
-				tmp.mPsComp->DetachFromParent();
-				tmp.mPsComp->DestroyComponent();
-				effBinds->Remove(tmp);
-				UE_LOG(EffectLogger, Warning, TEXT("--- AMyChar::DetachEffect, effectId:%d"), tmp.mEffData->mResId);
-
-				if (effBinds->Num() == 0)
-				{
-					mEffectBindMap.Remove(_targetId);
-				}
-			}
-		}
+		_actor->RemoveBehavElemAll(_groupId);
 	}
 }
 
@@ -355,12 +333,17 @@ UShakeElem* UEffectMgr::TestShake(AMyChar* _actor, int32 _id)
 	UBehavData* behavData = GetBehav(_id);
 	if (behavData != nullptr)
 	{
+		TArray<UBehavElem*> addVec;
 		TArray<UShakeElem*>& shakeVec = behavData->GetTestShake();
 		if (shakeVec.Num() > 0)
 		{
 			UShakeElem* shake = shakeVec[0]->Clone();
+			shake->mGroupId = ::IdGeneratorEffect();
 			shake->SetActor(_actor);
 			shake->Start();
+			addVec.Add(shake);
+			_actor->AddBehavElem(shake->mGroupId, addVec);
+
 			return shake;
 		}
 	}
