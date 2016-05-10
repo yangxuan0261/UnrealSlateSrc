@@ -44,7 +44,7 @@ public:
 		void SetSpeed(int32 _speed) { mSpeed = _speed; }
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void SetPkMsg(UPkMsg* _pkMsg) { mPkMsg = _pkMsg; }
+		void SetPkMsg(UPkMsg* _pkMsg); 
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void SetFly(bool _fly);

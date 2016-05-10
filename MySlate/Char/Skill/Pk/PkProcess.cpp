@@ -38,10 +38,6 @@ void UPkProcess::Recycle()
 
 void UPkProcess::SetMsg(UPkMsg* _pkMsg)
 {
-	if (mPkMsg != nullptr)
-	{
-		mPkMsg->Recycle();
-	}
 	mPkMsg = _pkMsg;
 }
 

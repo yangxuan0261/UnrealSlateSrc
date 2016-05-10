@@ -145,6 +145,12 @@ void AMyBullet::SetTargetAndLoc(AMyChar* _target, const FVector& _targetLoc)
 	}
 }
 
+void AMyBullet::SetPkMsg(UPkMsg* _pkMsg)
+{
+	mPkMsg = _pkMsg;
+	UE_LOG(BuffLogger, Warning, TEXT("--- AMyBullet::SetPkMsg"));
+}
+
 void AMyBullet::SetFly(bool _fly)
 {
 	mFlying = _fly;

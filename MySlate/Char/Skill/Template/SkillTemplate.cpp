@@ -41,8 +41,7 @@ void USkillTemplate::BeginDestroy()
 {
 	if (mFilter != nullptr)
 	{
-		mFilter->RemoveFromRoot();
-		mFilter->ConditionalBeginDestroy();
+		mFilter->Recycle();
 		mFilter = nullptr;
 	}
 
@@ -61,8 +60,7 @@ void USkillTemplate::ReleaseArray(TArray<UAbsPkEvent*>& _arr)
 {
 	for (UAbsPkEvent* func : _arr)
 	{
-		func->RemoveFromRoot();
-		func->ConditionalBeginDestroy();
+		func->Recycle();
 	}
 	_arr.Empty();
 }

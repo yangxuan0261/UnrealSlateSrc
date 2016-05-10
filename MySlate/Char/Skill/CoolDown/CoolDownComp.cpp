@@ -114,7 +114,6 @@ void UCoolDownComp::AddCD(int32 _skillId, bool _isRestartCD)
 		RemoveCDById(_skillId);
 
 		UCoolDown* cd = GetObjMgr()->GetObj<UCoolDown>(GetObjMgr()->mCoolDownCls);
-		mCDArr.Add(cd);
 		cd->SetSkillTemplate(skillTemp); 
 		cd->SetChar(mOwner);
 		if (_isRestartCD) {

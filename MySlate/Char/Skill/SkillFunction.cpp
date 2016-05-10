@@ -26,12 +26,6 @@ USkillFunction::~USkillFunction()
 
 void USkillFunction::BeginDestroy()
 {
-	if (mPkMsg != nullptr)
-	{
-		mPkMsg->Recycle();
-		mPkMsg = nullptr;
-	}
-
 	UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::BeginDestroy:%d"), mSkillId);
 	Super::BeginDestroy();
 }
@@ -54,6 +48,12 @@ void USkillFunction::Reset()
 
 void USkillFunction::Recycle()
 {
+	if (mPkMsg != nullptr)
+	{
+		mPkMsg->Recycle();
+		mPkMsg = nullptr;
+	}
+
 	IObjInterface::Recycle();
 }
 
