@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "Char/Skill/SkillTypes.h"
-
+#include "../SkillTypes.h"
+#include "../../Object/ObjInter.h"
 #include "CoolDown.generated.h"
 
 class UCoolDown;
@@ -14,7 +14,7 @@ class UCoolDownComp;
 class USkillFunction;
 
 UCLASS()
-class UCoolDown : public UObject
+class UCoolDown : public UObject, public IObjInterface
 {
 	GENERATED_BODY()
 
@@ -22,6 +22,8 @@ public:
 	UCoolDown();
 	virtual ~UCoolDown();
 	virtual void BeginDestroy() override; //调用ConditionalBeginDestroy();会立即调用，这个函数不允许外部调用
+	virtual void Reset() override;
+	virtual void Recycle() override;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "UCoolDown")

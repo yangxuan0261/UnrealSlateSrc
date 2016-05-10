@@ -10,7 +10,23 @@
 #include "../../../Effect/Effects/BehavData.h"
 #include "../../../Effect/EffectMgr.h"
 
-UAbsBuff::UAbsBuff() : Super()
+UAbsBuff::UAbsBuff() : Super(), IObjInterface()
+{
+	IObjInterface::SetObj(this);
+}
+
+UAbsBuff::~UAbsBuff()
+{
+
+}
+
+void UAbsBuff::BeginDestroy()
+{
+
+	Super::BeginDestroy();
+}
+
+void UAbsBuff::Reset()
 {
 	mBuffId = 0;
 	mSkillId = 0;
@@ -26,15 +42,9 @@ UAbsBuff::UAbsBuff() : Super()
 	mBehavGroupId = 0;
 }
 
-UAbsBuff::~UAbsBuff()
+void UAbsBuff::Recycle()
 {
-
-}
-
-void UAbsBuff::BeginDestroy()
-{
-
-	Super::BeginDestroy();
+	IObjInterface::Recycle();
 }
 
 void UAbsBuff::Tick(float DeltaSeconds)

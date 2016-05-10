@@ -47,36 +47,7 @@ void UEffectMgr::BeginDestroy()
 
 void UEffectMgr::Tick(float DeltaTime)
 {
-	//特效剩余时间
-	for (auto Iter = mEffectBindMap.CreateIterator(); Iter; ++Iter)
-	{
-		for (FEffectBind& effBind : Iter->Value)
-		{
-			//延时可见
-			if (effBind.mHasDelay)
-			{
-				effBind.mDelayTimer -= DeltaTime;
-				if (effBind.mDelayTimer < 0.f)
-				{
-					effBind.mPsComp->CustomTimeDilation = 1.f;
-					effBind.mPsComp->SetVisibility(true);
-					effBind.mHasDelay = false;
-				}
-			}
 
-			//总时长到了自动回收，为场景特效服务
-			if (effBind.mHasTotal)
-			{
-				if (effBind.mTotalTimer < 0.f)
-				{
-					//TODO: 销毁场景特效
-
-					effBind.mTotalTimer = false;
-
-				}
-			}
-		}
-	}
 }
 
 bool UEffectMgr::IsTickable() const
@@ -349,9 +320,4 @@ UShakeElem* UEffectMgr::TestShake(AMyChar* _actor, int32 _id)
 	}
 
 	return nullptr;
-}
-
-FEffectBind::FEffectBind(UEffDataElem* _effData, int32 _uuId, UParticleSystemComponent* _psComp)
-{
-
 }

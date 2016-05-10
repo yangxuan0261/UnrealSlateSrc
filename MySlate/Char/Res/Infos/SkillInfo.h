@@ -35,9 +35,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
 		ESkillType		mSkillType;	//TODO: 技编数据
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
-		FString			mAttachPoint;//TODO: 技编数据 子弹绑定点
+		FString			mAttachPoint;//子弹绑定点
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
-		EAnimType		mAnimType;//TODO: 技编数据 相同类型动画的不同动作枚举
+		EAnimType		mAnimType;//相同类型动画的不同动作枚举
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
+		int32			mBehavId; 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
 		FString			mFilterStr;

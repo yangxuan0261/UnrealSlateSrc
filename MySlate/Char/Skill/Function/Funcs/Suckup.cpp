@@ -6,15 +6,11 @@
 #include "../../../Comp/MyCharDataComp.h"
 #include "../../../MyChar.h"
 #include "../../Template/BufflTemplate.h"
+#include "../../../Object/ObjMgr.h"
 
 USuckup::USuckup() : Super()
 {
-	//buff
-	mDtVal = 0.f;
-	mDurable = true;
 
-	//skill
-	mValue = 0.f;
 }
 
 USuckup::~USuckup()
@@ -28,9 +24,19 @@ void USuckup::BeginDestroy()
 	Super::BeginDestroy();
 }
 
+void USuckup::Reset()
+{
+	//buff
+	mDtVal = 0.f;
+	mDurable = true;
+
+	//skill
+	mValue = 0.f;
+}
+
 USuckup* USuckup::CreateFunction(const FString& _key)
 {
-	USuckup* func = NewObject<USuckup>(USuckup::StaticClass());
+	USuckup* func = GetObjMgr()->GetObj<USuckup>(GetObjMgr()->mSuckupCls);
 	func->SetKey(_key);
 	return func;
 }

@@ -3,10 +3,47 @@
 #include "ObjMgr.h"
 
 #include "../Skill/Pk/FightData.h"
+#include "../Skill/Pk/PkProcess.h"
+#include "../Skill/Pk/PkMsg.h"
+
+#include "../Skill/Filter/CircleFilter.h"
+#include "../Skill/Filter/LockFilter.h"
+#include "../Skill/Filter/RectFilter.h"
+
+#include "../Skill/CoolDown/CoolDown.h"
+#include "../Skill/SkillFunction.h"
+
+#include "../Skill/Buff/Buffs/AppendBuff.h"
+#include "../Skill/Buff/Buffs/CommonBuff.h"
+
+#include "../Skill/Function/Funcs/AddBuff.h"
+#include "../Skill/Function/Funcs/Attack.h"
+#include "../Skill/Function/Funcs/AttackPhy.h"
+#include "../Skill/Function/Funcs/Suckup.h"
+
 
 UObjMgr::UObjMgr() : Super()
 {
+	//default cpp class
+	mFightDataCls		= UFightData::StaticClass();
+	mPkProcessCls		= UPkProcess::StaticClass();
+	mPkMsgCls			= UPkMsg::StaticClass();
+	mPkParamCls			= UParam::StaticClass();
 
+	mCircleFltCls		= UCircleFilter::StaticClass();
+	mLockFltCls			= ULockFilter::StaticClass();
+	mRectFltCls			= URectFilter::StaticClass();
+
+	mCoolDownCls		= UCoolDown::StaticClass();
+	mSkillFuncCls		= USkillFunction::StaticClass();
+
+	mAppBuffCls			= UAppendBuff::StaticClass();
+	mComBuffCls			= UCommonBuff::StaticClass();
+
+	mAddBuffCls			= UAddBuff::StaticClass();
+	mAttackCls			= UAttack::StaticClass();
+	mAttackPhyCls		= UAttackPhy::StaticClass();
+	mSuckupCls			= USuckup::StaticClass();
 }
 
 UObjMgr::~UObjMgr()
@@ -43,7 +80,10 @@ TRetType* UObjMgr::GetObj(UClass* _cls)
 		}
 	}
 
-	return NewObject<TRetType>(TRetType::StaticClass());
+	TRetType* ret = NewObject<TRetType>(TRetType::StaticClass());
+	UObject* obj = (UObject*)ret;
+	obj->AddToRoot();
+	return ret;
 }
 
 void UObjMgr::Recycle(UObject* _obj)
@@ -60,11 +100,4 @@ void UObjMgr::Recycle(UObject* _obj)
 		tmp.Add(_obj);
 		mObjMap.Add(clsName, tmp);
 	}
-}
-
-UFightData* UObjMgr::GetFightData()
-{
-	UFightData* ret = mFightDataCls != nullptr ? GetObj<UFightData>(mFightDataCls) : nullptr;
-	ret->AddToRoot();
-	return ret;
 }

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "SkillTypes.h"
+#include "../Object/ObjInter.h"
 #include "SkillFunction.generated.h"
 
 class USkillTemplate;
@@ -11,14 +12,15 @@ class AMyChar;
 class UCoolDown;
 
 UCLASS()
-class USkillFunction : public UObject
+class USkillFunction : public UObject, public IObjInterface
 {
 	GENERATED_BODY()
-
 public:
 	USkillFunction();
 	virtual ~USkillFunction();
 	virtual void BeginDestroy() override;
+	virtual void Reset() override;
+	virtual void Recycle() override;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")

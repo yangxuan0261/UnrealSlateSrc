@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../../SkillTypes.h"
+#include "../../../Object/ObjInter.h"
 #include "AbsBuff.generated.h"
 
 class UAbsPkEvent;
@@ -10,15 +11,17 @@ class UBufflTemplate;
 class UPkMsg;
 
 UCLASS()
-class UAbsBuff : public UObject
+class UAbsBuff : public UObject, public IObjInterface
 {
 	GENERATED_BODY()
-
 public:
 	UAbsBuff();
 	virtual ~UAbsBuff();
 	virtual void BeginDestroy() override;
-	
+	virtual void Reset() override;
+	virtual void Recycle() override;
+
+public:
 	virtual void Tick(float DeltaSeconds);
 
 	void BuffStart();

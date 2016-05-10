@@ -8,11 +8,11 @@
 #include "../Template/SkillTemplate.h"
 #include "./FightData.h"
 
+#include "../../Object/ObjMgr.h"
 
-UParam::UParam()
+UParam::UParam() : Super(), IObjInterface()
 {
-	mFightData = nullptr;
-	mTarget = nullptr;
+	IObjInterface::SetObj(this);
 }
 
 UParam::~UParam()
@@ -22,33 +22,56 @@ UParam::~UParam()
 
 void UParam::BeginDestroy()
 {
-	if (mFightData != nullptr)
-	{
-		mFightData->RemoveFromRoot();
-		mFightData->ConditionalBeginDestroy();
-		mFightData = nullptr;
-	}
-
 	UE_LOG(PkLogger, Warning, TEXT("--- UParam::BeginDestroy"));
 	Super::BeginDestroy();
 }
 
+void UParam::Reset()
+{
+	mFightData = nullptr;
+	mTarget = nullptr;
+}
+
+void UParam::Recycle()
+{
+	if (mFightData != nullptr)
+	{
+		mFightData->Recycle();
+		mFightData = nullptr;
+	}
+	IObjInterface::Recycle();
+}
+
 void UParam::Init()
 {
-	mFightData = NewObject<UFightData>(UFightData::StaticClass());
-	mFightData->AddToRoot();
+	mFightData = GetObjMgr()->GetObj<UFightData>(GetObjMgr()->mFightDataCls);
 }
 
 
 //-------------------------------- UPkMsg Begin
-UPkMsg::UPkMsg()
-	: Super()
+UPkMsg::UPkMsg() : Super(), IObjInterface()
+{
+	IObjInterface::SetObj(this);
+}
+
+UPkMsg::~UPkMsg()
+{
+	UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::~UPkMsg"));
+}
+
+void UPkMsg::BeginDestroy()
+{
+	UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::BeginDestroy"));
+	Super::BeginDestroy();
+}
+
+void UPkMsg::Reset()
 {
 	mCanLog = false;
-	mSkillId = 0;					
+	mSkillId = 0;
 	mSkillLogicType = ESkillAttackType::ATTACK_PHY;
 	mTeamType = ETeam::None;
-	mAttackerId = 0;				
+	mAttackerId = 0;
 	mTargetId = 0;
 	mAttackerData = nullptr;
 	mAttackerDataForCacul = nullptr;
@@ -59,34 +82,25 @@ UPkMsg::UPkMsg()
 	mAttacker = nullptr;
 }
 
-UPkMsg::~UPkMsg()
-{
-	UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::~UPkMsg"));
-}
-
-void UPkMsg::BeginDestroy()
+void UPkMsg::Recycle()
 {
 	if (mAttackerData != nullptr)
 	{
-		mAttackerData->RemoveFromRoot();
-		mAttackerData->ConditionalBeginDestroy();
+		mAttackerData->Recycle();
 		mAttackerData = nullptr;
 	}
 	if (mAttackerDataForCacul != nullptr)
 	{
-		mAttackerDataForCacul->RemoveFromRoot();
-		mAttackerDataForCacul->ConditionalBeginDestroy();
+		mAttackerDataForCacul->Recycle();
 		mAttackerDataForCacul = nullptr;
 	}
 	for (int32 i = 0; i < mTargetArr.Num(); ++i)
 	{
-		mTargetArr[i]->RemoveFromRoot();
-		mTargetArr[i]->ConditionalBeginDestroy();
+		mTargetArr[i]->Recycle();
 	}
 	mTargetArr.Empty();
 
-	UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::BeginDestroy"));
-	Super::BeginDestroy();
+	IObjInterface::Recycle();
 }
 
 void UPkMsg::SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _target, const FVector& _targetLoc)
@@ -140,8 +154,7 @@ void UPkMsg::SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _t
 
 void UPkMsg::AddTarget(AMyChar* _char)
 {
-	UParam* param = NewObject<UParam>(UParam::StaticClass());
-	param->AddToRoot();
+	UParam* param = GetObjMgr()->GetObj<UParam>(GetObjMgr()->mPkParamCls);
 	param->Init(); 
 	param->mTarget = _char;
 	param->mFightData->Copy(_char->GetDataComp()->GetFigthData());//复制目标的战斗数据
@@ -151,9 +164,7 @@ void UPkMsg::AddTarget(AMyChar* _char)
 void UPkMsg::SetAttackerData(UFightData* _data)
 {
 	mAttackerData = _data; //备份数据
-
-	mAttackerDataForCacul = NewObject<UFightData>(UFightData::StaticClass());
-	mAttackerDataForCacul->AddToRoot();
+	mAttackerDataForCacul = GetObjMgr()->GetObj<UFightData>(GetObjMgr()->mFightDataCls);
 	mAttackerDataForCacul->Copy(mAttackerData);
 }
 

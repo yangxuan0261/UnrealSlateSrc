@@ -10,6 +10,8 @@
 #include "./Skill/Pk/PkMsg.h"
 //#include "Skill/Pk/PkProcess.h"
 
+#include "./Object/ObjMgr.h"
+
 AMyBullet::AMyBullet()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -210,13 +212,13 @@ void AMyBullet::CreatePk()
 		{
 			UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CreatePk, target lock != null, id:%d"), target->GetUuid());
 
-			mPkProcess = NewObject<UPkProcess>(UPkProcess::StaticClass());
+			mPkProcess = GetObjMgr()->GetObj<UPkProcess>(GetObjMgr()->mPkProcessCls);
 			mPkProcess->SetPkOverDlg(FPkOverDlg::CreateUObject(this, &AMyBullet::CallbackPkOver));
 			mPkMsg->SetTarget(target);
 			mPkProcess->SetMsg(mPkMsg);
 			mPkProcess->Run();
 
-			mPkProcess->ConditionalBeginDestroy();
+			mPkProcess->Recycle();
 			mPkProcess = nullptr;
 		}
 		else
@@ -254,17 +256,14 @@ void AMyBullet::DestroyBullet()
 
 	if (mPkProcess != nullptr)
 	{
-		mPkProcess->RemoveFromRoot();
-		mPkProcess->ConditionalBeginDestroy();
+		mPkProcess->Recycle();
 		mPkProcess = nullptr;
 	}
-	if (mPkMsg != nullptr)
-	{	//如果子弹发射出去了， pkMsg应该跟随子弹释放
-		mPkMsg->RemoveFromRoot();
-		mPkMsg->ConditionalBeginDestroy();
+	if (mPkMsg != nullptr) //如果子弹发射出去了， pkMsg应该跟随子弹释放
+	{	
+		mPkMsg->Recycle();
 		mPkMsg = nullptr;
 	}
-
 
 	OnProjectileDestroyed();
 	Destroy();

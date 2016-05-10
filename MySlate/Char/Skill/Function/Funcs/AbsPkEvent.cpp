@@ -5,8 +5,7 @@
 
 UAbsPkEvent::UAbsPkEvent() : Super()
 {
-	mKey = "";
-	mIsPercent = false;
+	
 }
 
 UAbsPkEvent::~UAbsPkEvent()
@@ -18,6 +17,13 @@ void UAbsPkEvent::BeginDestroy()
 {
 
 	Super::BeginDestroy();
+}
+
+void UAbsPkEvent::Reset()
+{
+	Super::Reset();
+	mKey = "";
+	mIsPercent = false;
 }
 
 bool UAbsPkEvent::CheckPercent(const FString& _value)

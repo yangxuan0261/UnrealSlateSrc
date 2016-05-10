@@ -3,7 +3,6 @@
 #include "ResMgr.h"
 
 #include "./ResDataBase.h"
-#include "./Infos/TestData.h"
 #include "./Infos/SkillInfo.h"
 #include "./Infos/BuffInfo.h"
 #include "./Infos/BehavInfo.h"
@@ -58,24 +57,6 @@ void UResMgr::TestAsyncLoad()
 void UResMgr::AsyncCallback()
 {
 	UE_LOG(ResLogger, Warning, TEXT("--- UResMgr::AsyncCallback, assets load over"));
-}
-
-void UResMgr::TestloadCSV()
-{
-	UObject* obj = mAssetLoader->SynchronousLoad(mResDB->mTestData.ToStringReference());
-	UDataTable* data = Cast<UDataTable>(obj);
-	if (data != nullptr)
-	{
-		UE_LOG(ResLogger, Warning, TEXT("--- UResMgr::TestloadCSV success"));
-		FTestData* tmpPtr = nullptr;
-		for (auto it : data->RowMap)
-		{
-			// it.Key has the key from first column of the CSV file
-			// it.Value has a pointer to a struct of data. You can safely cast it to your actual type, e.g FMyStruct* data = (FMyStruct*)(it.Value);
-			tmpPtr = (FTestData*)(it.Value);
-			UE_LOG(ResLogger, Warning, TEXT("--- row:%s, key:%d, name:%s"), *it.Key.ToString(), tmpPtr->mId, *tmpPtr->mName);
-		}
-	}
 }
 
 UParticleSystem* UResMgr::GetParticle(int32 _id)

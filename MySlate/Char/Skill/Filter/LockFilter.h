@@ -15,6 +15,7 @@ public:
 	ULockFilter();
 	virtual ~ULockFilter();
 	virtual void BeginDestroy() override;
+	virtual void Reset() override;
 
 	virtual void Filter(UPkMsg* _msg, EFilterType _filterType = EFilterType::Locked, float _radius = 0.f, const FVector& _boxSize = FVector::ZeroVector) override;
 	virtual UAbsFilter* Clone() override;

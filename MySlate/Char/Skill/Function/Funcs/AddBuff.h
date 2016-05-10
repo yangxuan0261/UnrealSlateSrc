@@ -17,7 +17,9 @@ public:
 	UAddBuff();
 	virtual ~UAddBuff();
 	virtual void BeginDestroy() override;
+	virtual void Reset() override;
 
+public:
 	static UAddBuff* CreateFunction(const FString& _key);
 	virtual UAbsPkEvent* Clone() override;
 	virtual void Parser(const TArray<FString>& _params) override;

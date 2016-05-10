@@ -2,11 +2,11 @@
 #include "MySlate.h"
 #include "Attack.h"
 
+#include "../../../Object/ObjMgr.h"
+
 UAttack::UAttack() : Super()
 {
-	mValue = 0.f;
-	mOwner = 1; //攻击者
-	mLimitId = -1; //不限制技能
+
 }
 
 UAttack::~UAttack()
@@ -20,9 +20,16 @@ void UAttack::BeginDestroy()
 	Super::BeginDestroy();
 }
 
+void UAttack::Reset()
+{
+	mValue = 0.f;
+	mOwner = 1; //攻击者
+	mLimitId = -1; //不限制技能
+}
+
 UAttack* UAttack::CreateFunction(const FString& _key)
 {
-	UAttack* func = NewObject<UAttack>(UAttack::StaticClass());
+	UAttack* func = GetObjMgr()->GetObj<UAttack>(GetObjMgr()->mAttackCls);
 	func->SetKey(_key);
 	return func;
 }

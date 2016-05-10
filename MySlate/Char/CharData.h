@@ -16,6 +16,7 @@ public:
 	virtual ~UCharData();
 	virtual void BeginDestroy() override;
 
+	void Init();
 	UFightData*	GetFightData() const { return mFightData; }
 
 public:

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../SkillTypes.h"
+#include "../../Object/ObjInter.h"
 #include "AbsFilter.generated.h"
 
 /*
@@ -14,15 +15,17 @@ class AMyChar;
 class UPkMsg;
 
 UCLASS()
-class UAbsFilter : public UObject
+class UAbsFilter : public UObject, public IObjInterface
 {
 	GENERATED_BODY()
-
 public:
 	UAbsFilter();
 	virtual ~UAbsFilter();
 	virtual void BeginDestroy() override;
+	virtual void Reset() override;
+	virtual void Recycle() override;
 
+public:
 	virtual void Filter(UPkMsg* _msg, EFilterType _filterType = EFilterType::Locked, float _radius = 0.f, const FVector& _boxSize = FVector::ZeroVector); //过虑可选actor
 	virtual UAbsFilter* Clone() { return nullptr; }
 	virtual void Parser(const TArray<FString>& _params) {}//解释数据

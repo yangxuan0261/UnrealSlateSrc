@@ -37,7 +37,7 @@ public:
 		UAbsBuff*	FindBuff(int32 _charId, int32 _buffId);
 
 	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
-		void ForceOver(TArray<UAbsBuff*>& _buffArr, UAbsBuff* _buff, bool remove = false);
+		void ForceOver(TArray<UAbsBuff*>& _buffArr, UAbsBuff* _buff);
 
 	UFUNCTION(BlueprintCallable, Category = "UBuffMgr")
 		void RemoveBuff(int32 _charId);

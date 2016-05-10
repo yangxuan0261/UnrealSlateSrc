@@ -1,24 +1,24 @@
 
 #pragma once
 
+#include "../../../Object/ObjInter.h"
 #include "AbsAttrFunc.generated.h"
 
 class UAbsBuff;
 class AMyChar;
 
 UCLASS()
-class UAbsAttrFunc : public UObject
+class UAbsAttrFunc : public UObject, public IObjInterface
 {
 	GENERATED_BODY()
-
-public:
-	
-
 public:
 	UAbsAttrFunc();
 	virtual ~UAbsAttrFunc();
 	virtual void BeginDestroy() override;
+	virtual void Reset() override;
+	virtual void Recycle() override;
 
+public:
 	virtual void RunTick(float DeltaSeconds) {}
 	virtual void RunStart() {}
 	virtual void RunOver() {}

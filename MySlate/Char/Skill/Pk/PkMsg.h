@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Char/Skill/SkillTypes.h"
+#include "../../Object/ObjInter.h"
 #include "Char/GameTypes.h"
 
 #include "PkMsg.generated.h"
@@ -11,13 +12,15 @@ class USkillTemplate;
 class UFightData;
 
 UCLASS()
-class UParam : public UObject
+class UParam : public UObject, public IObjInterface
 {
 	GENERATED_BODY()
 public:
 	UParam();
 	virtual ~UParam();
 	virtual void BeginDestroy() override;
+	virtual void Reset() override;
+	virtual void Recycle() override;
 
 	void Init();
 
@@ -29,13 +32,15 @@ public:
 };
 
 UCLASS()
-class UPkMsg : public UObject
+class UPkMsg : public UObject, public IObjInterface
 {
 	GENERATED_BODY()
 public:
 	UPkMsg();
 	virtual ~UPkMsg();
 	void virtual BeginDestroy() override;
+	virtual void Reset() override;
+	virtual void Recycle() override;
 
 	void	SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _target, const FVector& _targetLoc);
 	const TArray<UParam*>& GetTargets() const { return mTargetArr; }

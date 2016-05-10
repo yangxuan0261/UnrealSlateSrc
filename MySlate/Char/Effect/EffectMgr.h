@@ -14,26 +14,6 @@ class UBehavData;
 class AMyChar;
 class AMyBullet;
 
-USTRUCT()
-struct FEffectBind
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	FEffectBind() {}
-	bool operator ==(const FEffectBind& _cp) //重载==操作符，TArray remove中需要用到
-	{
-		return mUuId == _cp.mUuId;
-	}
-	FEffectBind(UEffDataElem* _effData, int32 _uuId, UParticleSystemComponent* _psComp);
-	int32	mUuId;		//唯一识别，区分相同buff移除
-	float	mDelayTimer; //延迟时间 计步器
-	bool	mHasDelay; //延迟时间 计步器
-	float	mTotalTimer; //总时间 计步器
-	bool	mHasTotal; //总时间 计步器
-	UEffDataElem*	mEffData;
-	UParticleSystemComponent* mPsComp; //生成的粒子组件
-};
-
 UCLASS()
 class UEffectMgr : public UObject, public FTickableGameObject, public USingleton<UEffectMgr>
 {
@@ -70,6 +50,5 @@ public:
 		UShakeElem*	TestShake(AMyChar* _actor, int32 _id);
 
 public:
-	TMap<int32, TArray<FEffectBind>>	mEffectBindMap; //特效数组
 	TMap<int32, UBehavData*>	mBehavMap;
 };

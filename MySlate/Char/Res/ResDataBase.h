@@ -70,9 +70,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
 		TAssetPtr<UDataTable>	mCharInfo;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
-		TAssetPtr<UDataTable>	mTestData;
-
 private:
 
 	//TMap<int32, UBehaviorData*>		mBehaviorDataMap;//存放技能数据

@@ -12,8 +12,31 @@
 #include "./Function/Funcs/AbsPkEvent.h"
 #include "./Pk/FightData.h"
 #include "../Effect/EffectMgr.h"
+#include "../Object/ObjMgr.h"
 
-USkillFunction::USkillFunction() : Super()
+USkillFunction::USkillFunction() : Super(), IObjInterface()
+{
+	IObjInterface::SetObj(this);
+}
+
+USkillFunction::~USkillFunction()
+{
+	UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::~USkillFunction"));
+}
+
+void USkillFunction::BeginDestroy()
+{
+	if (mPkMsg != nullptr)
+	{
+		mPkMsg->Recycle();
+		mPkMsg = nullptr;
+	}
+
+	UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::BeginDestroy:%d"), mSkillId);
+	Super::BeginDestroy();
+}
+
+void USkillFunction::Reset()
 {
 	mSkillId = 0;
 	mSkillTemplate = nullptr;
@@ -29,22 +52,9 @@ USkillFunction::USkillFunction() : Super()
 	mTargetId = 0;
 }
 
-USkillFunction::~USkillFunction()
+void USkillFunction::Recycle()
 {
-	UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::~USkillFunction"));
-}
-
-void USkillFunction::BeginDestroy()
-{
-	if (mPkMsg != nullptr)
-	{
-		mPkMsg->RemoveFromRoot();
-		mPkMsg->ConditionalBeginDestroy();
-		mPkMsg = nullptr;
-	}
-
-	UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::BeginDestroy:%d"), mSkillId);
-	Super::BeginDestroy();
+	IObjInterface::Recycle();
 }
 
 void USkillFunction::Tick(float DeltaSeconds)
@@ -182,14 +192,11 @@ void USkillFunction::SkillBegin()
 
 	mOwnerCD->Restart();
 
-	UPkMsg* pkMsg = NewObject<UPkMsg>(UPkMsg::StaticClass());
-	pkMsg->AddToRoot();
+	UPkMsg* pkMsg = GetObjMgr()->GetObj<UPkMsg>(GetObjMgr()->mPkMsgCls);
 	mPkMsg = pkMsg;
-
 	pkMsg->SetData(mSkillTemplate, mAttacker, mTarget, mTargetLoc);
 
 	UFightData* attackerData = mAttacker->GetDataComp()->GetFigthData()->Clone();//将攻击者的战斗数据拷贝到 新建的战斗数据对象中
-	attackerData->AddToRoot();//在pkMsg的析构函数中释放这个对象
 	pkMsg->SetAttackerData(attackerData);
 	pkMsg->SetAttackerTeam(mAttacker->GetDataComp()->GetTeamType());
 	//step1 - 运行技能前置func, 比如瞬间移动
@@ -304,8 +311,9 @@ void USkillFunction::ReleaseData()
 		{
 			if (mPkMsg != nullptr)
 			{
-				mPkMsg->RemoveFromRoot();
-				mPkMsg->ConditionalBeginDestroy();
+				//mPkMsg->RemoveFromRoot();
+				//mPkMsg->ConditionalBeginDestroy();
+				mPkMsg->Recycle();
 				mPkMsg = nullptr;
 			}
 		}

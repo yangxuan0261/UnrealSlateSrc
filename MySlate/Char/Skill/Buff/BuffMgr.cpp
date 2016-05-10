@@ -9,7 +9,7 @@
 #include "../SkillMgr.h"
 #include "../Template/BufflTemplate.h"
 #include "../SkillTypes.h"
-
+#include "../../Object/ObjMgr.h"
 
 UBuffMgr::UBuffMgr() : Super()
 {
@@ -54,7 +54,7 @@ void UBuffMgr::Tick(float DeltaTime)
 			else if (buff->GetState() == EBuffState::Over
 				|| buff->GetState() == EBuffState::Break) //Break暂时无用
 			{
-				ForceOver(buffs, buff, true);
+				ForceOver(buffs, buff);
 				if (buffs.Num() == 0)
 				{
 					Iter.RemoveCurrent();
@@ -93,11 +93,11 @@ void UBuffMgr::AddBuff(AMyChar* _attacker, AMyChar* _target, int32 _skillId, int
 		UAbsBuff* beAdd = nullptr;
 		if (buffTemp->mCanAdd) //叠加buff
 		{
-			beAdd = NewObject<UAppendBuff>(UAppendBuff::StaticClass());
+			beAdd = GetObjMgr()->GetObj<UAppendBuff>(GetObjMgr()->mAppBuffCls);
 		}
 		else
 		{
-			beAdd = NewObject<UCommonBuff>(UCommonBuff::StaticClass());
+			beAdd = GetObjMgr()->GetObj<UCommonBuff>(GetObjMgr()->mComBuffCls);
 		}
 		beAdd->SetData(buffTemp, _attacker, _target, _skillId);
 
@@ -118,29 +118,20 @@ void UBuffMgr::AddBuff(AMyChar* _attacker, AMyChar* _target, int32 _skillId, int
 				}
 				else //不可缀加，去旧迎新
 				{
-					//UAbsBuff* tmpBuff = *buff;
-					//tmpBuff->BuffOver();
-					//buffs->Remove(tmpBuff);//非常重要：删除是必须把*buff赋值给一个临时对象，不然地址检查不通过导致崩溃
-					//tmpBuff->RemoveFromRoot();
-					//tmpBuff->ConditionalBeginDestroy();
-
 					(*buff)->ChangeState(EBuffState::Over);
 
-					beAdd->AddToRoot();
 					beAdd->BuffStart();
 					buffs->Add(beAdd);
 				}
 			}
 			else
 			{
-				beAdd->AddToRoot();
 				beAdd->BuffStart();
 				buffs->Add(beAdd);
 			}
 		}
 		else
 		{
-			beAdd->AddToRoot();
 			beAdd->BuffStart();
 
 			TArray<UAbsBuff*> tmpBuffs;
@@ -168,15 +159,11 @@ UAbsBuff* UBuffMgr::FindBuff(int32 _charId, int32 _buffId)
 	return nullptr;
 }
 
-void UBuffMgr::ForceOver(TArray<UAbsBuff*>& _buffArr, UAbsBuff* _buff, bool remove /* = false */)
+void UBuffMgr::ForceOver(TArray<UAbsBuff*>& _buffArr, UAbsBuff* _buff)
 {
 	_buff->BuffOver();
-	_buff->RemoveFromRoot();
-	_buff->ConditionalBeginDestroy();
-	if (remove)
-	{
-		_buffArr.Remove(_buff);
-	}
+	_buff->Recycle();
+	_buffArr.Remove(_buff);
 }
 
 //移除某个角色身上的所有buff
@@ -189,7 +176,6 @@ void UBuffMgr::RemoveBuff(int32 _charId)
 		{
 			ForceOver(*buffs, buff);
 		}
-		buffs->Empty();
 		mBuffs.Remove(_charId);
 	}
 }
@@ -206,7 +192,7 @@ void UBuffMgr::RemoveBuffSpec(int32 _charId, int32 _buffId)
 
 		if (buff != nullptr)
 		{
-			ForceOver(*buffs, *buff, true);
+			ForceOver(*buffs, *buff);
 			if (buffs->Num() == 0)
 			{
 				mBuffs.Remove(_charId);

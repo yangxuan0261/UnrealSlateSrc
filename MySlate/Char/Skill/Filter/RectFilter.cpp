@@ -7,7 +7,7 @@
 
 URectFilter::URectFilter() : Super()
 {
-	mBoxSize = FVector::ZeroVector;
+	IObjInterface::SetObj(this);
 }
 
 URectFilter::~URectFilter()
@@ -17,9 +17,14 @@ URectFilter::~URectFilter()
  
 void URectFilter::BeginDestroy()
 {
-
 	UE_LOG(FilterLogger, Warning, TEXT("--- URectFilter::BeginDestroy"));
 	Super::BeginDestroy();
+}
+
+void URectFilter::Reset()
+{
+	Super::Reset();
+	mBoxSize = FVector::ZeroVector;
 }
 
 void URectFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::Locked */, float _radius /* = 0.f */, const FVector& _boxSize /* = FVector::ZeroVector */)

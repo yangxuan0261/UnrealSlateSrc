@@ -4,6 +4,7 @@
 
 ULockFilter::ULockFilter() : Super()
 {
+	IObjInterface::SetObj(this);
 }
 
 ULockFilter::~ULockFilter()
@@ -13,9 +14,13 @@ ULockFilter::~ULockFilter()
 
 void ULockFilter::BeginDestroy()
 {
-
 	UE_LOG(FilterLogger, Warning, TEXT("--- ULockFilter::BeginDestroy"));
 	Super::BeginDestroy();
+}
+
+void ULockFilter::Reset()
+{
+	Super::Reset();
 }
 
 void ULockFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::Locked */, float _radius /* = 0.f */, const FVector& _boxSize /* = FVector::ZeroVector */)

@@ -14,9 +14,8 @@ public:
 	UFightData();
 	virtual ~UFightData();
 	virtual void BeginDestroy() override;
-
-	//obj interface
 	virtual void Reset() override;
+	virtual void Recycle() override;
 
 	UFightData* Clone();
 	void Copy(UFightData* _fightData);

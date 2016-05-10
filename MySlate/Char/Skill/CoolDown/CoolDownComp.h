@@ -31,9 +31,6 @@ public:
 		void		SetOwner(AMyChar* _owner) { mOwner = _owner; }
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDownComp")
-		void		CreateCD(int32 _skillId, TSubclassOf<UCoolDown> _class); //可以把蓝图类传进来
-
-	UFUNCTION(BlueprintCallable, Category = "UCoolDownComp")
 		USkillFunction*	CanUseSkill(int32 _skillId);
 
 	UFUNCTION(BlueprintCallable, Category = "UCoolDownComp")

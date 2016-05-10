@@ -168,6 +168,7 @@ void UCharMgr::LoadCharData()
 			tmpPtr = (FCharInfo*)(Iter.Value);
 			tmpPtr->mId = FCString::Atoi(*Iter.Key.ToString());
 			UCharData* char1 = NewObject<UCharData>(UCharData::StaticClass());
+			char1->Init();
 			char1->mId = tmpPtr->mId;
 			char1->mName = tmpPtr->mName;
 			char1->mDescr = tmpPtr->mDescr;

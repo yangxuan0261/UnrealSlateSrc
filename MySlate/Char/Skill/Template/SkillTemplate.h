@@ -77,6 +77,8 @@ public:
 		FString			mAttachPoint;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		EAnimType		mAnimType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
+		int32			mBehavId; 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		FString			mFilterStr;

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../SkillTypes.h"
+#include "../../Object/ObjInter.h"
 #include "PkProcess.generated.h"
 
 class UPkMsg;
@@ -36,13 +37,15 @@ public:
 };
 
 UCLASS()
-class UPkProcess : public UObject
+class UPkProcess : public UObject, public IObjInterface
 {
 	GENERATED_BODY()
 public:
 	UPkProcess();
 	virtual ~UPkProcess();
 	virtual void BeginDestroy() override;
+	virtual void Reset() override;
+	virtual void Recycle() override;
 
 public:
 	void SetMsg(UPkMsg* _pkMsg);

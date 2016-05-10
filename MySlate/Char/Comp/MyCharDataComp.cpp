@@ -5,6 +5,7 @@
 #include "../Skill/Pk/FightData.h"
 #include "../CharData.h"
 #include "../CharMgr.h"
+#include "../Object/ObjMgr.h"
 
 UMyCharDataComp::UMyCharDataComp()
 	: Super()
@@ -29,8 +30,7 @@ UMyCharDataComp::~UMyCharDataComp()
 void UMyCharDataComp::BeginPlay()
 {
 	Super::BeginPlay();
-	mFightData = NewObject<UFightData>(UFightData::StaticClass());//战斗时数据对象
-	mFightData->AddToRoot();
+	mFightData = GetObjMgr()->GetObj<UFightData>(GetObjMgr()->mFightDataCls);//战斗时数据对象
 }
 
 void UMyCharDataComp::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
@@ -43,8 +43,7 @@ void UMyCharDataComp::DestroyComponent(bool bPromoteChildren /*= false*/)
 {
 	if (mFightData != nullptr)
 	{
-		mFightData->RemoveFromRoot();
-		mFightData->ConditionalBeginDestroy();
+		mFightData->Recycle();
 		mFightData = nullptr;
 	}
 

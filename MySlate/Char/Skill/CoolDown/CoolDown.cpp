@@ -6,8 +6,25 @@
 #include "../Template/SkillTemplate.h"
 #include "../SkillFunction.h"
 #include "../../CharMgr.h"
+#include "../../Object/ObjMgr.h"
 
-UCoolDown::UCoolDown() : Super()
+UCoolDown::UCoolDown() : Super(), IObjInterface()
+{
+	IObjInterface::SetObj(this);
+}
+
+UCoolDown::~UCoolDown()
+{
+	UE_LOG(SkillLogger, Warning, TEXT("--- UCoolDown::~UCoolDown"));
+}
+
+void UCoolDown::BeginDestroy()
+{
+	UE_LOG(SkillLogger, Warning, TEXT("--- UCoolDown::BeginDestroy, skillId:%d"), mSkillId);
+	Super::BeginDestroy();
+}
+
+void UCoolDown::Reset()
 {
 	mSkillId = 0;
 	mSkillTemplate = nullptr;
@@ -19,22 +36,15 @@ UCoolDown::UCoolDown() : Super()
 	mOwnerChar = nullptr;
 }
 
-UCoolDown::~UCoolDown()
-{
-	UE_LOG(SkillLogger, Warning, TEXT("--- UCoolDown::~UCoolDown"));
-}
-
-void UCoolDown::BeginDestroy()
+void UCoolDown::Recycle()
 {
 	if (mSkillFunc != nullptr)
 	{
-		mSkillFunc->RemoveFromRoot();
-		mSkillFunc->ConditionalBeginDestroy();
+		mSkillFunc->Recycle();
 		mSkillFunc = nullptr;
 	}
 
-	UE_LOG(SkillLogger, Warning, TEXT("--- UCoolDown::BeginDestroy, skillId:%d"), mSkillId);
-	Super::BeginDestroy();
+	IObjInterface::Recycle();
 }
 
 void UCoolDown::SetSkillTemplate(USkillTemplate* _skillTemp)
@@ -56,7 +66,7 @@ USkillFunction* UCoolDown::GetSkillFunc()
 {
 	if (mSkillFunc == nullptr)
 	{
-		USkillFunction* skillFunc = NewObject<USkillFunction>(UCoolDown::StaticClass()); //设置USkillFunction跟随UCoolDown销毁
+		USkillFunction* skillFunc = GetObjMgr()->GetObj<USkillFunction>(GetObjMgr()->mSkillFuncCls); //设置USkillFunction跟随UCoolDown销毁
 		skillFunc->AddToRoot();
 		skillFunc->SetCD(this);//使用技能时需要重置这个cd，故丢进this指针
 		mSkillFunc = skillFunc;

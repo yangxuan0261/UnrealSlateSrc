@@ -97,6 +97,8 @@ void USkillMgr::LoadSkillData()
 			skill1->mSkillType = tmpPtr->mSkillType;
 			skill1->mAttachPoint = tmpPtr->mAttachPoint;
 			skill1->mAnimType = tmpPtr->mAnimType;
+			skill1->mBehavId = tmpPtr->mBehavId;
+
 			skill1->mFilterStr = tmpPtr->mFilterStr;
 			skill1->mBeforeSkillStr = tmpPtr->mBeforeSkillStr;
 			skill1->mBeforePkStr = tmpPtr->mBeforePkStr;

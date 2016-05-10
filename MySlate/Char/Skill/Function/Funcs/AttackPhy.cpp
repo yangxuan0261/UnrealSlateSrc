@@ -5,17 +5,11 @@
 #include "../../Buff/Buffs/AbsBuff.h"
 #include "../../../Comp/MyCharDataComp.h"
 #include "../../../MyChar.h"
+#include "../../../Object/ObjMgr.h"
 
 UAttackPhy::UAttackPhy() : Super()
 {
-	//buff
-	mDtVal = 0.f;
-	mDurable = true;
 
-	//skill
-	mValue = 0.f;
-	mOwner = 1; //攻击者
-	mLimitId = -1; //不限制技能
 }
 
 UAttackPhy::~UAttackPhy()
@@ -29,9 +23,21 @@ void UAttackPhy::BeginDestroy()
 	Super::BeginDestroy();
 }
 
+void UAttackPhy::Reset()
+{
+	//buff
+	mDtVal = 0.f;
+	mDurable = true;
+
+	//skill
+	mValue = 0.f;
+	mOwner = 1; //攻击者
+	mLimitId = -1; //不限制技能
+}
+
 UAttackPhy* UAttackPhy::CreateFunction(const FString& _key)
 {
-	UAttackPhy* func = NewObject<UAttackPhy>(UAttackPhy::StaticClass());
+	UAttackPhy* func = GetObjMgr()->GetObj<UAttackPhy>(GetObjMgr()->mAttackPhyCls);
 	func->SetKey(_key);
 	return func;
 }

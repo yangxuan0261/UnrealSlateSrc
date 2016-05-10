@@ -7,11 +7,11 @@
 #include "../../Pk/PkMsg.h"
 #include "../../Buff/BuffMgr.h"
 #include "../../Template/SkillTemplate.h"
+#include "../../../Object/ObjMgr.h"
 
 UAddBuff::UAddBuff() : Super()
 {
-	//skill
-	mBuffId = 0;
+
 }
 
 UAddBuff::~UAddBuff()
@@ -25,9 +25,15 @@ void UAddBuff::BeginDestroy()
 	Super::BeginDestroy();
 }
 
+void UAddBuff::Reset()
+{
+	//skill
+	mBuffId = 0;
+}
+
 UAddBuff* UAddBuff::CreateFunction(const FString& _key)
 {
-	UAddBuff* func = NewObject<UAddBuff>(UAddBuff::StaticClass());
+	UAddBuff* func = GetObjMgr()->GetObj<UAddBuff>(GetObjMgr()->mAddBuffCls);
 	func->SetKey(_key);
 	return func;
 }

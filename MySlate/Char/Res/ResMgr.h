@@ -33,10 +33,6 @@ public:
 		void TestAsyncLoad();
 	void AsyncCallback();
 
-
-	UFUNCTION(BlueprintCallable, Category = "UResMgr")
-		void TestloadCSV();
-
 	FStreamableManager*		GetAssetLoader() const { return mAssetLoader; }
 	UParticleSystem*		GetParticle(int32 _id);
 
@@ -45,6 +41,4 @@ public:
 private:
 	FStreamableManager*		mAssetLoader;
 	UResDataBase*			mResDB;
-
-	//TMap<int32, UBehaviorData*>		mBehaviorDataMap;//存放技能数据
 };

@@ -7,6 +7,7 @@
 #include "../SkillMgr.h"
 #include "../Template/SkillTemplate.h"
 #include "../SkillFunction.h"
+#include "../../Object/ObjMgr.h"
 
 UCoolDownComp::UCoolDownComp()
 	: Super()
@@ -36,8 +37,7 @@ void UCoolDownComp::DestroyComponent(bool bPromoteChildren /*= false*/)
 {
 	for (UCoolDown* cd : mCDArr)
 	{
-		cd->RemoveFromRoot();
-		cd->ConditionalBeginDestroy();
+		cd->Recycle();
 	}
 	mCDArr.Empty();
 
@@ -57,14 +57,6 @@ void UCoolDownComp::MyTick(float DeltaTime)
 			}
 		}
 	}
-}
-
-void UCoolDownComp::CreateCD(int32 _skillId, TSubclassOf<UCoolDown> _class)
-{
-	//UCoolDown* cd = NewObject<UCoolDown>(_class);
-	//cd->AddToRoot();
-	//cd->SetSkillId(_skillId);
-	//mCDArr.Add(cd);
 }
 
 USkillFunction* UCoolDownComp::CanUseSkill(int32 _skillId)
@@ -105,10 +97,9 @@ void UCoolDownComp::RemoveCDById(int32 _skillId)
 	{
 		if (mCDArr[i]->mSkillId == _skillId)
 		{
-			mCDArr[i]->RemoveFromRoot();
-			mCDArr[i]->ConditionalBeginDestroy(); //cd对象丢给gc系统
+			mCDArr[i]->Recycle();
 			mCDArr.RemoveAt(i);
-			UE_LOG(CompLogger, Error, TEXT("--- UCoolDownComp::RemoveCDById, skillId:%d"), _skillId);
+			UE_LOG(CompLogger, Warning, TEXT("--- UCoolDownComp::RemoveCDById, skillId:%d"), _skillId);
 			return;
 		}
 	}
@@ -122,8 +113,7 @@ void UCoolDownComp::AddCD(int32 _skillId, bool _isRestartCD)
 		//清除旧的
 		RemoveCDById(_skillId);
 
-		UCoolDown* cd = NewObject<UCoolDown>(UCoolDown::StaticClass());
-		cd->AddToRoot();
+		UCoolDown* cd = GetObjMgr()->GetObj<UCoolDown>(GetObjMgr()->mCoolDownCls);
 		mCDArr.Add(cd);
 		cd->SetSkillTemplate(skillTemp); 
 		cd->SetChar(mOwner);

@@ -10,9 +10,9 @@
 #include "../Buff/BuffMgr.h"
 #include "./FightData.h"
 
-UPkProcess::UPkProcess() : Super()
+UPkProcess::UPkProcess() : Super(), IObjInterface()
 {
-
+	IObjInterface::SetObj(this);
 }
 
 UPkProcess::~UPkProcess()
@@ -22,21 +22,27 @@ UPkProcess::~UPkProcess()
 
 void UPkProcess::BeginDestroy()
 {
-
-
 	UE_LOG(PkLogger, Warning, TEXT("--- UPkProcess::BeginDestroy"));
 	Super::BeginDestroy();
+}
+
+void UPkProcess::Reset()
+{
+
+}
+
+void UPkProcess::Recycle()
+{
+	IObjInterface::Recycle();
 }
 
 void UPkProcess::SetMsg(UPkMsg* _pkMsg)
 {
 	if (mPkMsg != nullptr)
 	{
-		mPkMsg->RemoveFromRoot();
-		mPkMsg->ConditionalBeginDestroy();
+		mPkMsg->Recycle();
 	}
 	mPkMsg = _pkMsg;
-	mPkMsg->AddToRoot();
 }
 
 void UPkProcess::Run()

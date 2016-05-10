@@ -21,6 +21,7 @@ USkillTemplate::USkillTemplate() : Super()
 	mSkillType = ESkillType::Normal;
 	mFilterStr = "";
 	mFilter = nullptr;
+	mBehavId = 0;
 
 	mBeforeSkillStr = "";
 	mBeforePkStr = "";
@@ -139,7 +140,6 @@ void USkillTemplate::ParseFuncStr(const FString& _funcStr, TArray<UAbsPkEvent*>&
 		UAbsPkEvent* func = UFuncFactory::GetInstance()->createFunction(*iter);
 		if (func != nullptr)
 		{
-			func->AddToRoot();
 			_funcArr.Add(func);
 		}
 	}
@@ -148,8 +148,4 @@ void USkillTemplate::ParseFuncStr(const FString& _funcStr, TArray<UAbsPkEvent*>&
 void USkillTemplate::ParseFilterStr(const FString& _filterStr)
 {
 	mFilter = UFuncFactory::GetInstance()->createFilter(_filterStr);
-	if (mFilter != nullptr)
-	{
-		mFilter->AddToRoot();
-	}
 }

@@ -17,11 +17,11 @@ class IObjInterface
 public:
 	IObjInterface();
 
-	virtual void Reset() = 0;
-	virtual void SetObj(UObject* _obj) { mOwnObj = _obj; }
+	virtual void Reset() = 0;	//抽象接口，要求子类必须重写
+	virtual void SetObj(UObject* _obj); 
 	virtual void Recycle();
 
 private:
-	UObjMgr*	mObjMgr;
-	UObject*	mOwnObj;
+	UObjMgr*	mObjMgr;	//回收中心
+	UObject*	mOwnObj;	//宿主对象
 };

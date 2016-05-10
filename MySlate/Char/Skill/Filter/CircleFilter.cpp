@@ -7,7 +7,7 @@
 
 UCircleFilter::UCircleFilter() : Super()
 {
-	mRadius = 100;
+	IObjInterface::SetObj(this);
 }
 
 UCircleFilter::~UCircleFilter()
@@ -17,9 +17,14 @@ UCircleFilter::~UCircleFilter()
  
 void UCircleFilter::BeginDestroy()
 {
-
 	UE_LOG(FilterLogger, Warning, TEXT("--- UCircleFilter::BeginDestroy"));
 	Super::BeginDestroy();
+}
+
+void UCircleFilter::Reset()
+{
+	Super::Reset();
+	mRadius = 100;
 }
 
 void UCircleFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::Locked */, float _radius /* = 0.f */, const FVector& _boxSize /* = FVector::ZeroVector */)

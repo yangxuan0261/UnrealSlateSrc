@@ -32,7 +32,9 @@ public:
 	UAbsPkEvent();
 	virtual ~UAbsPkEvent();
 	virtual void BeginDestroy() override;
+	virtual void Reset() override;
 
+public:
 	virtual UAbsPkEvent* Clone() { return nullptr; }
 
 	virtual void RunBeforeSkill(UPkMsg* msg) {}

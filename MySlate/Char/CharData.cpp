@@ -3,6 +3,7 @@
 #include "CharData.h"
 
 #include "./Skill/Pk/FightData.h"
+#include "./Object/ObjMgr.h"
 
 UCharData::UCharData() : Super()
 {
@@ -11,8 +12,6 @@ UCharData::UCharData() : Super()
 	mDescr = "";
 	mHeath = 100.f;
 	mHeathMax = 150.f;
-	mFightData = NewObject<UFightData>(UFightData::StaticClass());
-	mFightData->AddToRoot();
 }
 
 UCharData::~UCharData()
@@ -31,4 +30,9 @@ void UCharData::BeginDestroy()
 
 	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UCharData::BeginDestroy, id:%d"), mId);
 	Super::BeginDestroy();
+}
+
+void UCharData::Init()
+{
+	mFightData = GetObjMgr()->GetObj<UFightData>(GetObjMgr()->mFightDataCls);
 }

@@ -8,11 +8,9 @@
 #include "../../CharMgr.h"
 #include "../Pk/PkMsg.h"
 
-UAbsFilter::UAbsFilter()
+UAbsFilter::UAbsFilter() : Super(), IObjInterface()
 {
-	mKey = "";
-	mSelectType = ESelectType::Enemy; //默认敌方
-	mCount = -1; //不限人数
+	IObjInterface::SetObj(this);
 }
 
 UAbsFilter::~UAbsFilter()
@@ -24,6 +22,18 @@ void UAbsFilter::BeginDestroy()
 {
 
 	Super::BeginDestroy();
+}
+
+void UAbsFilter::Reset()
+{
+	mKey = "";
+	mSelectType = ESelectType::Enemy; //默认敌方
+	mCount = -1; //不限人数
+}
+
+void UAbsFilter::Recycle()
+{
+	IObjInterface::Recycle();
 }
 
 void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::Locked */, float _radius /* = 0.f */, const FVector& _boxSize /* = FVector::ZeroVector */)

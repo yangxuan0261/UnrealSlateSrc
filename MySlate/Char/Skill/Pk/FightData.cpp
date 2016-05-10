@@ -7,8 +7,6 @@
 UFightData::UFightData() : Super(), IObjInterface()
 {
 	IObjInterface::SetObj(this);
-
-	Reset();
 }
 
 UFightData::~UFightData()
@@ -28,9 +26,14 @@ void UFightData::Reset()
 	mLv = 1;
 }
 
+void UFightData::Recycle()
+{
+	IObjInterface::Recycle();
+}
+
 UFightData* UFightData::Clone()
 {
-	UFightData* data = NewObject<UFightData>(UFightData::StaticClass());
+	UFightData* data = GetObjMgr()->GetObj<UFightData>(GetObjMgr()->mFightDataCls);
 	data->Copy(this);
 	return data;
 }

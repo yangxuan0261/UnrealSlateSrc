@@ -4,11 +4,9 @@
 
 #include "../../../MyChar.h"
 
-UAbsAttrFunc::UAbsAttrFunc() : Super()
+UAbsAttrFunc::UAbsAttrFunc() : Super(), IObjInterface()
 {
-	mBuff = nullptr;
-	mAttacker = nullptr;
-	mOwnerChar = nullptr;
+	IObjInterface::SetObj(this);
 }
 
 UAbsAttrFunc::~UAbsAttrFunc()
@@ -19,6 +17,18 @@ UAbsAttrFunc::~UAbsAttrFunc()
 void UAbsAttrFunc::BeginDestroy()
 {
 	Super::BeginDestroy();
+}
+
+void UAbsAttrFunc::Reset()
+{
+	mBuff = nullptr;
+	mAttacker = nullptr;
+	mOwnerChar = nullptr;
+}
+
+void UAbsAttrFunc::Recycle()
+{
+	IObjInterface::Recycle();
 }
 
 void UAbsAttrFunc::SetData(UAbsBuff* _buff, AMyChar* _attacker, AMyChar* _owner)

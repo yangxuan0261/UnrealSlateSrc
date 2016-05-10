@@ -6,7 +6,7 @@
 
 UAppendBuff::UAppendBuff() : Super()
 {
-
+	IObjInterface::SetObj(this);
 }
 
 UAppendBuff::~UAppendBuff()
@@ -16,10 +16,13 @@ UAppendBuff::~UAppendBuff()
 
 void UAppendBuff::BeginDestroy()
 {
-
-
 	UE_LOG(BuffLogger, Warning, TEXT("--- UAppendBuff::BeginDestroy"));
 	Super::BeginDestroy();
+}
+
+void UAppendBuff::Reset()
+{
+
 }
 
 void UAppendBuff::AppendBuff(UAbsBuff* _beAdd)
