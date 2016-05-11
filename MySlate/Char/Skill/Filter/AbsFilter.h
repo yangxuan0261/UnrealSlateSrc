@@ -23,7 +23,6 @@ public:
 	virtual ~UAbsFilter();
 	virtual void BeginDestroy() override;
 	virtual void Reset() override;
-	virtual void Recycle() override;
 
 public:
 	virtual void Filter(UPkMsg* _msg, EFilterType _filterType = EFilterType::Locked, float _radius = 0.f, const FVector& _boxSize = FVector::ZeroVector); //¹ýÂÇ¿ÉÑ¡actor

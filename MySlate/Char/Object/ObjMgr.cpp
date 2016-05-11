@@ -21,6 +21,8 @@
 #include "../Skill/Function/Funcs/AttackPhy.h"
 #include "../Skill/Function/Funcs/Suckup.h"
 
+#include "../Effect/Effects/BehavElem.h"
+#include "../Skill/Template/SkillTemplate.h"
 
 UObjMgr::UObjMgr() : Super()
 {
@@ -44,6 +46,10 @@ UObjMgr::UObjMgr() : Super()
 	mAttackCls			= UAttack::StaticClass();
 	mAttackPhyCls		= UAttackPhy::StaticClass();
 	mSuckupCls			= USuckup::StaticClass();
+
+	mEffElemCls			= UEffDataElem::StaticClass();
+	mShkElemCls			= UShakeElem::StaticClass();
+	mBltElemCls			= UBulletElem::StaticClass();
 }
 
 UObjMgr::~UObjMgr()

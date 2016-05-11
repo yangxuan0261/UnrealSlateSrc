@@ -42,11 +42,6 @@ void UAbsBuff::Reset()
 	mBehavGroupId = 0;
 }
 
-void UAbsBuff::Recycle()
-{
-	IObjInterface::Recycle();
-}
-
 void UAbsBuff::Tick(float DeltaSeconds)
 {
 	//持续或间隔伤害

@@ -26,6 +26,10 @@ class UAttack;
 class UAttackPhy;
 class USuckup;
 
+class UEffDataElem;
+class UShakeElem;
+class UBulletElem;
+
 UCLASS()
 class UObjMgr : public UObject, public USingleton<UObjMgr>
 {
@@ -95,6 +99,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UObjMgr")
 		TSubclassOf<USuckup>		mSuckupCls;
 	//--------- function End -----
+
+	//--------- behav Begin -----
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UObjMgr")
+		TSubclassOf<UEffDataElem>	mEffElemCls;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UObjMgr")
+		TSubclassOf<UShakeElem>		mShkElemCls;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UObjMgr")
+		TSubclassOf<UBulletElem>	mBltElemCls;
+
+	//--------- behav End -----
+
 
 private:
 	TMap<FString, TArray<UObject*>>		mObjMap; //对象回收池

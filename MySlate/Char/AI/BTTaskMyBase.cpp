@@ -7,13 +7,8 @@
 #include "../Skill/Template/SkillTemplate.h"
 #include "../Skill/CoolDown/CoolDown.h"
 
-UBTTaskMyBase::UBTTaskMyBase()
-	: Super()
+UBTTaskMyBase::UBTTaskMyBase() : Super(), IBTNodeInterface()
 {
-	mOwnerChar = nullptr;
-	mOwnerAI = nullptr;
-	mBTComp = nullptr;
-
 	//…Ë÷√√ø÷°tick
 	bNotifyTick = 1;
 }
@@ -30,9 +25,7 @@ void UBTTaskMyBase::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 
 void UBTTaskMyBase::OnInstanceCreated(UBehaviorTreeComponent& OwnerComp)
 {
-	mBTComp = &OwnerComp;
-	mOwnerAI = mBTComp != nullptr ? Cast<AMyAIController>(mBTComp->GetOwner()) : nullptr;
-	mOwnerChar = mOwnerAI != nullptr ? Cast<AMyChar>(mOwnerAI->GetPawn()) : nullptr;
+	IBTNodeInterface::InitData(&OwnerComp);
 }
 
 void UBTTaskMyBase::OnInstanceDestroyed(UBehaviorTreeComponent& OwnerComp)

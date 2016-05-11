@@ -15,6 +15,7 @@ class IBehavInterface
 {
 	GENERATED_IINTERFACE_BODY()
 public:
+	IBehavInterface();
 	virtual void BehavTick(float DeltaSeconds);
 
 	//ÌØÐ§

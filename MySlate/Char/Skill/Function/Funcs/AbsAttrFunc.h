@@ -16,7 +16,6 @@ public:
 	virtual ~UAbsAttrFunc();
 	virtual void BeginDestroy() override;
 	virtual void Reset() override;
-	virtual void Recycle() override;
 
 public:
 	virtual void RunTick(float DeltaSeconds) {}

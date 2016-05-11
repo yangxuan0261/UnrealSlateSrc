@@ -51,7 +51,7 @@ void UCoolDown::SetSkillTemplate(USkillTemplate* _skillTemp)
 {
 	mSkillTemplate = _skillTemp;
 	mSkillId = mSkillTemplate->mId;
-	mCDTime = (float)mSkillTemplate->mCoolDown;
+	mCDTime = (float)mSkillTemplate->mBltElem->mCoolDown;
 	mTimer = mCDTime;
 	mIsOK = true;
 

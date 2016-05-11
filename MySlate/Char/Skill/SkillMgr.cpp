@@ -11,6 +11,7 @@
 #include "../Res/Infos/SkillInfo.h"
 #include "../Res/Infos/BuffInfo.h"
 #include "../Res/Infos/BehavInfo.h"
+#include "./Pk/PkMsg.h"
 
 USkillMgr::USkillMgr() : Super()
 {
@@ -88,16 +89,21 @@ void USkillMgr::LoadSkillData()
 			skill1->mId = tmpPtr->mId;
 			skill1->mName = tmpPtr->mName;
 			skill1->mDescr = tmpPtr->mDescr;
-			skill1->mCoolDown = tmpPtr->mCoolDown;
-			skill1->mLockedType = tmpPtr->mLockedType;
 			skill1->mAttackDist = tmpPtr->mAttackDist;
-			skill1->mTolerance = tmpPtr->mTolerance;
-			skill1->mBulletSpeed = tmpPtr->mBulletSpeed;
-			skill1->mFlyDist = tmpPtr->mFlyDist;
 			skill1->mSkillType = tmpPtr->mSkillType;
-			skill1->mAttachPoint = tmpPtr->mAttachPoint;
 			skill1->mAnimType = tmpPtr->mAnimType;
 			skill1->mBehavId = tmpPtr->mBehavId;
+
+			//bullet info
+			skill1->mBltElem->mCoolDown = tmpPtr->mBltInfo.mCoolDown;
+			skill1->mBltElem->mLockedType = tmpPtr->mBltInfo.mLockedType;
+			skill1->mBltElem->mTolerance = tmpPtr->mBltInfo.mTolerance;
+			skill1->mBltElem->mBulletSpeed = tmpPtr->mBltInfo.mBulletSpeed;
+			skill1->mBltElem->mFlyDist = tmpPtr->mBltInfo.mFlyDist;
+			skill1->mBltElem->mAttachPoint = tmpPtr->mBltInfo.mAttachPoint;
+			skill1->mBltElem->mLoc = tmpPtr->mBltInfo.mLoc;
+			skill1->mBltElem->mScale = tmpPtr->mBltInfo.mScale;
+			skill1->mBltElem->mRotate = tmpPtr->mBltInfo.mRotate;
 
 			skill1->mFilterStr = tmpPtr->mFilterStr;
 			skill1->mBeforeSkillStr = tmpPtr->mBeforeSkillStr;
@@ -151,4 +157,10 @@ void USkillMgr::LoadBuffData()
 	{
 		UE_LOG(GolbalFuncLogger, Warning, TEXT("--- USkillDataMgr::LoadSkillData, dataTab is nullptr"));
 	}
+}
+
+float USkillMgr::FormulaPk(UPkMsg* _msg, EFormulaPkType _type)
+{
+
+	return 0.f;
 }

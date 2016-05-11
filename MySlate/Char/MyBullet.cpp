@@ -56,8 +56,6 @@ void AMyBullet::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//特效接口部分
-	IBehavInterface::SetActor(this);
 }
 
 void AMyBullet::Tick(float DeltaSeconds)
@@ -90,12 +88,12 @@ void AMyBullet::Tick(float DeltaSeconds)
 		}
 	}
 
-	if (mSkillTemp->mLockedType == ELockedType::Loc)
+	if (mSkillTemp->mBltElem->mLockedType == ELockedType::Loc)
 	{
-		if (mSkillTemp->mFlyDist > 0)
+		if (mSkillTemp->mBltElem->mFlyDist > 0)
 		{
 			float distSq = FVector::DistSquared(GetActorLocation(), mStartPos);
-			float flyDist = FMath::Pow((float)mSkillTemp->mFlyDist, 2.f);
+			float flyDist = FMath::Pow((float)mSkillTemp->mBltElem->mFlyDist, 2.f);
 
 			if (distSq > flyDist)
 			{
@@ -104,11 +102,11 @@ void AMyBullet::Tick(float DeltaSeconds)
 			}
 		}
 	}
-	else if (mSkillTemp->mLockedType == ELockedType::Char) //被锁定目标死亡情况，不做任何结算
+	else if (mSkillTemp->mBltElem->mLockedType == ELockedType::Char) //被锁定目标死亡情况，不做任何结算
 	{
 		if (mPkMsg->GetTargetId() > 0 && mPkMsg->GetTarget() == nullptr)
 		{
-			if (GetActorLocation().Equals(mTargetLoc, mSkillTemp->mTolerance))
+			if (GetActorLocation().Equals(mTargetLoc, mSkillTemp->mBltElem->mTolerance))
 			{
 				DestroyBullet();
 				UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::Tick, target death, bullet arrival"));
@@ -170,10 +168,10 @@ void AMyBullet::SetFly(bool _fly)
 		CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AMyBullet::OnMyCollisionCompBeginOverlap);
 
 		//如果锁定地点，且飞行距离 > 0，则飞行距离一定大于开始点与目标点的距离，比如黑暗游侠的箭，会飞行一定的距离才消失
-		if (mSkillTemp->mLockedType == ELockedType::Loc && mSkillTemp->mFlyDist > 0)
+		if (mSkillTemp->mBltElem->mLockedType == ELockedType::Loc && mSkillTemp->mBltElem->mFlyDist > 0)
 		{
 			float distSq = (mTargetLoc, mStartPos).Size();
-			float flyDist = mSkillTemp->mFlyDist;
+			float flyDist = mSkillTemp->mBltElem->mFlyDist;
 
 			if (flyDist < distSq)
 			{
@@ -284,7 +282,7 @@ void AMyBullet::OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UP
 	}
 
 	//TODO: 暂时先只对敌方,飞行过程中碰撞框碰撞到的目标，即时结算
-	if (mSkillTemp->mLockedType == ELockedType::Loc && mSkillTemp->mFlyDist > 0)
+	if (mSkillTemp->mBltElem->mLockedType == ELockedType::Loc && mSkillTemp->mBltElem->mFlyDist > 0)
 	{
 		if (target->GetDataComp()->GetTeamType() != mPkMsg->GetAttackerTeam())
 		{
@@ -293,7 +291,7 @@ void AMyBullet::OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UP
 			CreatePk();
 		}
 	}
-	else if (mSkillTemp->mLockedType == ELockedType::Char) //TODO: 暂时先只对敌方锁定目标造成伤害
+	else if (mSkillTemp->mBltElem->mLockedType == ELockedType::Char) //TODO: 暂时先只对敌方锁定目标造成伤害
 	{
 		int32 targetId = target->GetUuid();
 		if (mPkMsg->GetTargetId() > 0 && mPkMsg->GetTarget() != nullptr)

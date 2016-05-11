@@ -6,21 +6,46 @@
 #include "../Filter/AbsFilter.h"
 #include "../Utils/CommonDef.h"
 #include "../Function/Funcs/AbsPkEvent.h"
+#include "../../Object/ObjMgr.h"
+
+UBulletElem::UBulletElem() : Super(), IObjInterface()
+{
+	IObjInterface::SetObj(this);
+}
+
+UBulletElem::~UBulletElem()
+{
+	UE_LOG(SkillLogger, Warning, TEXT("--- UBulletElem::~UBulletElem"));
+}
+
+void UBulletElem::BeginDestroy()
+{
+	Super::BeginDestroy();
+}
+
+void UBulletElem::Reset()
+{
+	mCoolDown = 5;
+	mLockedType = ELockedType::Loc;
+	mTolerance = 0;
+	mBulletSpeed = 0;
+	mFlyDist = 0;
+	mLoc = FVector::ZeroVector;
+	mScale = FVector::ZeroVector;
+	mRotate = FRotator::ZeroRotator;
+}
+
 
 USkillTemplate::USkillTemplate() : Super()
 {
 	mId = -1;
 	mName = TEXT("Default SkillName");
 	mDescr = TEXT("Default SkillDescr");
-	mCoolDown = 5;
-	mLockedType = ELockedType::Loc;
 	mAttackDist = 10;
-	mTolerance = 0;
-	mBulletSpeed = 0;
-	mFlyDist = 0;
 	mSkillType = ESkillType::Normal;
 	mFilterStr = "";
 	mFilter = nullptr;
+	mAnimType = EAnimType::None;
 	mBehavId = 0;
 
 	mBeforeSkillStr = "";
@@ -29,7 +54,8 @@ USkillTemplate::USkillTemplate() : Super()
 	mEndEvnsStr = "";
 	mEndPkStr= "";
 	mEndSkillStr = "";
-	mAnimType = EAnimType::None;
+
+	mBltElem = GetObjMgr()->GetObj<UBulletElem>(GetObjMgr()->mBltElemCls);
 }
 
 USkillTemplate::~USkillTemplate()

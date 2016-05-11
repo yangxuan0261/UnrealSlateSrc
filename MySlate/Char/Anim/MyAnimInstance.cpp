@@ -13,6 +13,10 @@ UMyAnimInstance::UMyAnimInstance()
 	mSpeed = 0.f;
 	mCharState = CharState::IdleRun;
 	mAnimType = EAnimType::None;
+
+	mStateDlg.BindLambda([&](CharState _state)->void {
+		mCharState = _state;
+	});
 }
 
 UMyAnimInstance::~UMyAnimInstance()
@@ -101,11 +105,11 @@ void UMyAnimInstance::AnimNotify_DeathOver(UAnimNotify* Notify)
 
 void UMyAnimInstance::AnimNotify_Test(UAnimNotify* Notify)
 {
-	if (mOwnerChar != nullptr)
-	{
-		mSpeed = mOwnerChar->GetVelocity().Size(); //设置速度
-		mCharState = mOwnerChar->mCharState; //设置动画状态
-	}
+	//if (mOwnerChar != nullptr)
+	//{
+	//	mSpeed = mOwnerChar->GetVelocity().Size(); //设置速度
+	//	mCharState = mOwnerChar->mCharState; //设置动画状态
+	//}
 }
 
 void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -120,7 +124,6 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	if (mOwnerChar != nullptr)
 	{	//TODO: 待优化，不变时不需要去get
 		mSpeed = mOwnerChar->GetVelocity().Size(); //设置速度
-		mCharState = mOwnerChar->mCharState; //设置动画状态
 
 		USkillFunction* skillFunc = mOwnerChar->GetUsingSkill();
 		USkillTemplate* skillTemp = skillFunc != nullptr ? skillFunc->GetSkillTemplate() : nullptr;

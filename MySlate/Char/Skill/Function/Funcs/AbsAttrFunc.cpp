@@ -26,11 +26,6 @@ void UAbsAttrFunc::Reset()
 	mOwnerChar = nullptr;
 }
 
-void UAbsAttrFunc::Recycle()
-{
-	IObjInterface::Recycle();
-}
-
 void UAbsAttrFunc::SetData(UAbsBuff* _buff, AMyChar* _attacker, AMyChar* _owner)
 {
 	mBuff = _buff;

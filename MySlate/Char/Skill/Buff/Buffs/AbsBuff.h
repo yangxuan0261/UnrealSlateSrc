@@ -19,7 +19,6 @@ public:
 	virtual ~UAbsBuff();
 	virtual void BeginDestroy() override;
 	virtual void Reset() override;
-	virtual void Recycle() override;
 
 public:
 	virtual void Tick(float DeltaSeconds);

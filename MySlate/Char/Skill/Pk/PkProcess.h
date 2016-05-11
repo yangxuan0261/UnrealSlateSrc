@@ -7,6 +7,7 @@
 
 class UPkMsg;
 struct FDamageInfo;
+class AMyChar;
 
 DECLARE_DELEGATE_OneParam(FPkOverDlg, TArray<FDamageInfo>&);
 DECLARE_DELEGATE_OneParam(RunSkillBeforeCallBack, UPkMsg*);
@@ -20,6 +21,7 @@ public:
 	FDamageInfo()
 	{
 		mTargetId = 0;
+		mTarget = nullptr;
 		mValue = 0.f;
 		mIsDodge = false;
 		mIsCrit = false;
@@ -28,6 +30,7 @@ public:
 	}
 
 	int32	mTargetId;			//目标唯一id
+	AMyChar*	mTarget;		//目标
 	ESkillAttackType	type;	//伤害类型 (物理伤害、魔法伤害、治疗、吸血)
 	float	mValue;				//伤害值
 	bool	mIsDodge;			//闪避
@@ -58,7 +61,7 @@ private:
 	void Filter();//选取攻击对象逻辑
 	void RunEndEvns(); 
 
-	void PkLogic();// pk逻辑运算，之前的方法已把对象消耗的值算好，这里不用再计算，直接进行逻辑运算即可
+	void PkLogicEvns();// pk逻辑运算，之前的方法已把对象消耗的值算好，这里不用再计算，直接进行逻辑运算即可
 	void RunEndPk();//
 	void PkPrice();//奖历分配，组织协议，是否战斗已结束
 

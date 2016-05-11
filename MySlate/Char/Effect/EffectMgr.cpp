@@ -151,7 +151,15 @@ int32 UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _
 		return 0;
 	}
 
+	auto bindShakeFunc = [](UShakeElem* _shake, IBehavInterface* _target, int32 _groupId)->void {
+		UShakeElem* shake = _shake->Clone();
+		shake->mGroupId = _groupId;
+		shake->SetActor(_target);
+		shake->Start();
+	};
+
 	int32 groupId = ::IdGeneratorEffect(); //本次行为数据的识别id
+	TArray<UBehavElem*> allElem;
 
 	//------------- char
 	if (_tarChar != nullptr)
@@ -213,21 +221,23 @@ int32 UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _
 				effect->SetActor(_tarChar);
 				effect->SetData(psComp);
 				effect->Start();
+				allElem.Add(effect);
 			}
 		}
 
 		for (UShakeElem* shake: shakeVec)
 		{
-			shake = shake->Clone();
-			shake->mGroupId = groupId;
-			shake->SetActor(_tarChar);
-			shake->Start();
+			bindShakeFunc(shake, _tarChar, groupId);
+			allElem.Add(shake);
 		}
+
+		_tarChar->AddBehavElem(groupId, allElem);
 	}
 
 	//------------- bullet
 	if (_tarBullet != nullptr)
 	{
+		allElem.Empty();
 		TArray<UEffDataElem*> effectVec = behavData->mBltEffVec;
 		TArray<UShakeElem*> shakeVec = behavData->mBltShkVec;
 
@@ -255,6 +265,7 @@ int32 UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _
 					effect->SetActor(_tarChar);
 					effect->SetData(psComp);
 					effect->Start();
+					allElem.Add(effect);
 				}
 			}
 			else
@@ -265,11 +276,11 @@ int32 UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _
 
 		for (UShakeElem* shake : shakeVec)
 		{
-			shake = shake->Clone();
-			shake->mGroupId = groupId;
-			shake->SetActor(_tarBullet);
-			shake->Start();
+			bindShakeFunc(shake, _tarBullet, groupId);
+			allElem.Add(shake);
 		}
+
+		_tarBullet->AddBehavElem(groupId, allElem);
 	}
 
 	//------------- scene

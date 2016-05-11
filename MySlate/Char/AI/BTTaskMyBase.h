@@ -1,12 +1,13 @@
 #pragma once
 
+#include "./BTNodeInter.h"
 #include "BTTaskMyBase.generated.h"
 
 class AMyChar;
 class UBehaviorTreeComponent;
 
 UCLASS(Blueprintable)
-class UBTTaskMyBase : public UBTTask_BlueprintBase
+class UBTTaskMyBase : public UBTTask_BlueprintBase, public IBTNodeInterface
 {
 	GENERATED_BODY()
 public:
@@ -23,12 +24,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UBTTaskMyBase")
 		bool		MoveToTarget();
 
+	UFUNCTION(BlueprintCallable, Category = "UBTTaskMyBase")
+		AMyChar*	GetChar() const { return mOwnerChar; }
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBTTaskMyBase")
-		AMyChar*	mOwnerChar;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBTTaskMyBase")
-		AMyAIController*	mOwnerAI;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBTTaskMyBase")
-		UBehaviorTreeComponent*	mBTComp;
 
 };

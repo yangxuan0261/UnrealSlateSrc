@@ -30,6 +30,18 @@ void UParam::Reset()
 {
 	mFightData = nullptr;
 	mTarget = nullptr;
+	mIsLocked = false;
+
+	mDmgPhyValue = 0.0f;
+	mDmgMagValue = 0.0f;
+	mSuckUp = 0.0f;
+	mCureRank = 0.0f;
+	mRebound = 0.0f;
+	mReboundPer = 1.0f;
+	mDeath = false;
+	mCrit = false;
+	mDodge = false;
+	mRebond = false;
 }
 
 void UParam::Recycle()
@@ -39,6 +51,7 @@ void UParam::Recycle()
 		mFightData->Recycle();
 		mFightData = nullptr;
 	}
+
 	IObjInterface::Recycle();
 }
 
@@ -69,7 +82,7 @@ void UPkMsg::Reset()
 {
 	mCanLog = false;
 	mSkillId = 0;
-	mSkillLogicType = ESkillAttackType::ATTACK_PHY;
+	mSkillLogicType = ESkillAttackType::Physics;
 	mTeamType = ETeam::None;
 	mAttackerId = 0;
 	mTargetId = 0;
@@ -94,11 +107,8 @@ void UPkMsg::Recycle()
 		mAttackerDataForCacul->Recycle();
 		mAttackerDataForCacul = nullptr;
 	}
-	for (int32 i = 0; i < mTargetArr.Num(); ++i)
-	{
-		mTargetArr[i]->Recycle();
-	}
-	mTargetArr.Empty();
+	
+	ClearTargets();
 
 	IObjInterface::Recycle();
 }
@@ -152,13 +162,24 @@ void UPkMsg::SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _t
 	}
 }
 
-void UPkMsg::AddTarget(AMyChar* _char)
+void UPkMsg::AddTarget(AMyChar* _char, bool _isLocked /* = false */)
 {
 	UParam* param = GetObjMgr()->GetObj<UParam>(GetObjMgr()->mPkParamCls);
 	param->Init(); 
 	param->mTarget = _char;
+	param->mIsLocked = _isLocked;
 	param->mFightData->Copy(_char->GetDataComp()->GetFigthData());//复制目标的战斗数据
 	mTargetArr.Add(param);
+}
+
+//每次pk完都清除目标集，持续进行pk
+void UPkMsg::ClearTargets()
+{
+	for (UParam* param : mTargetArr)
+	{
+		param->Recycle();
+	}
+	mTargetArr.Empty();
 }
 
 void UPkMsg::SetAttackerData(UFightData* _data)
@@ -182,7 +203,7 @@ void UPkMsg::SetAttackDmgValue(float _value, int _limitId /* = -1 */, bool _isAd
 	{
 		switch (mSkillLogicType)
 		{
-		case ESkillAttackType::ATTACK_PHY: // 物理伤害
+		case ESkillAttackType::Physics: // 物理伤害
 		{
 			if (_isAdd)
 				mCurrTarget->mDmgPhyValue += _value;
@@ -192,7 +213,7 @@ void UPkMsg::SetAttackDmgValue(float _value, int _limitId /* = -1 */, bool _isAd
 			UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::SetAttackDmgValue, ATTACK_PHY:%f"), _value);
 			break;
 		}
-		case ESkillAttackType::ATTACK_MAG: // 法术伤害
+		case ESkillAttackType::Magic: // 法术伤害
 		{
 			if (_isAdd)
 				mCurrTarget->mDmgMagValue += _value;

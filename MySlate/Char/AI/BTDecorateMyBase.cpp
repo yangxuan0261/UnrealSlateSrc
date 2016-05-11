@@ -7,13 +7,8 @@
 #include "../Skill/Template/SkillTemplate.h"
 #include "../Skill/CoolDown/CoolDown.h"
 
-UBTDecorateMyBase::UBTDecorateMyBase()
-	: Super()
+UBTDecorateMyBase::UBTDecorateMyBase() : Super(), IBTNodeInterface()
 {
-	mOwnerChar = nullptr;
-	mOwnerAI = nullptr;
-	mBTComp = nullptr;
-
 	//设置tick 开关
 	bNotifyTick = true;
 }
@@ -27,15 +22,11 @@ UBTDecorateMyBase::~UBTDecorateMyBase()
 void UBTDecorateMyBase::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
-
 }
 
-//初始化成员都放在这个方法
 void UBTDecorateMyBase::OnInstanceCreated(UBehaviorTreeComponent& OwnerComp)
 {
-	mBTComp = &OwnerComp;
-	mOwnerAI = mBTComp != nullptr ? Cast<AMyAIController>(mBTComp->GetOwner()) : nullptr;
-	mOwnerChar = mOwnerAI != nullptr ? Cast<AMyChar>(mOwnerAI->GetPawn()) : nullptr;
+	IBTNodeInterface::InitData(&OwnerComp);
 }
 
 void UBTDecorateMyBase::OnInstanceDestroyed(UBehaviorTreeComponent& OwnerComp)

@@ -4,11 +4,42 @@
 #include "../../../Common/CommonHeader.h"
 #include "../SkillTypes.h"
 #include "../Utils/CommonDef.h"
-
+#include "../../Object/ObjInter.h"
 #include "SkillTemplate.generated.h"
 
 class UAbsPkEvent;
 class UAbsFilter;
+
+UCLASS(BlueprintType)
+class UBulletElem : public UObject, public IObjInterface //子弹数据
+{
+	GENERATED_BODY()
+public:
+	UBulletElem();
+	virtual ~UBulletElem();
+	virtual void BeginDestroy() override;
+	virtual void Reset() override;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBulletElem")
+		int32			mCoolDown;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBulletElem")
+		ELockedType		mLockedType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBulletElem")
+		FString			mAttachPoint;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBulletElem")
+		int32			mTolerance;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBulletElem")
+		int32			mBulletSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBulletElem")
+		int32			mFlyDist;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBulletElem")
+		FVector			mLoc;					//矩阵信息
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBulletElem")
+		FVector			mScale;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBulletElem")
+		FRotator		mRotate;
+};
 
 UCLASS(Blueprintable, BlueprintType)
 class USkillTemplate : public UObject
@@ -60,21 +91,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		FString			mDescr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		int32			mCoolDown;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		ELockedType		mLockedType;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		int32			mAttackDist; 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		int32			mTolerance;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		int32			mBulletSpeed; 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		int32			mFlyDist; 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		ESkillType		mSkillType;	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
-		FString			mAttachPoint;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		EAnimType		mAnimType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FSkillInfo")
@@ -94,4 +113,7 @@ public:
 		FString			mEndPkStr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
 		FString			mEndSkillStr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "USkillTemplate")
+		UBulletElem*	mBltElem;
 };

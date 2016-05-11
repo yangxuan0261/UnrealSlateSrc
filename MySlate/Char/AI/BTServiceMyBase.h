@@ -1,14 +1,14 @@
 #pragma once
 
+#include "./BTNodeInter.h"
 #include "BTServiceMyBase.generated.h"
 
 class AMyChar;
 class AMyAIController;
 class UBehaviorTreeComponent;
 
-// Bot AI task that tries to find a location near the current enemy
 UCLASS(Blueprintable)
-class UBTServiceMyBase : public UBTService_BlueprintBase
+class UBTServiceMyBase : public UBTService_BlueprintBase, public IBTNodeInterface
 {
 	GENERATED_BODY()
 public:
@@ -28,11 +28,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UBTServiceMyBase")
 		AMyChar*	GetCloestEnemy();
 
+	UFUNCTION(BlueprintCallable, Category = "UBTServiceMyBase")
+		AMyChar*	GetChar() const { return mOwnerChar; }
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBTServiceMyBase")
-		AMyChar*	mOwnerChar;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBTServiceMyBase")
-		AMyAIController*	mOwnerAI;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBTServiceMyBase")
-		UBehaviorTreeComponent*	mBTComp;
+
 };

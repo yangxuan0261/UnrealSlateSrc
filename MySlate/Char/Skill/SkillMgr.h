@@ -3,12 +3,14 @@
 
 #include "Tickable.h"
 #include "../../Common/ISingleton.h"
+#include "./SkillTypes.h"
 
 #include "SkillMgr.generated.h"
 
 class AMyChar;
 class USkillTemplate;
 class UBufflTemplate;
+class UPkMsg;
 
 UCLASS()
 class USkillMgr : public UObject, public FTickableGameObject, public USingleton<USkillMgr>
@@ -43,6 +45,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "USkillDataMgr")
 		void				LoadBuffData();
+
+	UFUNCTION(BlueprintCallable, Category = "USkillDataMgr")
+		float				FormulaPk(UPkMsg* _msg, EFormulaPkType _type);
 
 private:
 	TMap<int32, USkillTemplate*>	mSkillTempMap;

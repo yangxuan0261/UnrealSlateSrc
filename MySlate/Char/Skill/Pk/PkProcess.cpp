@@ -9,6 +9,7 @@
 #include "../Template/SkillTemplate.h"
 #include "../Buff/BuffMgr.h"
 #include "./FightData.h"
+#include "./PkMsg.h"
 
 UPkProcess::UPkProcess() : Super(), IObjInterface()
 {
@@ -28,7 +29,8 @@ void UPkProcess::BeginDestroy()
 
 void UPkProcess::Reset()
 {
-
+	mPkMsg = nullptr;
+	mCallBack = nullptr;
 }
 
 void UPkProcess::Recycle()
@@ -47,17 +49,18 @@ void UPkProcess::Run()
 	
 	Filter();
 	const TArray<UParam*>& targets = mPkMsg->GetTargets();
-	for (int32 i = 0; i < targets.Num(); ++i)
+	for (UParam* param : targets)
 	{
-		currtarge = targets[i];
+		currtarge = param;
 		mPkMsg->SetCurrTarget(currtarge);
 
-		PkLogic();//pk逻辑运算，之前的方法已把对象消耗的值算好,还有是否闪避和暴击等，这里不用再计算，直接进行逻辑运算即可
+		PkLogicEvns();//pk逻辑运算，之前的方法已把对象消耗的值算好,还有是否闪避和暴击等，这里不用再计算，直接进行逻辑运算即可
 		RunEndEvns(); //每个受击者加buff
 	}
 
 	RunEndPk(); //给攻击者加buff
 	PkPrice();
+	mPkMsg->ClearTargets();
 }
 
 bool UPkProcess::CheckCanPk()
@@ -91,7 +94,7 @@ void UPkProcess::RunEndEvns()
 	}
 }
 
-void UPkProcess::PkLogic()
+void UPkProcess::PkLogicEvns()
 {
 	//战斗伤害值
 	float dmg = mPkMsg->GetAttackerData()->GetAttackPhy();
@@ -114,6 +117,14 @@ void UPkProcess::RunEndPk()
 void UPkProcess::PkPrice()
 {
 	TArray<FDamageInfo> dmgArr;
+
+	UParam* currtarge = nullptr;
+	const TArray<UParam*>& targets = mPkMsg->GetTargets();
+	for (UParam* param : targets)
+	{
+		currtarge = param;
+
+	}
 
 	mCallBack.ExecuteIfBound(dmgArr);
 }

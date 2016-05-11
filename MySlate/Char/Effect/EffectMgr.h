@@ -13,6 +13,7 @@ struct FShakeInfo;
 class UBehavData;
 class AMyChar;
 class AMyBullet;
+class IBehavInterface;
 
 UCLASS()
 class UEffectMgr : public UObject, public FTickableGameObject, public USingleton<UEffectMgr>

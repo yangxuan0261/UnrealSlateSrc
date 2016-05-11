@@ -74,13 +74,26 @@ enum class ESkillType : uint8 //技能类型
 UENUM()
 enum class ESkillAttackType : uint8 //技能攻击类型
 {
-	ATTACK_PHY = 1,	//物理伤害
-	ATTACK_MAG,		//魔法伤害
-	ATTACK_CURE,	//治疗
-	ATTACK_POWER,	//能量
-	ATTACK_BUFF,	//buffer
-	ATTACK_SUCKHP,	//吸血
-	ATTACK_REBOUND,	//反伤
+	None = 0,
+	Physics,	//物理伤害
+	Magic,		//魔法伤害
+	Cure,		//治疗
+	Power,		//能量
+	Buff,		//buffer
+	Suckup,		//吸血
+	Rebound,	//反伤
+	Count,
+};
+
+UENUM()
+enum class EFormulaPkType : uint8 //计算公式类型
+{
+	None = 0,
+	Dodge,		//闪避
+	Crit,		//暴击
+	Damage,		//伤害
+	Cure,		//治疗
+	Rebound,	//反伤
 	Count,
 };
 

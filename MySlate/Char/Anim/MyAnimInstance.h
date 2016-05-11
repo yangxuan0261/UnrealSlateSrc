@@ -7,6 +7,9 @@
 
 class AMyChar;
 class USkillTemplate;
+class UMyAnimInstance;
+
+DECLARE_DELEGATE_OneParam(FStateNotify, CharState); 
 
 UCLASS()
 class UMyAnimInstance : public UAnimInstance
@@ -54,4 +57,6 @@ public:
 		CharState	mCharState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyAnimInstance")
 		EAnimType	mAnimType;
+
+	FStateNotify	mStateDlg;
 };

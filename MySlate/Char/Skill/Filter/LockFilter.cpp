@@ -2,6 +2,9 @@
 #include "MySlate.h"
 #include "LockFilter.h"
 
+#include "../Pk/PkMsg.h"
+#include "../../MyChar.h"
+
 ULockFilter::ULockFilter() : Super()
 {
 	IObjInterface::SetObj(this);
@@ -26,6 +29,8 @@ void ULockFilter::Reset()
 void ULockFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::Locked */, float _radius /* = 0.f */, const FVector& _boxSize /* = FVector::ZeroVector */)
 {
 	Super::Filter(_msg, EFilterType::Locked);
+
+	_msg->AddTarget(_msg->GetTarget(), true);
 }
 
 UAbsFilter* ULockFilter::Clone()

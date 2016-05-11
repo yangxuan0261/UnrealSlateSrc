@@ -26,9 +26,18 @@ public:
 
 	UFightData*		mFightData;			//战斗数据
 	AMyChar*		mTarget;			//目标
+	bool			mIsLocked;			//是否被锁定标记
 
-	float			mDmgPhyValue = 0.0f;						//物理总伤害
-	float			mDmgMagValue = 0.0f;						//法术总伤害
+	float			mDmgPhyValue;		//物理总伤害
+	float			mDmgMagValue;		//法术总伤害
+	float			mSuckUp;			//总被吸血量
+	float			mCureRank;			//治疗总量
+	float			mRebound;			//总反弹伤害值
+	float			mReboundPer;		//总反弹伤害百分比
+	bool			mDeath;				//是否死亡
+	bool			mCrit;				//是否暴击
+	bool			mDodge;				//是否闪避
+	bool			mRebond;			//是否反伤
 };
 
 UCLASS()
@@ -44,7 +53,8 @@ public:
 
 	void	SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _target, const FVector& _targetLoc);
 	const TArray<UParam*>& GetTargets() const { return mTargetArr; }
-	void	AddTarget(AMyChar* _char);
+	void	AddTarget(AMyChar* _char, bool _isLocked = false);
+	void	ClearTargets();
 	USkillTemplate*	GetSkillTemp() const { return mSkillTemp; }
 
 	//void	ExeNullDlg();

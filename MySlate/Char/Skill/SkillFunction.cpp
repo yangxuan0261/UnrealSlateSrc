@@ -187,7 +187,7 @@ void USkillFunction::SkillBegin()
 	}
 
 	//TODO: 技编数据, 做技能表现
-	mAttacker->TempNotifyA();
+	//mAttacker->TempNotifyA();
 	mIsOver = false;
 
 	mOwnerCD->Restart();
@@ -221,25 +221,27 @@ void USkillFunction::SkillBegin()
 	mBullet->SetPkMsg(pkMsg);
 	mBullet->SetSkillTemplate(mSkillTemplate);
 	mBullet->SetTargetAndLoc(pkMsg->GetTarget(), pkMsg->GetTargetLoc());
-	mBullet->SetSpeed(mSkillTemplate->mBulletSpeed);
+	mBullet->SetSpeed(mSkillTemplate->mBltElem->mBulletSpeed);
+	mBullet->SetFly(false);
 	mBullet->SetActorHiddenInGame(true); //创建子弹是才开始显示
 
-	if (mSkillTemplate->mAttachPoint.Len() > 0) //有绑定部位
+	if (mSkillTemplate->mBltElem->mAttachPoint.Len() > 0) //有绑定部位
 	{
 		//TODO: 技编数据, 设置矩阵信息transform
-		mBullet->AttachRootComponentTo(mAttacker->GetMesh(), FName(*mSkillTemplate->mAttachPoint));
-		mBullet->SetActorRelativeLocation(FVector::ZeroVector);
-		mBullet->SetActorRelativeRotation(FRotator::ZeroRotator);
-		mBullet->SetActorRelativeScale3D(FVector(1.f, 1.f, 1.f));
+		mBullet->AttachRootComponentTo(mAttacker->GetMesh(), FName(*mSkillTemplate->mBltElem->mAttachPoint));
+		mBullet->SetActorRelativeLocation(mSkillTemplate->mBltElem->mLoc);
+		mBullet->SetActorRelativeRotation(mSkillTemplate->mBltElem->mRotate);
+		mBullet->SetActorRelativeScale3D(mSkillTemplate->mBltElem->mScale);
 	}
 	else
 	{
-		mBullet->SetActorLocation(mAttacker->GetActorLocation());
-		mBullet->SetActorRotation(mAttacker->GetActorRotation());
+		mBullet->SetActorLocation(mAttacker->GetActorLocation() + mSkillTemplate->mBltElem->mLoc);
+		mBullet->SetActorRotation(mAttacker->GetActorRotation() + mSkillTemplate->mBltElem->mRotate);
+		mBullet->SetActorScale3D(mSkillTemplate->mBltElem->mScale);
 	}
 
 	//---------- 技编 数据逻辑
-
+	UEffectMgr::GetInstance()->AttachBehav(mAttacker, EOwnType::Self, mBullet, mSkillTemplate->mBehavId);
 }
 
 void USkillFunction::BulletCreate()

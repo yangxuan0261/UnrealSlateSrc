@@ -25,6 +25,7 @@ AMyChar::AMyChar() : Super()
 	mUuid = 0;
 	mCharData = nullptr;
 	mTurnToLoc = FVector::ZeroVector;
+	mAnimation = nullptr;
 }
 
 AMyChar::~AMyChar()
@@ -54,8 +55,12 @@ void AMyChar::BeginPlay()
 	mDeathMultiNotify.Add(FDeathOneNotify::CreateUObject(UBuffMgr::GetInstance(), &UBuffMgr::CharDeathNotify));
 	//GetMesh()->SetSkeletalMesh(nullptr);
 
-	//特效接口部分
-	IBehavInterface::SetActor(this);
+	//动画实例
+	mAnimation = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
+	if (mAnimation != nullptr)
+	{
+		UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::BeginPlay, UMyAnimInstance load success"));
+	}
 }
 
 void AMyChar::Tick( float DeltaTime )
@@ -147,6 +152,10 @@ bool AMyChar::UseSkill(int32 _skillId, int32 _targetId /* = 0 */, FVector _targe
 void AMyChar::ChangeState(CharState _state)
 {
 	mCharState = _state;
+	if (mAnimation != nullptr)
+	{
+		mAnimation->mStateDlg.ExecuteIfBound(_state);
+	}
 	//for test
 	//USkillFunction* sdf = GetUsingSkill();
 	//bool b = sdf != nullptr ? sdf->CanAttack() : false;

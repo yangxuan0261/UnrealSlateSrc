@@ -6,12 +6,8 @@
 #include "../Comp/MyCharDataComp.h"
 #include "./MyAIController.h"
 
-UBTServiceMyBase::UBTServiceMyBase() : Super()
+UBTServiceMyBase::UBTServiceMyBase() : Super(), IBTNodeInterface()
 {
-	mOwnerChar = nullptr;
-	mOwnerAI = nullptr;
-	mBTComp = nullptr;
-
 	//…Ë÷√√ø÷°tick
 	bNotifyTick = 1;
 }
@@ -29,9 +25,7 @@ void UBTServiceMyBase::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * Node
 
 void UBTServiceMyBase::OnInstanceCreated(UBehaviorTreeComponent& OwnerComp)
 {
-	mBTComp = &OwnerComp;
-	mOwnerAI = mBTComp != nullptr ? Cast<AMyAIController>(mBTComp->GetOwner()) : nullptr;
-	mOwnerChar = mOwnerAI != nullptr ? Cast<AMyChar>(mOwnerAI->GetPawn()) : nullptr;
+	IBTNodeInterface::InitData(&OwnerComp);
 }
 
 void UBTServiceMyBase::OnInstanceDestroyed(UBehaviorTreeComponent& OwnerComp)

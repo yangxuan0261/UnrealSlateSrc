@@ -31,11 +31,6 @@ void UAbsFilter::Reset()
 	mCount = -1; //不限人数
 }
 
-void UAbsFilter::Recycle()
-{
-	IObjInterface::Recycle();
-}
-
 void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::Locked */, float _radius /* = 0.f */, const FVector& _boxSize /* = FVector::ZeroVector */)
 {
 	mDestChars.Empty();

@@ -16,9 +16,10 @@ class UCharMgr;
 class UCharData;
 class USkeletalMeshComponent;
 class UBehavElem;
+class UMyAnimInstance;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FDeathMultiNotify, AMyChar*);
-DECLARE_DELEGATE_OneParam(FDeathOneNotify, AMyChar*);
+DECLARE_DELEGATE_OneParam(FDeathOneNotify, AMyChar*); //为multi服务
 
 UCLASS()
 class AMyChar : public ACharacter, public IBehavInterface
@@ -120,6 +121,6 @@ private:
 	FRotator		mTurnToRot; //用来平滑旋转时保存目标Rotate,
 
 
-
-	FDeathMultiNotify mDeathMultiNotify; //绑定： buff管理器等等
+	UMyAnimInstance*	mAnimation;
+	FDeathMultiNotify	mDeathMultiNotify; //绑定： buff管理器等等
 };

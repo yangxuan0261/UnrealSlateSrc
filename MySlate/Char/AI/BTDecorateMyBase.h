@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./BTNodeExt.h"
+#include "./BTNodeInter.h"
 #include "BTDecorateMyBase.generated.h"
 
 class AMyChar;
@@ -9,7 +9,7 @@ class UBehaviorTreeComponent;
 
 // Bot AI task that tries to find a location near the current enemy
 UCLASS(Blueprintable)
-class UBTDecorateMyBase : public UBTDecorator_BlueprintBase
+class UBTDecorateMyBase : public UBTDecorator_BlueprintBase, public IBTNodeInterface
 {
 	GENERATED_BODY()
 public:
@@ -33,12 +33,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UBTDecorateMyBase")
 		bool		IsAttackRange();
 
+	UFUNCTION(BlueprintCallable, Category = "UBTDecorateMyBase")
+		AMyChar*	GetChar() const { return mOwnerChar; }
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBTDecorateMyBase")
-		AMyChar*	mOwnerChar;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBTDecorateMyBase")
-		AMyAIController*	mOwnerAI;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBTDecorateMyBase")
-		UBehaviorTreeComponent*	mBTComp;
 
 };

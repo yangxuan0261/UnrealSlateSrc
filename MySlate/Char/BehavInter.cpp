@@ -9,13 +9,18 @@ UBehavInterface::UBehavInterface(const class FObjectInitializer& ObjectInitializ
 
 }
 
+IBehavInterface::IBehavInterface()
+{
+
+}
+
 void IBehavInterface::BehavTick(float DeltaSeconds)
 {
 	for (auto Iter = mBehavMap.CreateConstIterator(); Iter; ++Iter)
 	{
-		for (UBehavElem* elem : Iter->Value)
+		for (auto Iter2 = Iter->Value.CreateConstIterator(); Iter2; ++Iter2)
 		{
-			elem->Tick(DeltaSeconds);
+			(*Iter2)->Tick(DeltaSeconds);
 		}
 	}
 }
@@ -39,19 +44,16 @@ void IBehavInterface::RemoveBehavElem(UBehavElem* _elem)
 	TArray<UBehavElem*>* srcVec = mBehavMap.Find(groupId);
 	if (srcVec != nullptr)
 	{
-		UBehavElem** findElem = srcVec->FindByPredicate([&](const UBehavElem* behavElem)->bool {
+		srcVec->RemoveAll([&](const UBehavElem* behavElem)->bool {
 			return behavElem == _elem;
 		});
-		if (findElem != nullptr)
-		{
-			UBehavElem* tmp = *findElem;
-			srcVec->Remove(tmp);
 
-			if (srcVec->Num() == 0)
-			{
-				mBehavMap.Remove(groupId);
-			}
+		if (srcVec->Num() == 0)
+		{
+			mBehavMap.Remove(groupId);
 		}
+
+		UE_LOG(SkillLogger, Warning, TEXT("--- IBehavInterface::RemoveBehavElem, map num:%d "), mBehavMap.Num());
 	}
 }
 
