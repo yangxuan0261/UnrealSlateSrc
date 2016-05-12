@@ -331,10 +331,9 @@ void UEffectMgr::AttachMesh(AMyBullet* _bullet, USkillTemplate* _skillTemp)
 			continue;
 		}
 
-		//注册cd组件
-		 
 		UStaticMeshComponent* meshComp = NewObject<UStaticMeshComponent>(_bullet, TEXT("BulletStaticMeshComponent"));
 		meshComp->RegisterComponent();
+		meshComp->AttachTo(_bullet->GetRootComponent()); //绑定mesh到子弹身上
 		newMeshVec.Add(meshComp);
 	}
 	_bullet->SetMeshComp(newMeshVec);
