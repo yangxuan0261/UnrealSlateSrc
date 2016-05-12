@@ -31,6 +31,7 @@ UObjMgr::UObjMgr() : Super()
 	mPkProcessCls		= UPkProcess::StaticClass();
 	mPkMsgCls			= UPkMsg::StaticClass();
 	mPkParamCls			= UParam::StaticClass();
+	mDmgInfoCls			= UDamageInfo::StaticClass();
 
 	mCircleFltCls		= UCircleFilter::StaticClass();
 	mLockFltCls			= ULockFilter::StaticClass();

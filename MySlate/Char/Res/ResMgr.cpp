@@ -26,7 +26,10 @@ UResMgr::~UResMgr()
 
 void UResMgr::BeginDestroy()
 {
-
+	if (mAssetLoader != nullptr)
+	{
+		delete mAssetLoader;
+	}
 	UE_LOG(ResLogger, Warning, TEXT("--- UResMgr::BeginDestroy"));
 	Super::BeginDestroy();
 }
@@ -61,7 +64,7 @@ void UResMgr::AsyncCallback()
 
 UParticleSystem* UResMgr::GetParticle(int32 _id)
 {
-	TArray<FParticleItem>& parArr = mResDB->GetParticles();
+	TArray<FParticleItem>& parArr = mResDB->mParticleList;
 	FParticleItem* result = parArr.FindByPredicate([&](const FParticleItem& _pi)->bool {
 		return _pi.mId == _id;
 	});
@@ -72,7 +75,22 @@ UParticleSystem* UResMgr::GetParticle(int32 _id)
 		UObject* obj = mAssetLoader->SynchronousLoad(result->mParticleAsset.ToStringReference());
 		dstps = obj != nullptr ? Cast<UParticleSystem>(obj) : nullptr;
 	}
+	return dstps;
+}
 
+UStaticMesh * UResMgr::GetStaticMesh(int32 _id)
+{
+	TArray<FStaticMeshItem>& meshArr = mResDB->mStaticMeshList;
+	FStaticMeshItem* result = meshArr.FindByPredicate([&](const FStaticMeshItem& _pi)->bool {
+		return _pi.mId == _id;
+	});
+
+	UStaticMesh* dstps = nullptr;
+	if (result != nullptr)
+	{
+		UObject* obj = mAssetLoader->SynchronousLoad(result->mMeshAsset.ToStringReference());
+		dstps = obj != nullptr ? Cast<UStaticMesh>(obj) : nullptr;
+	}
 	return dstps;
 }
 

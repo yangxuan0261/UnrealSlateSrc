@@ -23,6 +23,23 @@ public:
 };
 
 USTRUCT()
+struct FStaticMeshItem
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FStaticMeshItem()
+	{
+		mId = 0;
+		mMeshAsset = FStringAssetReference("");
+	}
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FMeshItem")
+		int32 mId;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FMeshItem")
+		TAssetPtr<UStaticMesh> mMeshAsset;
+};
+
+USTRUCT()
 struct FParticleItem
 {
 	GENERATED_USTRUCT_BODY()
@@ -49,14 +66,15 @@ public:
 	virtual ~UResDataBase();
 	virtual void BeginDestroy() override;
 
-	TArray<FParticleItem>&		GetParticles() { return mParticleList; }
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
 		TArray<FMeshItem>		mMeshList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
 		TArray<FParticleItem>	mParticleList;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
+		TArray<FStaticMeshItem>	mStaticMeshList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UResMgr")
 		TAssetPtr<UDataTable>	mSkillInfo;

@@ -4,10 +4,10 @@
 
 #include "../Pk/PkMsg.h"
 #include "../../MyChar.h"
+#include "../../Object/ObjMgr.h"
 
 ULockFilter::ULockFilter() : Super()
 {
-	IObjInterface::SetObj(this);
 }
 
 ULockFilter::~ULockFilter()
@@ -48,7 +48,7 @@ void ULockFilter::Parser(const TArray<FString>& _params)
 
 ULockFilter* ULockFilter::CreateFilter(const FString& _key)
 {
-	ULockFilter* lockFilter = NewObject<ULockFilter>(ULockFilter::StaticClass());
+	ULockFilter* lockFilter = GetObjMgr()->GetObj<ULockFilter>(GetObjMgr()->mLockFltCls);
 	lockFilter->SetKey(_key);
 	return lockFilter;
 }

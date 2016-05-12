@@ -6,8 +6,11 @@
 #include "../Res/Infos/BehavInfo.h"
 #include "./Effects/BehavData.h"
 #include "./Effects/BehavElem.h"
+#include "./Effects/EffectElem.h"
+#include "./Effects/ShakeElem.h"
 #include "../MyChar.h"
 #include "../MyBullet.h"
+#include "../Skill/Template/SkillTemplate.h"
 
 static int32 gEffectUuid = 1;
 static int32 IdGeneratorEffect()
@@ -169,8 +172,6 @@ int32 UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _
 		//StrArr.Append(Arr, ARRAY_COUNT(Arr));
 		for (UEffDataElem* effect : effectVec)
 		{
-
-
 			UParticleSystem* ps = UResMgr::GetInstance()->GetParticle(effect->mResId);
 			if (ps == nullptr )
 			{
@@ -237,6 +238,7 @@ int32 UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _
 	//------------- bullet
 	if (_tarBullet != nullptr)
 	{
+		//子弹特效，在行为数据中取
 		allElem.Empty();
 		TArray<UEffDataElem*> effectVec = behavData->mBltEffVec;
 		TArray<UShakeElem*> shakeVec = behavData->mBltShkVec;
@@ -308,6 +310,34 @@ void UEffectMgr::DetachBehav(IBehavInterface* _actor, int32 _groupId)
 	{
 		_actor->RemoveBehavElemAll(_groupId);
 	}
+}
+
+void UEffectMgr::AttachMesh(AMyBullet* _bullet, USkillTemplate* _skillTemp)
+{
+	const TArray<FBulletMeshData>& meshVec = _skillTemp->mBltElem->mMeshVec;
+	if (meshVec.Num() == 0)
+	{
+		return;
+	}
+
+	TArray<UStaticMeshComponent*> newMeshVec;
+	for (int32 i = 0; i < meshVec.Num(); i++)
+	{
+		const FBulletMeshData& mesh = meshVec[i];
+		UStaticMesh* staticMesh = UResMgr::GetInstance()->GetStaticMesh(mesh.mResId);
+		if (staticMesh == nullptr)
+		{
+			UE_LOG(EffectLogger, Error, TEXT("--- UEffectMgr::AttachMesh, mesh == nullptr, resId:%d"), mesh.mResId);
+			continue;
+		}
+
+		//注册cd组件
+		 
+		UStaticMeshComponent* meshComp = NewObject<UStaticMeshComponent>(_bullet, TEXT("BulletStaticMeshComponent"));
+		meshComp->RegisterComponent();
+		newMeshVec.Add(meshComp);
+	}
+	_bullet->SetMeshComp(newMeshVec);
 }
 
 UShakeElem* UEffectMgr::TestShake(AMyChar* _actor, int32 _id)

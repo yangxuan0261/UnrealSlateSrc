@@ -10,6 +10,24 @@
 class UAbsPkEvent;
 class UAbsFilter;
 
+USTRUCT(Blueprintable)
+struct FBulletMeshData
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FBulletMeshData() {}
+	FBulletMeshData(int32 _resId, FVector _loc, FVector _scale, FRotator _rot);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBulletMeshData")
+		int32			mResId;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBulletMeshData")
+		FVector			mLoc;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBulletMeshData")
+		FVector			mScale;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBulletMeshData")
+		FRotator		mRotate;
+};
+
 UCLASS(BlueprintType)
 class UBulletElem : public UObject, public IObjInterface //×Óµ¯Êý¾Ý
 {
@@ -39,6 +57,9 @@ public:
 		FVector			mScale;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UBulletElem")
 		FRotator		mRotate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBulletInfo")
+		TArray<FBulletMeshData>		mMeshVec;
 };
 
 UCLASS(Blueprintable, BlueprintType)

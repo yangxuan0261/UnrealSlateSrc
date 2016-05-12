@@ -10,7 +10,37 @@
 #include "../Buff/BuffMgr.h"
 #include "./FightData.h"
 #include "./PkMsg.h"
+#include "../SkillMgr.h"
+#include "../../Object/ObjMgr.h"
 
+UDamageInfo::UDamageInfo() : Super(), IObjInterface()
+{
+	IObjInterface::SetObj(this);
+}
+
+UDamageInfo::~UDamageInfo()
+{
+	UE_LOG(PkLogger, Warning, TEXT("--- UDamageInfo::~UDamageInfo"));
+}
+
+void UDamageInfo::BeginDestroy()
+{
+	UE_LOG(PkLogger, Warning, TEXT("--- UDamageInfo::BeginDestroy"));
+	Super::BeginDestroy();
+}
+
+void UDamageInfo::Reset()
+{
+	mTargetId = 0;
+	mTarget = nullptr;
+	mValue = 0.f;
+	mIsDodge = false;
+	mIsCrit = false;
+	mIsPhyDmgImmunity = false;
+	mIsMagDmgImmunity = false;
+}
+
+//-------------------------------- UPkProcess Begin
 UPkProcess::UPkProcess() : Super(), IObjInterface()
 {
 	IObjInterface::SetObj(this);
@@ -94,11 +124,14 @@ void UPkProcess::RunEndEvns()
 	}
 }
 
+//TODO: 计算每个单位的各种战斗数据，闪避，暴击，伤害等，暂时先计算伤害
 void UPkProcess::PkLogicEvns()
 {
-	//战斗伤害值
-	float dmg = mPkMsg->GetAttackerData()->GetAttackPhy();
-	mPkMsg->SetAttackDmgValue(dmg, -1, false);
+	float val = USkillMgr::GetInstance()->FormulaPk(mPkMsg, EFormulaPkType::Dodge);
+	mPkMsg->SetDodge(val > 0.5f ? true : false);
+
+	val = USkillMgr::GetInstance()->FormulaPk(mPkMsg, EFormulaPkType::Damage);
+	mPkMsg->SetAttackDmgValue(val, -1, false);
 }
 
 void UPkProcess::RunEndPk()
@@ -114,17 +147,30 @@ void UPkProcess::RunEndPk()
 	//UBuffMgr::GetInstance()->RunEndPkBuffs(mPkMsg->GetAttackerId(), mPkMsg);
 }
 
+//根据计算好的数据，决定是否付出代价
 void UPkProcess::PkPrice()
 {
-	TArray<FDamageInfo> dmgArr;
+	TArray<UDamageInfo*> dmgArr;
 
-	UParam* currtarge = nullptr;
 	const TArray<UParam*>& targets = mPkMsg->GetTargets();
 	for (UParam* param : targets)
 	{
-		currtarge = param;
+		if (param->mDodge)
+		{
+			continue;
+		}
 
+		UDamageInfo* info1 = GetObjMgr()->GetObj<UDamageInfo>(GetObjMgr()->mDmgInfoCls);
+		info1->mTarget = param->mTarget;
+		info1->mValue = param->mDmgPhyVal;
+		dmgArr.Add(info1);
 	}
 
 	mCallBack.ExecuteIfBound(dmgArr);
+}
+
+//最终代价
+void UPkProcess::PkDamage(TArray<UDamageInfo*> _dmgVec)
+{
+
 }

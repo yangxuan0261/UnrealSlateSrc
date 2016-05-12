@@ -6,7 +6,7 @@
 
 UAppendBuff::UAppendBuff() : Super()
 {
-	IObjInterface::SetObj(this);
+
 }
 
 UAppendBuff::~UAppendBuff()

@@ -4,7 +4,7 @@
 
 UCommonBuff::UCommonBuff() : Super()
 {
-	IObjInterface::SetObj(this);
+
 }
 
 UCommonBuff::~UCommonBuff()

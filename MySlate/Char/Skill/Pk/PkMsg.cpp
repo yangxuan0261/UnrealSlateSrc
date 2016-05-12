@@ -32,8 +32,8 @@ void UParam::Reset()
 	mTarget = nullptr;
 	mIsLocked = false;
 
-	mDmgPhyValue = 0.0f;
-	mDmgMagValue = 0.0f;
+	mDmgPhyVal = 0.0f;
+	mDmgMagVal = 0.0f;
 	mSuckUp = 0.0f;
 	mCureRank = 0.0f;
 	mRebound = 0.0f;
@@ -82,7 +82,7 @@ void UPkMsg::Reset()
 {
 	mCanLog = false;
 	mSkillId = 0;
-	mSkillLogicType = ESkillAttackType::Physics;
+	mSkillLogicType = ESkillAtkType::Physics;
 	mTeamType = ETeam::None;
 	mAttackerId = 0;
 	mTargetId = 0;
@@ -203,22 +203,22 @@ void UPkMsg::SetAttackDmgValue(float _value, int _limitId /* = -1 */, bool _isAd
 	{
 		switch (mSkillLogicType)
 		{
-		case ESkillAttackType::Physics: // 物理伤害
+		case ESkillAtkType::Physics: // 物理伤害
 		{
 			if (_isAdd)
-				mCurrTarget->mDmgPhyValue += _value;
+				mCurrTarget->mDmgPhyVal += _value;
 			else
-				mCurrTarget->mDmgPhyValue -= _value;
+				mCurrTarget->mDmgPhyVal -= _value;
 
 			UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::SetAttackDmgValue, ATTACK_PHY:%f"), _value);
 			break;
 		}
-		case ESkillAttackType::Magic: // 法术伤害
+		case ESkillAtkType::Magic: // 法术伤害
 		{
 			if (_isAdd)
-				mCurrTarget->mDmgMagValue += _value;
+				mCurrTarget->mDmgMagVal += _value;
 			else
-				mCurrTarget->mDmgMagValue -= _value;
+				mCurrTarget->mDmgMagVal -= _value;
 
 			UE_LOG(PkLogger, Warning, TEXT("--- UPkMsg::SetAttackDmgValue, ATTACK_MAG:%f"), _value);
 			break;
@@ -227,4 +227,9 @@ void UPkMsg::SetAttackDmgValue(float _value, int _limitId /* = -1 */, bool _isAd
 			break;
 		}
 	}
+}
+
+void UPkMsg::SetDodge(bool _value)
+{
+	mCurrTarget->mDodge = _value;
 }

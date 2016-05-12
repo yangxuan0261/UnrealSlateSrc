@@ -8,7 +8,7 @@
 #include "./Skill/Template/SkillTemplate.h"
 #include "./CharMgr.h"
 #include "./Skill/Pk/PkMsg.h"
-//#include "Skill/Pk/PkProcess.h"
+#include "Skill/Pk/PkProcess.h"
 
 #include "./Object/ObjMgr.h"
 
@@ -16,7 +16,7 @@ AMyBullet::AMyBullet()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	USphereComponent* sphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
+	USphereComponent* sphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("MySphereComp"));
 	sphereComp->InitSphereRadius(1.0f);
 	CollisionComp = sphereComp;
 	CollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -26,14 +26,24 @@ AMyBullet::AMyBullet()
 	CollisionComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	RootComponent = CollisionComp;
 
-	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
-	MovementComp->UpdatedComponent = CollisionComp;
+	//sphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp2"));
+	//sphereComp->InitSphereRadius(2.0f);
+	//MyRoot = sphereComp;
+	//MyRoot->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	////CollisionComp->SetCollisionObjectType(COLLISION_PROJECTILE);
+	////CollisionComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+	////CollisionComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	//MyRoot->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	//MyRoot->AttachTo(RootComponent);
+
+	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MyProjectileComp"));
+	MovementComp->SetUpdatedComponent(RootComponent);
 	MovementComp->ProjectileGravityScale = 0.0f;
 	MovementComp->MaxSpeed = 0.f;
 	MovementComp->InitialSpeed = 0.f;
 
 	//TODO: mesh component
-	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
+	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyMeshComp"));
 	MeshComp->AttachTo(CollisionComp);
 
 	mTargetId = 0;
@@ -55,7 +65,6 @@ AMyBullet::~AMyBullet()
 void AMyBullet::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void AMyBullet::Tick(float DeltaSeconds)
@@ -119,7 +128,25 @@ void AMyBullet::Tick(float DeltaSeconds)
 
 void AMyBullet::Destroyed()
 {
-
+	if (MovementComp != nullptr)
+	{
+		MovementComp->DestroyComponent();
+	}	
+	//if (MyRoot != nullptr)
+	//{
+	//	MyRoot->DetachFromParent();
+	//	MyRoot->DestroyComponent();
+	//}	
+	if (MeshComp != nullptr)
+	{
+		MeshComp->DetachFromParent();
+		MeshComp->DestroyComponent();
+	}
+	if (CollisionComp != nullptr)
+	{
+		CollisionComp->DetachFromParent();
+		CollisionComp->DestroyComponent();
+	}
 	UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::Destroyed"));
 	Super::Destroyed();
 }
@@ -190,7 +217,7 @@ void AMyBullet::SetFly(bool _fly)
 	}
 }
 
-void AMyBullet::CallbackPkOver(TArray<FDamageInfo>& _dmgArr)
+void AMyBullet::CallbackPkOver(TArray<UDamageInfo*> _dmgArr)
 {
 	UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CallbackPkOver, _dmgArr size:%d"), _dmgArr.Num());
 

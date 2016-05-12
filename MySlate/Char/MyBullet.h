@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "./Skill/Pk/PkProcess.h"
 #include "./BehavInter.h"
 
 #include "MyBullet.generated.h"
@@ -12,7 +11,7 @@ class AMyChar;
 class USkillTemplate;
 class UPkMsg;
 class UPkProcess;
-//struct FDamageInfo;
+class UDamageInfo;
 class UBehavElem;
 
 /*
@@ -50,7 +49,7 @@ public:
 		void SetFly(bool _fly);
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
-		void CallbackPkOver(TArray<FDamageInfo>& _dmgArr);
+		void CallbackPkOver(TArray<UDamageInfo*> _dmgArr);
 
 	//UFUNCTION()
 	//	virtual void OnHit(const FHitResult& HitResult);
@@ -63,6 +62,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void SetSkillTemplate(USkillTemplate* _skillTemp) { mSkillTemp = _skillTemp; }
+
+	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
+		void SetMeshComp(TArray<UStaticMeshComponent*> _meshCompVec) { MeshCompVec = _meshCompVec; }
 
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void DestroyBullet();
@@ -86,13 +88,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		UShapeComponent* CollisionComp;
 
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
+	//	UShapeComponent* MyRoot;
+
 	/** Mesh */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		UStaticMeshComponent* MeshComp;
 
-	/** Mesh */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
-		TArray<UParticleSystemComponent*> Particles;
+		TArray<UStaticMeshComponent*> MeshCompVec;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		int32				mTargetId; //ÊÜ»÷Õß

@@ -28,8 +28,8 @@ public:
 	AMyChar*		mTarget;			//目标
 	bool			mIsLocked;			//是否被锁定标记
 
-	float			mDmgPhyValue;		//物理总伤害
-	float			mDmgMagValue;		//法术总伤害
+	float			mDmgPhyVal;			//物理总伤害
+	float			mDmgMagVal;			//法术总伤害
 	float			mSuckUp;			//总被吸血量
 	float			mCureRank;			//治疗总量
 	float			mRebound;			//总反弹伤害值
@@ -73,14 +73,14 @@ public:
 	UParam*	GetCurrTarget() const { return mCurrTarget; }
 
 	//--------------- Begin
-	void SetAttackDmgValue(float _value, int _limitId = -1, bool _isAdd = true);			//伤害增加(数值)(受击者)
-
+	void	SetAttackDmgValue(float _value, int _limitId = -1, bool _isAdd = true);			//伤害增加(数值)(受击者)
+	void	SetDodge(bool _value);
 	//--------------- Begin
 private:
 	bool			mCanLog;
 	int32			mSkillId;						//技能id
 	USkillTemplate*	mSkillTemp;		
-	ESkillAttackType	mSkillLogicType;			//技能逻辑类型 SKILL_ATTACK_TYPE
+	ESkillAtkType	mSkillLogicType;			//技能逻辑类型 SKILL_ATTACK_TYPE
 	int32			mAttackerId;					//攻击者 唯一id
 	AMyChar*		mAttacker;						//攻击者
 	int32			mTargetId;						//锁定目标者 唯一id

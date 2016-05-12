@@ -2,6 +2,16 @@
 #include "MySlate.h"
 #include "SkillInfo.h"
 
+FBulletMeshInfo::FBulletMeshInfo()
+{
+
+}
+
+FBulletMeshInfo::~FBulletMeshInfo()
+{
+
+}
+
 FBulletInfo::FBulletInfo()
 {
 	UE_LOG(ResLogger, Warning, TEXT("--- FBulletInfo::FBulletInfo construct"));
@@ -21,5 +31,3 @@ FSkillInfo::~FSkillInfo()
 {
 	UE_LOG(ResLogger, Warning, TEXT("--- FSkillInfo::~FSkillInfo"));
 }
-
-

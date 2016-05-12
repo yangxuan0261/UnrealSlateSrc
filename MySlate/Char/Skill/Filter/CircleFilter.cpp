@@ -4,10 +4,10 @@
 
 #include "../Pk/PkMsg.h"
 #include "../../MyChar.h"
+#include "../../Object/ObjMgr.h"
 
 UCircleFilter::UCircleFilter() : Super()
 {
-	IObjInterface::SetObj(this);
 }
 
 UCircleFilter::~UCircleFilter()
@@ -54,7 +54,7 @@ void UCircleFilter::Parser(const TArray<FString>& _params)
 
 UCircleFilter* UCircleFilter::CreateFilter(const FString& _key)
 {
-	UCircleFilter* circleFilter = NewObject<UCircleFilter>(UCircleFilter::StaticClass());
+	UCircleFilter* circleFilter = GetObjMgr()->GetObj<UCircleFilter>(GetObjMgr()->mCircleFltCls);
 	circleFilter->SetKey(_key);
 	return circleFilter;
 }

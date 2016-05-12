@@ -12,6 +12,8 @@
 #include "../Res/Infos/BuffInfo.h"
 #include "../Res/Infos/BehavInfo.h"
 #include "./Pk/PkMsg.h"
+#include "../Comp/MyCharDataComp.h"
+#include "./Pk/FightData.h"
 
 USkillMgr::USkillMgr() : Super()
 {
@@ -105,6 +107,16 @@ void USkillMgr::LoadSkillData()
 			skill1->mBltElem->mScale = tmpPtr->mBltInfo.mScale;
 			skill1->mBltElem->mRotate = tmpPtr->mBltInfo.mRotate;
 
+			for (const FBulletMeshInfo& mesh : tmpPtr->mBltInfo.mMeshVec)
+			{
+				skill1->mBltElem->mMeshVec.Add(FBulletMeshData(
+					mesh.mResId
+					,mesh.mLoc
+					,mesh.mScale
+					,mesh.mRotate
+				));
+			}
+
 			skill1->mFilterStr = tmpPtr->mFilterStr;
 			skill1->mBeforeSkillStr = tmpPtr->mBeforeSkillStr;
 			skill1->mBeforePkStr = tmpPtr->mBeforePkStr;
@@ -159,8 +171,24 @@ void USkillMgr::LoadBuffData()
 	}
 }
 
+//根据计算类型 _type，对每个单位目标的各种计算公式
 float USkillMgr::FormulaPk(UPkMsg* _msg, EFormulaPkType _type)
 {
+	UFightData* atkData = _msg->GetAttackerData();
+	UFightData* tarData = _msg->GetCurrTarget()->mTarget->GetDataComp()->GetFigthData();
 
-	return 0.f;
+	float ret = 0.f;
+	if (_type == EFormulaPkType::Dodge)
+	{
+		ret = 0.f; //暂时所有都不闪避
+	}
+	else if (_type == EFormulaPkType::Damage)
+	{
+		ret = atkData->GetAttackPhy();
+	}
+	else
+	{
+
+	}
+	return ret;
 }

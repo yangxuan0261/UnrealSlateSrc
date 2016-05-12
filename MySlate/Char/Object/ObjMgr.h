@@ -10,6 +10,7 @@ class UFightData;
 class UPkProcess;
 class UPkMsg;
 class UParam;
+class UDamageInfo;
 
 class UCircleFilter;
 class ULockFilter;
@@ -63,6 +64,8 @@ public:
 		TSubclassOf<UPkMsg>			mPkMsgCls; 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UObjMgr")
 		TSubclassOf<UParam>			mPkParamCls;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UObjMgr")
+		TSubclassOf<UDamageInfo>	mDmgInfoCls;
 	//--------- pk End -----
 
 	//--------- filter Begin -----
@@ -107,7 +110,6 @@ public:
 		TSubclassOf<UShakeElem>		mShkElemCls;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UObjMgr")
 		TSubclassOf<UBulletElem>	mBltElemCls;
-
 	//--------- behav End -----
 
 

@@ -240,8 +240,11 @@ void USkillFunction::SkillBegin()
 		mBullet->SetActorScale3D(mSkillTemplate->mBltElem->mScale);
 	}
 
-	//---------- 技编 数据逻辑
+	//---------- 技编, 特效数据逻辑
 	UEffectMgr::GetInstance()->AttachBehav(mAttacker, EOwnType::Self, mBullet, mSkillTemplate->mBehavId);
+
+	//---------- 技编, Mesh数据逻辑
+	UEffectMgr::GetInstance()->AttachMesh(mBullet, mSkillTemplate);
 }
 
 void USkillFunction::BulletCreate()

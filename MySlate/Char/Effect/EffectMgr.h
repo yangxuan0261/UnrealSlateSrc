@@ -47,6 +47,8 @@ public:
 	//UFUNCTION(BlueprintCallable, Category = "UEffectMgr")
 		void			DetachBehav(IBehavInterface* _actor, int32 _groupId);
 
+		void			AttachMesh(AMyBullet* _bullet, USkillTemplate* _skillTemp);
+
 	UFUNCTION(BlueprintCallable, Category = "UEffectMgr")
 		UShakeElem*	TestShake(AMyChar* _actor, int32 _id);
 

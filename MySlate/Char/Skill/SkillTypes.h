@@ -72,7 +72,7 @@ enum class ESkillType : uint8 //技能类型
 };
 
 UENUM()
-enum class ESkillAttackType : uint8 //技能攻击类型
+enum class ESkillAtkType : uint8 //技能攻击类型
 {
 	None = 0,
 	Physics,	//物理伤害

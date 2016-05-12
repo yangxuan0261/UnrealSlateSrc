@@ -6,6 +6,26 @@
 #include "SkillInfo.generated.h"
 
 USTRUCT(Blueprintable)
+struct FBulletMeshInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FBulletMeshInfo();
+	virtual ~FBulletMeshInfo();
+
+public:
+	//∂¡±Ì Ù–‘
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBulletInfo")
+		int32			mResId;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBulletInfo")
+		FVector			mLoc;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBulletInfo")
+		FVector			mScale;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBulletInfo")
+		FRotator		mRotate;
+};
+
+USTRUCT(Blueprintable)
 struct FBulletInfo : public FTableRowBase		//’Ò∂Ø
 {
 	GENERATED_USTRUCT_BODY()
@@ -33,6 +53,9 @@ public:
 		FVector			mScale;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBulletInfo")
 		FRotator		mRotate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FBulletInfo")
+		TArray<FBulletMeshInfo>		mMeshVec;
 };
 
 USTRUCT(Blueprintable)

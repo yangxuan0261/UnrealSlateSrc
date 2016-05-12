@@ -8,6 +8,14 @@
 #include "../Function/Funcs/AbsPkEvent.h"
 #include "../../Object/ObjMgr.h"
 
+FBulletMeshData::FBulletMeshData(int32 _resId, FVector _loc, FVector _scale, FRotator _rot)
+{
+	mResId = _resId;
+	mLoc = _loc;
+	mScale = _scale;
+	mRotate = _rot;
+}
+
 UBulletElem::UBulletElem() : Super(), IObjInterface()
 {
 	IObjInterface::SetObj(this);

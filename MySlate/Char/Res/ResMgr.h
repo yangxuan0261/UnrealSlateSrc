@@ -35,6 +35,7 @@ public:
 
 	FStreamableManager*		GetAssetLoader() const { return mAssetLoader; }
 	UParticleSystem*		GetParticle(int32 _id);
+	UStaticMesh*			GetStaticMesh(int32 _id);
 
 	UDataTable*				GetInfoTable(EInfoType _infoType);
 

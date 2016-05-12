@@ -56,14 +56,14 @@ void UGolbalFunc::DestroyMgrs()
 	UBuffMgr::ReleaseInstance();
 	UResMgr::ReleaseInstance();
 	UEffectMgr::ReleaseInstance();
-	//UObjMgr::ReleaseInstance(); //暂时不释放对象，避免stop时崩溃
+	UObjMgr::ReleaseInstance(); //暂时不释放对象，避免stop时崩溃
 	gSkillMgr = nullptr;
 	gCharMgr = nullptr;
 	gFunctionMgr = nullptr;
 	gBuffMgr = nullptr;
 	gResMgr = nullptr;
 	gEffectMgr = nullptr;
-	//gObjMgr = nullptr;
+	gObjMgr = nullptr;
 }
 
 void UGolbalFunc::TurnForward(AActor* _actor, const FVector& _targetLoc)
