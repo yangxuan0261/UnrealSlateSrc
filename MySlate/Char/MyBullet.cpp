@@ -147,6 +147,13 @@ void AMyBullet::Destroyed()
 		CollisionComp->DetachFromParent();
 		CollisionComp->DestroyComponent();
 	}
+
+	for (UStaticMeshComponent* comp : MeshCompVec)
+	{
+		comp->DetachFromParent();
+		comp->DestroyComponent();
+	}
+
 	UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::Destroyed"));
 	Super::Destroyed();
 }
