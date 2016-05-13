@@ -22,6 +22,8 @@
 #include "../Skill/Function/Funcs/Suckup.h"
 
 #include "../Effect/Effects/BehavElem.h"
+#include "../Effect/Effects/EffectElem.h"
+#include "../Effect/Effects/ShakeElem.h"
 #include "../Skill/Template/SkillTemplate.h"
 
 UObjMgr::UObjMgr() : Super()
