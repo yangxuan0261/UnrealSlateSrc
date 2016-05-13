@@ -36,7 +36,7 @@ AMyChar::~AMyChar()
 void AMyChar::BeginPlay()
 {
 	Super::BeginPlay();
-	gCharMgr = gGetChar();
+	gCharMgr = gGetCharMgr();
 
 	//设置默认AI控制类，并生成一下
 	AIControllerClass = AMyAIController::StaticClass();
@@ -52,7 +52,7 @@ void AMyChar::BeginPlay()
 	mDataComp->RegisterComponent();
 
 	//绑定buff管理器
-	mDeathMultiNotify.Add(FDeathOneNotify::CreateUObject(gGetBuff(), &UBuffMgr::CharDeathNotify));
+	mDeathMultiNotify.Add(FDeathOneNotify::CreateUObject(gGetBuffMgr(), &UBuffMgr::CharDeathNotify));
 	//GetMesh()->SetSkeletalMesh(nullptr);
 
 	//动画实例
@@ -125,13 +125,13 @@ bool AMyChar::UseSkill(int32 _skillId, int32 _targetId /* = 0 */, FVector _targe
 	if (mUsingSkill == nullptr)
 	{	
 		//可以容错，但不是必须，因为使用技能是目标肯定是存在的
-		//AMyChar* target = _targetId > 0 ? gGetChar()->GetChar(_targetId) : nullptr;
+		//AMyChar* target = _targetId > 0 ? gGetCharMgr()->GetChar(_targetId) : nullptr;
 		//if (target == nullptr)
 		//{
 		//	return canUse;
 		//}
 
-		AMyChar* target = gGetChar()->GetChar(_targetId);
+		AMyChar* target = gGetCharMgr()->GetChar(_targetId);
 
 		USkillFunction* skillFunc = mCDComp->CanUseSkill(_skillId);
 		if (skillFunc != nullptr)

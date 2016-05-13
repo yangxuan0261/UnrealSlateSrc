@@ -1,8 +1,5 @@
-// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
-
 #include "MySlate.h"
-#include "MySlatePlayerController.h"
-#include "AI/Navigation/NavigationSystem.h"
+#include "MyPlayerCtrler.h"
 
 AMySlatePlayerController::AMySlatePlayerController()
 {
@@ -26,8 +23,8 @@ void AMySlatePlayerController::SetupInputComponent()
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AMySlatePlayerController::OnSetDestinationPressed);
-	InputComponent->BindAction("SetDestination", IE_Released, this, &AMySlatePlayerController::OnSetDestinationReleased);
+	InputComponent->BindAction("MouseClick", IE_Pressed, this, &AMySlatePlayerController::OnSetDestinationPressed);
+	InputComponent->BindAction("MouseClick", IE_Released, this, &AMySlatePlayerController::OnSetDestinationReleased);
 
 	// support touch devices 
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AMySlatePlayerController::MoveToTouchLocation);

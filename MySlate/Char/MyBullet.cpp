@@ -224,7 +224,7 @@ void AMyBullet::CreatePk()
 
 	if (target != nullptr)
 	{
-		UPkProcess* pkProcess = gGetObj()->GetObj<UPkProcess>(gGetObj()->mPkProcessCls);
+		UPkProcess* pkProcess = gGetObjMgr()->GetObj<UPkProcess>(gGetObjMgr()->mPkProcessCls);
 		pkProcess->SetPkOverDlg(FPkOverDlg::CreateUObject(this, &AMyBullet::CallbackPkOver));
 		pkProcess->SetMsg(mPkMsg);
 		pkProcess->Run();

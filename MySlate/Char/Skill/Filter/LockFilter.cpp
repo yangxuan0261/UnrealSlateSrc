@@ -48,7 +48,7 @@ void ULockFilter::Parser(const TArray<FString>& _params)
 
 ULockFilter* ULockFilter::CreateFilter(const FString& _key)
 {
-	ULockFilter* lockFilter = gGetObj()->GetObj<ULockFilter>(gGetObj()->mLockFltCls);
+	ULockFilter* lockFilter = gGetObjMgr()->GetObj<ULockFilter>(gGetObjMgr()->mLockFltCls);
 	lockFilter->SetKey(_key);
 	return lockFilter;
 }

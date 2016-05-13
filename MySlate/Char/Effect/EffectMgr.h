@@ -56,4 +56,4 @@ public:
 	TMap<int32, UBehavData*>	mBehavMap;
 };
 
-#define gGetEffect()			UEffectMgr::GetInstance()
+#define gGetEffectMgr()			UEffectMgr::GetInstance()

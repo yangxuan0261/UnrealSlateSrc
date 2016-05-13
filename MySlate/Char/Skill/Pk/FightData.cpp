@@ -33,7 +33,7 @@ void UFightData::Recycle()
 
 UFightData* UFightData::Clone()
 {
-	UFightData* data = gGetObj()->GetObj<UFightData>(gGetObj()->mFightDataCls);
+	UFightData* data = gGetObjMgr()->GetObj<UFightData>(gGetObjMgr()->mFightDataCls);
 	data->Copy(this);
 	return data;
 }

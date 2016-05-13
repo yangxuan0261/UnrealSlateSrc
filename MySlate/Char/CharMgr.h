@@ -65,4 +65,4 @@ private:
 	TMap<int32, UCharData*> mCharDataMap;
 };
 
-#define gGetChar()			UCharMgr::GetInstance()
+#define gGetCharMgr()			UCharMgr::GetInstance()

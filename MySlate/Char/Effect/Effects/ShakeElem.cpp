@@ -25,7 +25,7 @@ void UShakeElem::BeginDestroy()
 
 UShakeElem* UShakeElem::Clone()
 {
-	UShakeElem* shakeElem = gGetObj()->GetObj<UShakeElem>(gGetObj()->mShkElemCls);
+	UShakeElem* shakeElem = gGetObjMgr()->GetObj<UShakeElem>(gGetObjMgr()->mShkElemCls);
 	shakeElem->mA = this->mA;
 	shakeElem->mW = this->mW;
 	shakeElem->mTime = this->mTime;

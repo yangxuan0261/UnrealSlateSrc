@@ -63,7 +63,7 @@ USkillTemplate::USkillTemplate() : Super()
 	mEndPkStr= "";
 	mEndSkillStr = "";
 
-	mBltElem = gGetObj()->GetObj<UBulletElem>(gGetObj()->mBltElemCls);
+	mBltElem = gGetObjMgr()->GetObj<UBulletElem>(gGetObjMgr()->mBltElemCls);
 }
 
 USkillTemplate::~USkillTemplate()

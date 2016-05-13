@@ -30,14 +30,14 @@ void UMyGameInstance::Init()
 
 	UMyGameInstance::SetInstance(this); //将这个对象设置为单例对象
 
-	gSkillMgr = gGetSkill();
-	gCharMgr = gGetChar();
+	gSkillMgr = gGetSkillMgr();
+	gCharMgr = gGetCharMgr();
 	gFunctionMgr = gGetFactory();
 	gFunctionMgr->InitFuncAndFilters();
-	gBuffMgr = gGetBuff();
-	gResMgr = UResMgr::GetInstance();
-	gEffectMgr = gGetEffect();
-	gObjMgr = UObjMgr::GetInstance();
+	gBuffMgr = gGetBuffMgr();
+	gResMgr = gGetResMgr();
+	gEffectMgr = gGetEffectMgr();
+	gObjMgr = gGetObjMgr();
 }
 
 void UMyGameInstance::Shutdown()
@@ -62,22 +62,3 @@ void UMyGameInstance::Shutdown()
 	UE_LOG(GameLogger, Warning, TEXT("--- UMyGameInstance::Shutdown"));
 	Super::Shutdown();
 }
-
-//void UMyGameInstance::Init()
-//{
-//	FCoreUObjectDelegates::PreLoadMap.AddUObject(this, &UMyGameInstance::MyBeginLoadingScreen);
-//	FCoreUObjectDelegates::PostLoadMap.AddUObject(this, &UMyGameInstance::MyEndLoadingScreen);
-//}
-//
-//void UMyGameInstance::MyBeginLoadingScreen()
-//{
-//	FLoadingScreenAttributes LoadingScreen;
-//	LoadingScreen.bAutoCompleteWhenLoadingCompletes = false;
-//	LoadingScreen.WidgetLoadingScreen = FLoadingScreenAttributes::NewTestLoadingScreenWidget();
-//
-//	GetMoviePlayer()->SetupLoadingScreen(LoadingScreen);
-//}
-//
-//void UMyGameInstance::MyEndLoadingScreen()
-//{
-//}

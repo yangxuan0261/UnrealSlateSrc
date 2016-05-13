@@ -79,7 +79,7 @@ void UEffDataElem::OnCompleted(UParticleSystemComponent* _psComp)
 
 UEffDataElem* UEffDataElem::Clone()
 {
-	UEffDataElem* effectElem = gGetObj()->GetObj<UEffDataElem>(gGetObj()->mEffElemCls);
+	UEffDataElem* effectElem = gGetObjMgr()->GetObj<UEffDataElem>(gGetObjMgr()->mEffElemCls);
 	effectElem->mResId = this->mResId;
 	effectElem->mOwnType = this->mOwnType;
 	effectElem->mFollowType = this->mFollowType;

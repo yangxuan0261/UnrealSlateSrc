@@ -24,6 +24,7 @@
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
 #include "BehaviorTree/Tasks/BTTask_BlueprintBase.h"
 #include "AIController.h"
+#include "AI/Navigation/NavigationSystem.h"
 
 //----- Animation Begin -----
 #include "Animation/AnimInstance.h"

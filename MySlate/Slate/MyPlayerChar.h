@@ -1,10 +1,10 @@
-// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
 #pragma once
-#include "GameFramework/Character.h"
-#include "MySlateCharacter.generated.h"
 
-UCLASS(Blueprintable)
-class AMySlateCharacter : public ACharacter
+#include "./Char/MyChar.h"
+#include "MyPlayerChar.generated.h"
+
+UCLASS()
+class AMySlateCharacter : public AMyChar
 {
 	GENERATED_BODY()
 

@@ -58,26 +58,6 @@ public:
 
 	//--------------- test function
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static void					TestStrSplit();
-
-	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static void					TestMapRmove();
-
-	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TestForceGC();
 
-	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static void					TestStrContains(FString _str);
-
-	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static void					TestFilter(AMyChar* _actor, float _radius);
-
-	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static void					TestSpwanBullet(AMyChar* _actor);
-
-	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static void					TestArrLambda(FString _str);
-
-	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static void					TestGetName(UObject* _obj);
 };

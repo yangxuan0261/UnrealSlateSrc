@@ -54,4 +54,4 @@ private:
 	TMap<int32, TArray<UAbsBuff*>>		mBuffs;//key, charΨһid
 };
 
-#define gGetBuff()			UBuffMgr::GetInstance()
+#define gGetBuffMgr()			UBuffMgr::GetInstance()

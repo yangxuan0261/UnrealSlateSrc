@@ -127,10 +127,10 @@ void UPkProcess::RunEndEvns()
 //TODO: 计算每个单位的各种战斗数据，闪避，暴击，伤害等，暂时先计算伤害
 void UPkProcess::PkLogicEvns()
 {
-	float val = gGetSkill()->FormulaPk(mPkMsg, EFormulaPkType::Dodge);
+	float val = gGetSkillMgr()->FormulaPk(mPkMsg, EFormulaPkType::Dodge);
 	mPkMsg->SetDodge(val > 0.5f ? true : false);
 
-	val = gGetSkill()->FormulaPk(mPkMsg, EFormulaPkType::Damage);
+	val = gGetSkillMgr()->FormulaPk(mPkMsg, EFormulaPkType::Damage);
 	mPkMsg->SetAttackDmgValue(val, -1, false);
 }
 
@@ -144,7 +144,7 @@ void UPkProcess::RunEndPk()
 		func->RunEndPk(mPkMsg);
 	}
 
-	//gGetBuff()->RunEndPkBuffs(mPkMsg->GetAttackerId(), mPkMsg);
+	//gGetBuffMgr()->RunEndPkBuffs(mPkMsg->GetAttackerId(), mPkMsg);
 }
 
 //根据计算好的数据，决定是否付出代价
@@ -160,7 +160,7 @@ void UPkProcess::PkPrice()
 			continue;
 		}
 
-		UDamageInfo* info1 = gGetObj()->GetObj<UDamageInfo>(gGetObj()->mDmgInfoCls);
+		UDamageInfo* info1 = gGetObjMgr()->GetObj<UDamageInfo>(gGetObjMgr()->mDmgInfoCls);
 		info1->mTarget = param->mTarget;
 		info1->mValue = param->mDmgPhyVal;
 		dmgArr.Add(info1);

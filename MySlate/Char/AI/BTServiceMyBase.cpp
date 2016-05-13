@@ -40,11 +40,11 @@ AMyChar * UBTServiceMyBase::GetCloestEnemy()
 	{
 		if (mOwnerChar->mDataComp->mTeam == ETeam::Enemy)
 		{
-			searchArr = gGetChar()->mTeamCharArr;
+			searchArr = gGetCharMgr()->mTeamCharArr;
 		}
 		else if (mOwnerChar->mDataComp->mTeam == ETeam::Teammate)
 		{
-			searchArr = gGetChar()->mEnemyCharArr;
+			searchArr = gGetCharMgr()->mEnemyCharArr;
 		}
 
 		AMyChar* closetOne = nullptr; //找出最近的敌人

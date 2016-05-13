@@ -57,7 +57,7 @@ void URectFilter::Parser(const TArray<FString>& _params)
 
 URectFilter* URectFilter::CreateFilter(const FString& _key)
 {
-	URectFilter* circleFilter = gGetObj()->GetObj<URectFilter>(gGetObj()->mRectFltCls);
+	URectFilter* circleFilter = gGetObjMgr()->GetObj<URectFilter>(gGetObjMgr()->mRectFltCls);
 	circleFilter->SetKey(_key);
 	return circleFilter;
 }

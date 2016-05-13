@@ -1,7 +1,7 @@
-// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
 #pragma once
+
 #include "GameFramework/PlayerController.h"
-#include "MySlatePlayerController.generated.h"
+#include "MyPlayerCtrler.generated.h"
 
 UCLASS()
 class AMySlatePlayerController : public APlayerController

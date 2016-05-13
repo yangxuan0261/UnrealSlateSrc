@@ -34,5 +34,5 @@ void UCharData::BeginDestroy()
 
 void UCharData::Init()
 {
-	mFightData = gGetObj()->GetObj<UFightData>(gGetObj()->mFightDataCls);
+	mFightData = gGetObjMgr()->GetObj<UFightData>(gGetObjMgr()->mFightDataCls);
 }

@@ -1,7 +1,7 @@
 // Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
 
 #include "MySlate.h"
-#include "MySlateCharacter.h"
+#include "MyPlayerChar.h"
 
 AMySlateCharacter::AMySlateCharacter()
 {

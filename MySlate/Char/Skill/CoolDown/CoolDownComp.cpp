@@ -107,13 +107,13 @@ void UCoolDownComp::RemoveCDById(int32 _skillId)
 
 void UCoolDownComp::AddCD(int32 _skillId, bool _isRestartCD)
 {
-	USkillTemplate* skillTemp = gGetSkill()->GetSkillTemplate(_skillId);
+	USkillTemplate* skillTemp = gGetSkillMgr()->GetSkillTemplate(_skillId);
 	if (skillTemp)
 	{
 		//Çå³ý¾ÉµÄ
 		RemoveCDById(_skillId);
 
-		UCoolDown* cd = gGetObj()->GetObj<UCoolDown>(gGetObj()->mCoolDownCls);
+		UCoolDown* cd = gGetObjMgr()->GetObj<UCoolDown>(gGetObjMgr()->mCoolDownCls);
 		cd->SetSkillTemplate(skillTemp); 
 		cd->SetChar(mOwner);
 		if (_isRestartCD) {

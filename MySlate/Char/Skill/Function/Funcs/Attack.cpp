@@ -29,7 +29,7 @@ void UAttack::Reset()
 
 UAttack* UAttack::CreateFunction(const FString& _key)
 {
-	UAttack* func = gGetObj()->GetObj<UAttack>(gGetObj()->mAttackCls);
+	UAttack* func = gGetObjMgr()->GetObj<UAttack>(gGetObjMgr()->mAttackCls);
 	func->SetKey(_key);
 	return func;
 }

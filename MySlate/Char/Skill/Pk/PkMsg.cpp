@@ -57,7 +57,7 @@ void UParam::Recycle()
 
 void UParam::Init()
 {
-	mFightData = gGetObj()->GetObj<UFightData>(gGetObj()->mFightDataCls);
+	mFightData = gGetObjMgr()->GetObj<UFightData>(gGetObjMgr()->mFightDataCls);
 }
 
 
@@ -164,7 +164,7 @@ void UPkMsg::SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _t
 
 void UPkMsg::AddTarget(AMyChar* _char, bool _isLocked /* = false */)
 {
-	UParam* param = gGetObj()->GetObj<UParam>(gGetObj()->mPkParamCls);
+	UParam* param = gGetObjMgr()->GetObj<UParam>(gGetObjMgr()->mPkParamCls);
 	param->Init(); 
 	param->mTarget = _char;
 	param->mIsLocked = _isLocked;
@@ -185,7 +185,7 @@ void UPkMsg::ClearTargets()
 void UPkMsg::SetAttackerData(UFightData* _data)
 {
 	mAttackerData = _data; //备份数据
-	mAttackerDataForCacul = gGetObj()->GetObj<UFightData>(gGetObj()->mFightDataCls);
+	mAttackerDataForCacul = gGetObjMgr()->GetObj<UFightData>(gGetObjMgr()->mFightDataCls);
 	mAttackerDataForCacul->Copy(mAttackerData);
 }
 

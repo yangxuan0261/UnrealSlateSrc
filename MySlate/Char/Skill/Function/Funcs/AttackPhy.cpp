@@ -37,7 +37,7 @@ void UAttackPhy::Reset()
 
 UAttackPhy* UAttackPhy::CreateFunction(const FString& _key)
 {
-	UAttackPhy* func = gGetObj()->GetObj<UAttackPhy>(gGetObj()->mAttackPhyCls);
+	UAttackPhy* func = gGetObjMgr()->GetObj<UAttackPhy>(gGetObjMgr()->mAttackPhyCls);
 	func->SetKey(_key);
 	return func;
 }

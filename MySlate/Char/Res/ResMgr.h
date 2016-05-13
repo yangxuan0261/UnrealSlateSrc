@@ -44,4 +44,4 @@ private:
 	UResDataBase*			mResDB;
 };
 
-#define gGetRes()			UResMgr::GetInstance()
+#define gGetResMgr()			UResMgr::GetInstance()

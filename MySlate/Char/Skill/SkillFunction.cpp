@@ -192,7 +192,7 @@ void USkillFunction::SkillBegin()
 
 	mOwnerCD->Restart();
 
-	UPkMsg* pkMsg = gGetObj()->GetObj<UPkMsg>(gGetObj()->mPkMsgCls);
+	UPkMsg* pkMsg = gGetObjMgr()->GetObj<UPkMsg>(gGetObjMgr()->mPkMsgCls);
 	mPkMsg = pkMsg;
 	pkMsg->SetData(mSkillTemplate, mAttacker, mTarget, mTargetLoc);
 
@@ -241,10 +241,10 @@ void USkillFunction::SkillBegin()
 	}
 
 	//---------- 技编, 特效数据逻辑
-	gGetEffect()->AttachBehav(mAttacker, EOwnType::Self, mBullet, mSkillTemplate->mBehavId);
+	gGetEffectMgr()->AttachBehav(mAttacker, EOwnType::Self, mBullet, mSkillTemplate->mBehavId);
 
 	//---------- 技编, Mesh数据逻辑
-	gGetEffect()->AttachMesh(mBullet, mSkillTemplate);
+	gGetEffectMgr()->AttachMesh(mBullet, mSkillTemplate);
 }
 
 void USkillFunction::BulletCreate()

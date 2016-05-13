@@ -27,13 +27,13 @@ public:
 
 
 private:
-	static USkillMgr*				gSkillMgr;
-	static UCharMgr*				gCharMgr;
-	static UFuncFactory*			gFunctionMgr;
-	static UBuffMgr*				gBuffMgr;
-	static UResMgr*					gResMgr;
-	static UEffectMgr*				gEffectMgr;
-	static UObjMgr*					gObjMgr;
+	static USkillMgr*		gSkillMgr;
+	static UCharMgr*		gCharMgr;
+	static UFuncFactory*	gFunctionMgr;
+	static UBuffMgr*		gBuffMgr;
+	static UResMgr*			gResMgr;
+	static UEffectMgr*		gEffectMgr;
+	static UObjMgr*			gObjMgr;
 };
 
 #define GetGame()			UMyGameInstance::GetInstance()
