@@ -20,21 +20,11 @@ AMyBullet::AMyBullet()
 	sphereComp->InitSphereRadius(1.0f);
 	CollisionComp = sphereComp;
 	CollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	//CollisionComp->SetCollisionObjectType(COLLISION_PROJECTILE);
-	//CollisionComp->SetCollisionResponseToAllChannels(ECR_Ignore);
-	//CollisionComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	CollisionComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 	CollisionComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	//CollisionComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	//CollisionComp->SetCollisionObjectType(COLLISION_PROJECTILE);
 	RootComponent = CollisionComp;
-
-	//sphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp2"));
-	//sphereComp->InitSphereRadius(2.0f);
-	//MyRoot = sphereComp;
-	//MyRoot->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	////CollisionComp->SetCollisionObjectType(COLLISION_PROJECTILE);
-	////CollisionComp->SetCollisionResponseToAllChannels(ECR_Ignore);
-	////CollisionComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
-	//MyRoot->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-	//MyRoot->AttachTo(RootComponent);
 
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MyProjectileComp"));
 	MovementComp->SetUpdatedComponent(RootComponent);
@@ -42,15 +32,10 @@ AMyBullet::AMyBullet()
 	MovementComp->MaxSpeed = 0.f;
 	MovementComp->InitialSpeed = 0.f;
 
-	//TODO: mesh component
-	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyMeshComp"));
-	MeshComp->AttachTo(CollisionComp);
-
 	mTargetId = 0;
 	mSkillTemp = nullptr;
 	mTargetLoc = FVector::ZeroVector;
 	mPkMsg = nullptr;
-	mPkProcess = nullptr;
 	mFlying = false;
 	mSpeed = 0;
 	mStartPos = FVector::ZeroVector;
@@ -106,8 +91,8 @@ void AMyBullet::Tick(float DeltaSeconds)
 
 			if (distSq > flyDist)
 			{
-				DestroyBullet();
 				UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::Tick, distSq > flyDist"));
+				DestroyBullet();
 			}
 		}
 	}
@@ -117,10 +102,8 @@ void AMyBullet::Tick(float DeltaSeconds)
 		{
 			if (GetActorLocation().Equals(mTargetLoc, mSkillTemp->mBltElem->mTolerance))
 			{
-				DestroyBullet();
 				UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::Tick, target death, bullet arrival"));
-				//CreatePk();
-				//BulletJump();
+				DestroyBullet();
 			}
 		}
 	}
@@ -132,22 +115,11 @@ void AMyBullet::Destroyed()
 	{
 		MovementComp->DestroyComponent();
 	}	
-	//if (MyRoot != nullptr)
-	//{
-	//	MyRoot->DetachFromParent();
-	//	MyRoot->DestroyComponent();
-	//}	
-	if (MeshComp != nullptr)
-	{
-		MeshComp->DetachFromParent();
-		MeshComp->DestroyComponent();
-	}
 	if (CollisionComp != nullptr)
 	{
 		CollisionComp->DetachFromParent();
 		CollisionComp->DestroyComponent();
 	}
-
 	for (UStaticMeshComponent* comp : MeshCompVec)
 	{
 		comp->DetachFromParent();
@@ -202,25 +174,33 @@ void AMyBullet::SetFly(bool _fly)
 		CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AMyBullet::OnMyCollisionCompBeginOverlap);
 
 		//如果锁定地点，且飞行距离 > 0，则飞行距离一定大于开始点与目标点的距离，比如黑暗游侠的箭，会飞行一定的距离才消失
-		if (mSkillTemp->mBltElem->mLockedType == ELockedType::Loc && mSkillTemp->mBltElem->mFlyDist > 0)
+		if (mSkillTemp->mBltElem->mLockedType == ELockedType::Loc)
 		{
-			float distSq = (mTargetLoc, mStartPos).Size();
-			float flyDist = mSkillTemp->mBltElem->mFlyDist;
-
-			if (flyDist < distSq)
+			if (mSkillTemp->mBltElem->mFlyDist > 0)
 			{
-				UE_LOG(BulletLogger, Error, TEXT("--- AMyBullet::SetFly, flyDist < distSq, %f < %f "), flyDist, distSq);
+				float distSq = (mTargetLoc, mStartPos).Size();
+				float flyDist = mSkillTemp->mBltElem->mFlyDist;
+
+				if (flyDist < distSq)
+				{
+					UE_LOG(BulletLogger, Error, TEXT("--- AMyBullet::SetFly, flyDist < distSq, %f < %f "), flyDist, distSq);
+				}
+			}
+			else
+			{
+				UE_LOG(BulletLogger, Error, TEXT("--- AMyBullet::SetFly, flyDist have to > 0, %d "), mSkillTemp->mBltElem->mFlyDist);
 			}
 		}
 
 		if (mSpeed == 0)
 		{
-			UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::SetFly, bullet speed == 0 "));
+			UE_LOG(BulletLogger, Error, TEXT("--- AMyBullet::SetFly, bullet speed == 0 "));
 		}
 	}
 	else
 	{
 		MovementComp->Velocity = FVector::ZeroVector;
+		CollisionComp->OnComponentBeginOverlap.RemoveAll(this);
 	}
 }
 
@@ -241,29 +221,22 @@ void AMyBullet::CreatePk()
 	{
 		target->TempNotifyB();
 	}
-	//return; //for test
 
-	//TODO: 暂时不做结算
-	if (mPkProcess == nullptr)
+	if (target != nullptr)
 	{
-		if (target != nullptr)
-		{
-			UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CreatePk, target lock != null, id:%d"), target->GetUuid());
+		UPkProcess* pkProcess = gGetObj()->GetObj<UPkProcess>(gGetObj()->mPkProcessCls);
+		pkProcess->SetPkOverDlg(FPkOverDlg::CreateUObject(this, &AMyBullet::CallbackPkOver));
+		pkProcess->SetMsg(mPkMsg);
+		pkProcess->Run();
 
-			mPkProcess = GetObjMgr()->GetObj<UPkProcess>(GetObjMgr()->mPkProcessCls);
-			mPkProcess->SetPkOverDlg(FPkOverDlg::CreateUObject(this, &AMyBullet::CallbackPkOver));
-			mPkMsg->SetTarget(target);
-			mPkProcess->SetMsg(mPkMsg);
-			mPkProcess->Run();
-
-			mPkProcess->Recycle();
-			mPkProcess = nullptr;
-		}
-		else
-		{
-			UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CreatePk, target lock is null"));
-		}
+		pkProcess->Recycle();
 	}
+	else
+	{
+		UE_LOG(BulletLogger, Warning, TEXT("--- AMyBullet::CreatePk, target lock is null"));
+	}
+
+	BulletJump();
 }
 
 //子弹弹射
@@ -292,11 +265,6 @@ void AMyBullet::DestroyBullet()
 {
 	IBehavInterface::RemoveBehavElemAll();
 
-	if (mPkProcess != nullptr)
-	{
-		mPkProcess->Recycle();
-		mPkProcess = nullptr;
-	}
 	if (mPkMsg != nullptr) //如果子弹发射出去了， pkMsg应该跟随子弹释放
 	{	
 		mPkMsg->Recycle();
@@ -315,13 +283,14 @@ void AMyBullet::OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UP
 		return;
 	}
 
-	//TODO: 暂时先只对敌方,飞行过程中碰撞框碰撞到的目标，即时结算
-	if (mSkillTemp->mBltElem->mLockedType == ELockedType::Loc && mSkillTemp->mBltElem->mFlyDist > 0)
+	//TODO: 暂时先只对敌方,飞行过程中碰撞框碰撞到的目标，即时结算，例如黑暗游侠的技能
+	if (mSkillTemp->mBltElem->mLockedType == ELockedType::Loc)
 	{
 		if (target->GetDataComp()->GetTeamType() != mPkMsg->GetAttackerTeam())
 		{
 			mPkMsg->SetTargetId(target->GetUuid());
 			mPkMsg->SetTarget(target);
+			mPkMsg->AddTarget(target, true);
 			CreatePk();
 		}
 	}
@@ -331,7 +300,6 @@ void AMyBullet::OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UP
 		if (mPkMsg->GetTargetId() > 0 && mPkMsg->GetTarget() != nullptr)
 		{
 			CreatePk();
-			BulletJump();
 		}
 	}
 }

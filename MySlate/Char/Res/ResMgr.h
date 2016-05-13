@@ -43,3 +43,5 @@ private:
 	FStreamableManager*		mAssetLoader;
 	UResDataBase*			mResDB;
 };
+
+#define gGetRes()			UResMgr::GetInstance()

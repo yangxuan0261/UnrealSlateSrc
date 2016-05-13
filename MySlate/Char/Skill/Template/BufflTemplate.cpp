@@ -71,7 +71,7 @@ void UBufflTemplate::ParseFuncStr(const FString& _funcStr, TArray<UAbsPkEvent*>&
 	paramStr.ParseIntoArray(params, Split_Sem, true);
 	for (TArray<FString>::TConstIterator iter = params.CreateConstIterator(); iter; ++iter)
 	{
-		UAbsPkEvent* func = UFuncFactory::GetInstance()->createFunction(*iter);
+		UAbsPkEvent* func = gGetFactory()->createFunction(*iter);
 		if (func != nullptr)
 		{
 			func->AddToRoot();

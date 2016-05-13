@@ -117,4 +117,4 @@ private:
 	TMap<FString, TArray<UObject*>>		mObjMap; //对象回收池
 };
 
-#define GetObjMgr()			UObjMgr::GetInstance()
+#define gGetObj()			UObjMgr::GetInstance()

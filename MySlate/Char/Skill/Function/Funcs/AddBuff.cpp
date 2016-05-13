@@ -33,7 +33,7 @@ void UAddBuff::Reset()
 
 UAddBuff* UAddBuff::CreateFunction(const FString& _key)
 {
-	UAddBuff* func = GetObjMgr()->GetObj<UAddBuff>(GetObjMgr()->mAddBuffCls);
+	UAddBuff* func = gGetObj()->GetObj<UAddBuff>(gGetObj()->mAddBuffCls);
 	func->SetKey(_key);
 	return func;
 }
@@ -59,5 +59,5 @@ void UAddBuff::RunEndEvns(UPkMsg* msg)
 {
 	UE_LOG(FuncLogger, Warning, TEXT("--- UAddBuff::RunEndEvns, targetId:%d, buffId:%d"), msg->GetCurrTarget()->mTarget->mUuid, mBuffId);
 
-	UBuffMgr::GetInstance()->AddBuff(msg->GetAttacker(), msg->GetCurrTarget()->mTarget, msg->GetSkillTemp()->mId, mBuffId);
+	gGetBuff()->AddBuff(msg->GetAttacker(), msg->GetCurrTarget()->mTarget, msg->GetSkillTemp()->mId, mBuffId);
 }

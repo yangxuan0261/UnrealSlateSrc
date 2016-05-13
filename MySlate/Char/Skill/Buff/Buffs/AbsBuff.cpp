@@ -93,7 +93,7 @@ void UAbsBuff::BuffStart()
 	}
 
 	//特效绑定
-	mBehavGroupId = UEffectMgr::GetInstance()->AttachBehav(mOwnerChar, EOwnType::Self, nullptr, mBuffTemp->mBehavDataId);
+	mBehavGroupId = gGetEffect()->AttachBehav(mOwnerChar, EOwnType::Self, nullptr, mBuffTemp->mBehavDataId);
 }
 
 void UAbsBuff::BuffOver()
@@ -107,7 +107,7 @@ void UAbsBuff::BuffOver()
 	}
 
 	//解除特效绑定
-	UEffectMgr::GetInstance()->DetachBehav(mOwnerChar, mBehavGroupId);
+	gGetEffect()->DetachBehav(mOwnerChar, mBehavGroupId);
 }
 
 void UAbsBuff::RunBeforePk(UPkMsg* msg)

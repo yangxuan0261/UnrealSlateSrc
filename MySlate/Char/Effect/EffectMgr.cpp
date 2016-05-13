@@ -10,6 +10,7 @@
 #include "./Effects/ShakeElem.h"
 #include "../MyChar.h"
 #include "../MyBullet.h"
+#include "../MyScene.h"
 #include "../Skill/Template/SkillTemplate.h"
 
 static int32 gEffectUuid = 1;
@@ -22,8 +23,6 @@ static int32 IdGeneratorEffect()
 
 	return gEffectUuid++;
 } 
-
-static const int32 gSceneEffectId = (1 << 4) + 1;
 
 UEffectMgr::UEffectMgr()
 {
@@ -245,7 +244,7 @@ int32 UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _
 
 		for (UEffDataElem* effect : effectVec)
 		{
-			if (effect->mFollowType == EFollowType::UnFollow) //子弹特效一般都是跟随
+			if (effect->mFollowType == EFollowType::Follow) //子弹特效一般都是跟随
 			{
 				UParticleSystem* ps = UResMgr::GetInstance()->GetParticle(effect->mResId);
 				if (ps == nullptr)
@@ -264,7 +263,7 @@ int32 UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _
 					effect = effect->Clone();
 					effect->mGroupId = groupId;
 					psComp->SetRelativeScale3D(effect->mScale);
-					effect->SetActor(_tarChar);
+					effect->SetActor(_tarBullet);
 					effect->SetData(psComp);
 					effect->Start();
 					allElem.Add(effect);
@@ -334,6 +333,10 @@ void UEffectMgr::AttachMesh(AMyBullet* _bullet, USkillTemplate* _skillTemp)
 		UStaticMeshComponent* meshComp = NewObject<UStaticMeshComponent>(_bullet, TEXT("BulletStaticMeshComponent"));
 		meshComp->RegisterComponent();
 		meshComp->AttachTo(_bullet->GetRootComponent()); //绑定mesh到子弹身上
+		meshComp->SetStaticMesh(staticMesh);
+		meshComp->SetRelativeLocation(mesh.mLoc);
+		meshComp->SetRelativeScale3D(mesh.mScale);
+		meshComp->SetRelativeRotation(mesh.mRotate);
 		newMeshVec.Add(meshComp);
 	}
 	_bullet->SetMeshComp(newMeshVec);

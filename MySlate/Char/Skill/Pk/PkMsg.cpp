@@ -57,7 +57,7 @@ void UParam::Recycle()
 
 void UParam::Init()
 {
-	mFightData = GetObjMgr()->GetObj<UFightData>(GetObjMgr()->mFightDataCls);
+	mFightData = gGetObj()->GetObj<UFightData>(gGetObj()->mFightDataCls);
 }
 
 
@@ -126,7 +126,7 @@ void UPkMsg::SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _t
 		//target 
 		if (_target != nullptr)
 		{
-			mTargetId = _target->GetUuid(); //防止，发动技能过程中，目标死亡的情况
+			mTargetId = _target->GetUuid(); //防止发动技能过程中，目标死亡的情况
 			mTargetLoc = mTargetLocked->GetActorLocation();
 
 			//死亡回调
@@ -164,7 +164,7 @@ void UPkMsg::SetData(USkillTemplate* _skillTemp, AMyChar* _attacker, AMyChar* _t
 
 void UPkMsg::AddTarget(AMyChar* _char, bool _isLocked /* = false */)
 {
-	UParam* param = GetObjMgr()->GetObj<UParam>(GetObjMgr()->mPkParamCls);
+	UParam* param = gGetObj()->GetObj<UParam>(gGetObj()->mPkParamCls);
 	param->Init(); 
 	param->mTarget = _char;
 	param->mIsLocked = _isLocked;
@@ -185,7 +185,7 @@ void UPkMsg::ClearTargets()
 void UPkMsg::SetAttackerData(UFightData* _data)
 {
 	mAttackerData = _data; //备份数据
-	mAttackerDataForCacul = GetObjMgr()->GetObj<UFightData>(GetObjMgr()->mFightDataCls);
+	mAttackerDataForCacul = gGetObj()->GetObj<UFightData>(gGetObj()->mFightDataCls);
 	mAttackerDataForCacul->Copy(mAttackerData);
 }
 

@@ -54,7 +54,7 @@ void UCircleFilter::Parser(const TArray<FString>& _params)
 
 UCircleFilter* UCircleFilter::CreateFilter(const FString& _key)
 {
-	UCircleFilter* circleFilter = GetObjMgr()->GetObj<UCircleFilter>(GetObjMgr()->mCircleFltCls);
+	UCircleFilter* circleFilter = gGetObj()->GetObj<UCircleFilter>(gGetObj()->mCircleFltCls);
 	circleFilter->SetKey(_key);
 	return circleFilter;
 }

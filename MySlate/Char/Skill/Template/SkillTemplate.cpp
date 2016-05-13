@@ -63,7 +63,7 @@ USkillTemplate::USkillTemplate() : Super()
 	mEndPkStr= "";
 	mEndSkillStr = "";
 
-	mBltElem = GetObjMgr()->GetObj<UBulletElem>(GetObjMgr()->mBltElemCls);
+	mBltElem = gGetObj()->GetObj<UBulletElem>(gGetObj()->mBltElemCls);
 }
 
 USkillTemplate::~USkillTemplate()
@@ -169,7 +169,7 @@ void USkillTemplate::ParseFuncStr(const FString& _funcStr, TArray<UAbsPkEvent*>&
 	paramStr.ParseIntoArray(params, Split_Sem, true);
 	for (TArray<FString>::TConstIterator iter = params.CreateConstIterator(); iter; ++iter)
 	{
-		UAbsPkEvent* func = UFuncFactory::GetInstance()->createFunction(*iter);
+		UAbsPkEvent* func = gGetFactory()->createFunction(*iter);
 		if (func != nullptr)
 		{
 			_funcArr.Add(func);
@@ -179,5 +179,5 @@ void USkillTemplate::ParseFuncStr(const FString& _funcStr, TArray<UAbsPkEvent*>&
 
 void USkillTemplate::ParseFilterStr(const FString& _filterStr)
 {
-	mFilter = UFuncFactory::GetInstance()->createFilter(_filterStr);
+	mFilter = gGetFactory()->createFilter(_filterStr);
 }

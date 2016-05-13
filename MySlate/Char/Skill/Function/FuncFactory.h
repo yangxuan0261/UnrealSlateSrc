@@ -111,3 +111,5 @@ private:
 	TMap<FString, UAbsPkEvent*>	mFunctionMap;
 	TMap<FString, UAbsFilter*>	mFilterMap;
 };
+
+#define gGetFactory()			UFuncFactory::GetInstance()

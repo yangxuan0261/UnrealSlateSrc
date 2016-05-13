@@ -55,6 +55,7 @@ DECLARE_LOG_CATEGORY_EXTERN(GolbalFuncLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(ResLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(EffectLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(ObjLogger, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(GameLogger, Log, All);
 
 //use logger
 //UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::~USkillFunction:%d"), mSkillId);

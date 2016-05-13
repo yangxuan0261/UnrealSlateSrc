@@ -67,7 +67,7 @@ void AStandardHUD::DrawHUD()
 
 void AStandardHUD::DrawActorsHealth()
 {
-	const TMap<int32, AMyChar*>& allChars = UCharMgr::GetInstance()->GetAllChars();
+	const TMap<int32, AMyChar*>& allChars = gGetChar()->GetAllChars();
 	for (TMap<int32, AMyChar*>::TConstIterator Iter = allChars.CreateConstIterator(); Iter; ++Iter)
 	{
 		DrawHealthBar(Iter->Value, 18 * mUIScale, -20.f);

@@ -51,9 +51,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void CallbackPkOver(TArray<UDamageInfo*> _dmgArr);
 
-	//UFUNCTION()
-	//	virtual void OnHit(const FHitResult& HitResult);
-
 	UFUNCTION(BlueprintCallable, Category = "AMyBullet")
 		void CreatePk();
 
@@ -79,21 +76,12 @@ public:
 		void OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 public:
-	/** movement component */
+	//子弹的基础组件：移动和碰撞，粒子和mesh组件动态增加，都在UEffectMgr中生成并绑定
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		UProjectileMovementComponent* MovementComp;
 
-	//TODO: 这几个组件暂时由蓝图中编辑，后期动态生成碰撞形状、Mesh、粒子
-	/** collisions root*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		UShapeComponent* CollisionComp;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
-	//	UShapeComponent* MyRoot;
-
-	/** Mesh */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
-		UStaticMeshComponent* MeshComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		TArray<UStaticMeshComponent*> MeshCompVec;
@@ -109,8 +97,6 @@ public:
 		FVector				mTargetLoc; //目标地点
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		UPkMsg*				mPkMsg; //
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
-		UPkProcess*			mPkProcess; 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")
 		bool				mFlying;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyBullet")

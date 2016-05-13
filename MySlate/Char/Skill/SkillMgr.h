@@ -53,3 +53,5 @@ private:
 	TMap<int32, USkillTemplate*>	mSkillTempMap;
 	TMap<int32, UBufflTemplate*>	mBuffTempMap;
 };
+
+#define gGetSkill()			USkillMgr::GetInstance()

@@ -66,7 +66,7 @@ USkillFunction* UCoolDown::GetSkillFunc()
 {
 	if (mSkillFunc == nullptr)
 	{
-		USkillFunction* skillFunc = GetObjMgr()->GetObj<USkillFunction>(GetObjMgr()->mSkillFuncCls); //设置USkillFunction跟随UCoolDown销毁
+		USkillFunction* skillFunc = gGetObj()->GetObj<USkillFunction>(gGetObj()->mSkillFuncCls); //设置USkillFunction跟随UCoolDown销毁
 		skillFunc->AddToRoot();
 		skillFunc->SetCD(this);//使用技能时需要重置这个cd，故丢进this指针
 		mSkillFunc = skillFunc;

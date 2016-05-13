@@ -36,7 +36,7 @@ void USuckup::Reset()
 
 USuckup* USuckup::CreateFunction(const FString& _key)
 {
-	USuckup* func = GetObjMgr()->GetObj<USuckup>(GetObjMgr()->mSuckupCls);
+	USuckup* func = gGetObj()->GetObj<USuckup>(gGetObj()->mSuckupCls);
 	func->SetKey(_key);
 	return func;
 }

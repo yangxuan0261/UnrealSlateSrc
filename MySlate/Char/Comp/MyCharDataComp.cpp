@@ -30,7 +30,7 @@ UMyCharDataComp::~UMyCharDataComp()
 void UMyCharDataComp::BeginPlay()
 {
 	Super::BeginPlay();
-	mFightData = GetObjMgr()->GetObj<UFightData>(GetObjMgr()->mFightDataCls);//战斗时数据对象
+	mFightData = gGetObj()->GetObj<UFightData>(gGetObj()->mFightDataCls);//战斗时数据对象
 }
 
 void UMyCharDataComp::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
@@ -53,7 +53,7 @@ void UMyCharDataComp::DestroyComponent(bool bPromoteChildren /*= false*/)
 
 void UMyCharDataComp::SetCharData(int32 _id)
 {
-	UCharData* data = UCharMgr::GetInstance()->GetCharData(_id);
+	UCharData* data = gGetChar()->GetCharData(_id);
 
 	if (data != nullptr)
 	{

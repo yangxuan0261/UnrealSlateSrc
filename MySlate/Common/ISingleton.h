@@ -5,6 +5,10 @@ template<class T>
 class USingleton
 {
 public:
+	USingleton() {};
+	virtual ~USingleton() {};
+
+public:
 	static T* GetInstance()
 	{
 		return ManagerInstance();
@@ -13,12 +17,15 @@ public:
 	{
 		ManagerInstance( true );
 	}
+	static void SetInstance(UObject* _obj) //for system spawn obj
+	{
+		static T* m_sInstance = Cast<T>(_obj);
+	}
 
 protected:
-
 	static T* ManagerInstance( bool destroy = false )
 	{
-		static T* m_sInstance; //
+		static T* m_sInstance = nullptr;
 
 		if( destroy )
 		{
@@ -39,7 +46,4 @@ protected:
 
 		return m_sInstance;
 	}
-
-	virtual ~USingleton() {};
-	USingleton() {};
 };

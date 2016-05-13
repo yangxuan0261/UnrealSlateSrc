@@ -1,16 +1,17 @@
 
 #pragma once
 
-#include "GolbalFunc.generated.h"
+#include "../MyGameInstance.h"
 
-class USkillMgr;
-class UCharMgr;
-class UFuncFactory;
-class UBuffMgr;
-class UResMgr;
-class UEffectMgr;
-class UObjMgr;
-class AMyChar;
+#include "./Char/Skill/SkillMgr.h"
+#include "./Char/CharMgr.h"
+#include "./Char/Skill/Function/FuncFactory.h"
+#include "./Char/Skill/Buff/BuffMgr.h"
+#include "./Char/Res/ResMgr.h"
+#include "./Char/Effect/EffectMgr.h"
+#include "./Char/Object/ObjMgr.h"
+
+#include "GolbalFunc.generated.h"
 
 UCLASS()
 class UGolbalFunc : public UBlueprintFunctionLibrary
@@ -22,28 +23,32 @@ public:
 	virtual ~UGolbalFunc();
 	virtual void BeginDestroy() override;
 
+	template<typename	TRetType>
+	static TRetType*				GetMgr() { return TRetType::GetInstance();}
+
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					InitMgrs();
+
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					DestroyMgrs();
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static USkillMgr*			GetSkillMgr() { return gSkillMgr; }
+		static USkillMgr*			GetSkillMgr() { return GetMgr<USkillMgr>(); }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static UBuffMgr*			GetBuffMgr() { return gBuffMgr; }
+		static UBuffMgr*			GetBuffMgr() { return GetMgr<UBuffMgr>(); }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static UCharMgr*			GetCharMgr() { return gCharMgr; }
+		static UCharMgr*			GetCharMgr() { return GetMgr<UCharMgr>(); }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static UResMgr*				GetResMgr() { return gResMgr; }
+		static UResMgr*				GetResMgr() { return GetMgr<UResMgr>(); }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static UEffectMgr*			GetEffectMgr() { return gEffectMgr; }
+		static UEffectMgr*			GetEffectMgr() { return GetMgr<UEffectMgr>(); }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
-		static UObjMgr*			GetObjtMgr() { return gObjMgr; }
+		static UObjMgr*				GetObjtMgr() { return GetMgr<UObjMgr>(); }
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TurnForward(AActor* _actor, const FVector& _targetLoc);
@@ -75,13 +80,4 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TestGetName(UObject* _obj);
-
-private:
-	static USkillMgr*				gSkillMgr;
-	static UCharMgr*				gCharMgr;
-	static UFuncFactory*			gFunctionMgr;
-	static UBuffMgr*				gBuffMgr;
-	static UResMgr*					gResMgr;
-	static UEffectMgr*				gEffectMgr;
-	static UObjMgr*					gObjMgr;
 };

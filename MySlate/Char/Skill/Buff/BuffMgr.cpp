@@ -86,18 +86,18 @@ void UBuffMgr::RunEndPkBuffs(int32 _charId, UPkMsg* msg)
 
 void UBuffMgr::AddBuff(AMyChar* _attacker, AMyChar* _target, int32 _skillId, int32 _buffId)
 {
-	UBufflTemplate* buffTemp = USkillMgr::GetInstance()->GetBuffTemplate(_buffId);
+	UBufflTemplate* buffTemp = gGetSkill()->GetBuffTemplate(_buffId);
 	if (buffTemp != nullptr && _target != nullptr)
 	{
 		int32 targetId = _target->GetUuid();
 		UAbsBuff* beAdd = nullptr;
 		if (buffTemp->mCanAdd) //µþ¼Óbuff
 		{
-			beAdd = GetObjMgr()->GetObj<UAppendBuff>(GetObjMgr()->mAppBuffCls);
+			beAdd = gGetObj()->GetObj<UAppendBuff>(gGetObj()->mAppBuffCls);
 		}
 		else
 		{
-			beAdd = GetObjMgr()->GetObj<UCommonBuff>(GetObjMgr()->mComBuffCls);
+			beAdd = gGetObj()->GetObj<UCommonBuff>(gGetObj()->mComBuffCls);
 		}
 		beAdd->SetData(buffTemp, _attacker, _target, _skillId);
 

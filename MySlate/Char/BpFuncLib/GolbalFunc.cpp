@@ -2,22 +2,7 @@
 #include "MySlate.h"
 #include "GolbalFunc.h"
 
-#include "../Skill/SkillMgr.h"
-#include "../CharMgr.h"
-#include "../Skill/Function/FuncFactory.h"
-#include "../Skill/Buff/BuffMgr.h"
-#include "../Res/ResMgr.h"
-#include "../Effect/EffectMgr.h"
-#include "../Object/ObjMgr.h"
 #include "../MyChar.h"
-
-USkillMgr*		UGolbalFunc::gSkillMgr		= nullptr;
-UCharMgr*		UGolbalFunc::gCharMgr		= nullptr;
-UFuncFactory*	UGolbalFunc::gFunctionMgr	= nullptr;
-UBuffMgr*		UGolbalFunc::gBuffMgr		= nullptr;
-UResMgr*		UGolbalFunc::gResMgr		= nullptr;
-UEffectMgr*		UGolbalFunc::gEffectMgr		= nullptr;
-UObjMgr*		UGolbalFunc::gObjMgr		= nullptr;
 
 UGolbalFunc::UGolbalFunc() : Super()
 {
@@ -38,32 +23,12 @@ void UGolbalFunc::BeginDestroy()
 
 void UGolbalFunc::InitMgrs()
 {
-	gSkillMgr = USkillMgr::GetInstance();
-	gCharMgr = UCharMgr::GetInstance();
-	gFunctionMgr = UFuncFactory::GetInstance();
-	gFunctionMgr->InitFuncAndFilters();
-	gBuffMgr = UBuffMgr::GetInstance();
-	gResMgr = UResMgr::GetInstance();
-	gEffectMgr = UEffectMgr::GetInstance();
-	gObjMgr = UObjMgr::GetInstance();
+
 }
 
 void UGolbalFunc::DestroyMgrs()
 {
-	USkillMgr::ReleaseInstance();
-	UCharMgr::ReleaseInstance();
-	UFuncFactory::ReleaseInstance();
-	UBuffMgr::ReleaseInstance();
-	UResMgr::ReleaseInstance();
-	UEffectMgr::ReleaseInstance();
-	UObjMgr::ReleaseInstance(); //暂时不释放对象，避免stop时崩溃
-	gSkillMgr = nullptr;
-	gCharMgr = nullptr;
-	gFunctionMgr = nullptr;
-	gBuffMgr = nullptr;
-	gResMgr = nullptr;
-	gEffectMgr = nullptr;
-	gObjMgr = nullptr;
+
 }
 
 void UGolbalFunc::TurnForward(AActor* _actor, const FVector& _targetLoc)
@@ -224,4 +189,3 @@ void UGolbalFunc::TestGetName(UObject* _obj)
 	FString name = _obj->GetClass()->GetName();
 	UE_LOG(GolbalFuncLogger, Warning, TEXT("----- uobject name:%s"), *name);
 }
-

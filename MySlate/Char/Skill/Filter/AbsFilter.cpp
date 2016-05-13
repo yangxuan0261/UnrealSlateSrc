@@ -53,11 +53,11 @@ void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::
 	if (targetLoc.SizeSquared() > 0.f)
 	{
 		//TArray<AMyChar*> ignoreChars; 
-		//ETeam ignoreTeam = UCharMgr::GetInstance()->GetIgnoreTeam(_msg->GetAttackerTeam(), mSelectType);
-		//UCharMgr::GetInstance()->GetIgnoreCharsByTeam(ignoreTeam, ignoreChars);
+		//ETeam ignoreTeam = gGetChar()->GetIgnoreTeam(_msg->GetAttackerTeam(), mSelectType);
+		//gGetChar()->GetIgnoreCharsByTeam(ignoreTeam, ignoreChars);
 
 		TArray<AActor*> ignoreActors;
-		//UCharMgr::GetInstance()->ConvertCharsToActors(ignoreChars, ignoreActors);
+		//gGetChar()->ConvertCharsToActors(ignoreChars, ignoreActors);
 
 		TArray<TEnumAsByte<EObjectTypeQuery>>  destObjectTypes; //目的类型集合
 		destObjectTypes.Add((EObjectTypeQuery)ECollisionChannel::ECC_Pawn); //这里强转一下，一一对应的
@@ -72,7 +72,7 @@ void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::
 			UKismetSystemLibrary::BoxOverlapActors_NEW(GWorld, targetLoc, _boxSize, destObjectTypes, AMyChar::StaticClass(), ignoreActors, destActors);
 		}
 
-		ETeam dstTeam = UCharMgr::GetInstance()->GetDestTeam(_msg->GetAttackerTeam(), mSelectType);
+		ETeam dstTeam = gGetChar()->GetDestTeam(_msg->GetAttackerTeam(), mSelectType);
 
 		//为减少多次遍历，直接在cast后加入pkMsg目标集合中
 		AMyChar* tmpTarget = nullptr;
