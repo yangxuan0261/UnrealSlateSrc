@@ -4,7 +4,7 @@
 #include "MyPlayerChar.generated.h"
 
 UCLASS()
-class AMySlateCharacter : public AMyChar
+class AMyPlayerChar : public AMyChar
 {
 	GENERATED_BODY()
 
@@ -18,7 +18,7 @@ class AMySlateCharacter : public AMyChar
 
 
 public:
-	AMySlateCharacter();
+	AMyPlayerChar();
 
 	/** Returns TopDownCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }

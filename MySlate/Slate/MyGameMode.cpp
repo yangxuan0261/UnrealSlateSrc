@@ -2,7 +2,7 @@
 #include "MyGameMode.h"
 
 #include "./StandardHUD.h"
-#include "./MyPlayerCtrler.h"
+#include "../Player/MyPlayerCtrler.h"
 
 AMyGameMode::AMyGameMode() : Super()
 {
@@ -10,7 +10,7 @@ AMyGameMode::AMyGameMode() : Super()
 	//HUDClass = AStandardHUD::StaticClass();
 
 	//// use our custom PlayerController class
-	//PlayerControllerClass = AMySlatePlayerController::StaticClass();
+	//PlayerControllerClass = AMyPlayerCtrler::StaticClass();
 
 	//// set default pawn class to our Blueprinted character
 	//static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/TopDownCPP/Blueprints/TopDownCharacter"));
