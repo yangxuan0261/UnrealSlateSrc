@@ -32,6 +32,7 @@
 
 //----- Component Begin -----
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "GameFramework/SpectatorPawn.h"
 #include "Components/SphereComponent.h"
 
 //----- engine util Begin -----
@@ -39,8 +40,12 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
-//----- Animation Begin -----
 
+//----- Slate Begin -----
+#include "GameFramework/HUD.h"
+
+//----- Input Begin -----
+#include "GameFramework/PlayerInput.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogMySlate, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(FilterLogger, Log, All);
@@ -60,5 +65,11 @@ DECLARE_LOG_CATEGORY_EXTERN(GameLogger, Log, All);
 
 //use logger
 //UE_LOG(SkillLogger, Warning, TEXT("--- USkillFunction::~USkillFunction:%d"), mSkillId);
+
+/** when you modify this, please note that this information can be saved with instances
+* also DefaultEngine.ini [/Script/Engine.CollisionProfile] should match with this list **/
+#define Collision_Static		ECC_WorldStatic
+#define Collision_Dynamic		ECC_WorldDynamic
+#define Collision_Pawn			ECC_Pawn
 
 #endif

@@ -11,6 +11,7 @@ class AMyPlayerCtrler : public APlayerController
 
 public:
 	AMyPlayerCtrler();
+	virtual ~AMyPlayerCtrler();
 
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
@@ -19,6 +20,7 @@ protected:
 	// Begin PlayerController interface
 	virtual void PlayerTick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
+	virtual void ProcessPlayerInput(const float DeltaTime, const bool bGamePaused) override;
 	// End PlayerController interface
 
 	/** Input handlers. */
@@ -46,8 +48,11 @@ protected:
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
 
-private:
-	UMyInput* InputHandler;
+	AActor* GetClickTarget(const FVector2D& ScreenPoint, FVector& WorldPoint) const;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyPlayerCtrler")
+		UMyInput* InputHandler;
 };
 
 

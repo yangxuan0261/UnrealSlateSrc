@@ -3,6 +3,8 @@
 
 #include "MyInput.generated.h"
 
+class AMyPlayerCtrler;
+
 DECLARE_DELEGATE_TwoParams(FOnePointActionSignature, const FVector2D&, float);
 DECLARE_DELEGATE_ThreeParams(FTwoPointsActionSignature, const FVector2D&, const FVector2D&, float);
 
@@ -88,6 +90,7 @@ class UMyInput : public UObject
 public:
 	UMyInput();
 	virtual ~UMyInput();
+	virtual void BeginDestroy() override;
 
 	/** bindings for custom game events */
 	TArray<FActionBinding1P> ActionBindings1P;
@@ -133,4 +136,9 @@ protected:
 
 	/** detect two points actions (touch only) */
 	void DetectTwoPointsActions(bool bCurrentState, bool bPrevState, float DeltaTime, const FVector2D& CurrentPosition1, const FVector2D& CurrentPosition2);
+
+	void				SetMyController(AMyPlayerCtrler* _ctrler);
+private:
+	AMyPlayerCtrler*	GetMyController();
+	AMyPlayerCtrler*	mController;
 };

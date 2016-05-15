@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "GameFramework/GameMode.h"
 #include "MyGameMode.generated.h"
 
 /**

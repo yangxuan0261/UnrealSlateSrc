@@ -9,7 +9,7 @@ AMyGameMode::AMyGameMode() : Super()
 	////Set the hud class to use our custom HUD by default.
 	//HUDClass = AStandardHUD::StaticClass();
 
-	//// use our custom PlayerController class
+	// use our custom PlayerController class
 	//PlayerControllerClass = AMyPlayerCtrler::StaticClass();
 
 	//// set default pawn class to our Blueprinted character

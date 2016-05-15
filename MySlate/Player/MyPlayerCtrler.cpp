@@ -2,11 +2,19 @@
 #include "MyPlayerCtrler.h"
 
 #include "./MyInput.h"
+#include "../Char/MyChar.h"
 
-AMyPlayerCtrler::AMyPlayerCtrler()
+AMyPlayerCtrler::AMyPlayerCtrler() : Super()
 {
+	PrimaryActorTick.bCanEverTick = true;
+	bHidden = false;
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
+}
+
+AMyPlayerCtrler::~AMyPlayerCtrler()
+{
+	UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::~AMyPlayerCtrler"));
 }
 
 void AMyPlayerCtrler::PlayerTick(float DeltaTime)
@@ -25,7 +33,8 @@ void AMyPlayerCtrler::SetupInputComponent()
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
 
-	InputHandler = NewObject<UMyInput>(this); //跟随this释放
+	InputHandler = NewObject<UMyInput>(this, UMyInput::StaticClass()); //跟随this释放
+
 	BIND_1P_ACTION(InputHandler, EGameKey::Tap, IE_Pressed, &AMyPlayerCtrler::OnTapPressed);
 	BIND_1P_ACTION(InputHandler, EGameKey::Hold, IE_Pressed, &AMyPlayerCtrler::OnHoldPressed);
 	BIND_1P_ACTION(InputHandler, EGameKey::Hold, IE_Released, &AMyPlayerCtrler::OnHoldReleased);
@@ -46,11 +55,34 @@ void AMyPlayerCtrler::SetupInputComponent()
 	InputComponent->BindTouch(EInputEvent::IE_Repeat, this, &AMyPlayerCtrler::MoveToTouchLocation);
 }
 
-void AMyPlayerCtrler::OnTapPressed(const FVector2D& ScreenPosition, float DownTime)
+void AMyPlayerCtrler::ProcessPlayerInput(const float DeltaTime, const bool bGamePaused)
 {
+	if (!bGamePaused && PlayerInput && InputHandler)
+	{
+		InputHandler->UpdateDetection(DeltaTime);
+	}
 
+	Super::ProcessPlayerInput(DeltaTime, bGamePaused);
 }
 
+void AMyPlayerCtrler::OnTapPressed(const FVector2D& ScreenPosition, float DownTime)
+{
+	FVector WorldPosition(0.f);
+	AActor* const HitActor = GetClickTarget(ScreenPosition, WorldPosition);
+
+	AMyChar* tarChar = Cast<AMyChar>(HitActor);
+	if (tarChar != nullptr)
+	{
+		UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnTapPressed, target id:%d"), tarChar->GetUuid());
+	}
+
+	//if (HitActor && HitActor->GetClass()->ImplementsInterface(UStrategyInputInterface::StaticClass())) //检查是否有实现结构
+	//{
+	//	IStrategyInputInterface::Execute_OnInputTap(HitActor);
+	//}
+
+}
+	
 void AMyPlayerCtrler::OnHoldPressed(const FVector2D& ScreenPosition, float DownTime)
 {
 
@@ -63,17 +95,17 @@ void AMyPlayerCtrler::OnHoldReleased(const FVector2D& ScreenPosition, float Down
 
 void AMyPlayerCtrler::OnSwipeStarted(const FVector2D& AnchorPosition, float DownTime)
 {
-
+	UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnSwipeStarted, DownTime:%f"), DownTime);
 }
 
 void AMyPlayerCtrler::OnSwipeUpdate(const FVector2D& ScreenPosition, float DownTime)
 {
-
+	UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnSwipeUpdate, DownTime:%f"), DownTime);
 }
 
 void AMyPlayerCtrler::OnSwipeReleased(const FVector2D& ScreenPosition, float DownTime)
 {
-
+	UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnSwipeReleased, DownTime:%f"), DownTime);
 }
 
 void AMyPlayerCtrler::OnSwipeTwoPointsStarted(const FVector2D& ScreenPosition1, const FVector2D& ScreenPosition2, float DownTime)
@@ -149,4 +181,19 @@ void AMyPlayerCtrler::OnSetDestinationReleased()
 {
 	// clear flag to indicate we should stop updating the destination
 	bMoveToMouseCursor = false;
+}
+
+AActor* AMyPlayerCtrler::GetClickTarget(const FVector2D& ScreenPoint, FVector& WorldPoint) const
+{
+	//根据屏幕2d点ScreenPoint，和检查标记Collision_Pawn，检测是否点击中world中的某个符合条件的actor
+	FHitResult Hit;
+	if (GetHitResultAtScreenPosition(ScreenPoint, Collision_Pawn, true, Hit)) 
+	{
+		//if (!AStrategyGameMode::OnEnemyTeam(Hit.GetActor(), this))
+		//{
+			WorldPoint = Hit.ImpactPoint;
+			return Hit.GetActor();
+		//}
+	}
+	return nullptr;
 }

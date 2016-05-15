@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "GameFramework/HUD.h"
 #include "StandardHUD.generated.h"
 
 class SStandardSlateWidget;

@@ -23,7 +23,7 @@ public:
 	// Begin UActorComponent Interface.
 	virtual void BeginPlay() override; //组件被new的时候立即调用
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
-	virtual void DestroyComponent(bool bPromoteChildren = false);
+	virtual void DestroyComponent(bool bPromoteChildren = false) override;
 	// End UActorComponent Interface.
 
 	void		SetFightData(UFightData* _data) { mFightData = _data; }

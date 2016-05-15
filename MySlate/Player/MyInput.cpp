@@ -1,14 +1,21 @@
 #include "MySlate.h"
 #include "MyInput.h"
 
-UMyInput::UMyInput()
-{
+#include "./MyPlayerCtrler.h"
 
+UMyInput::UMyInput() : Super()
+{
+	mController = nullptr;
 }
 
 UMyInput::~UMyInput()
 {
 
+}
+
+void UMyInput::BeginDestroy()
+{
+	Super::BeginDestroy();
 }
 
 void UMyInput::UpdateDetection(float DeltaTime)
@@ -59,27 +66,28 @@ void UMyInput::ProcessKeyStates(float DeltaTime)
 
 void UMyInput::UpdateGameKeys(float DeltaTime)
 {
-	//AStrategyPlayerController* MyController = CastChecked<AStrategyPlayerController>(GetOuter());
+	
+	AMyPlayerCtrler* MyController = GetMyController();
+	
+	// gather current states
+	uint32 CurrentTouchState = 0;
+	for (int32 i = 0; i < ARRAY_COUNT(MyController->PlayerInput->Touches); i++)
+	{
+		if (MyController->PlayerInput->Touches[i].Z != 0)
+		{
+			CurrentTouchState |= (1 << i);
+		}
+	}
 
-	//// gather current states
-	//uint32 CurrentTouchState = 0;
-	//for (int32 i = 0; i < ARRAY_COUNT(MyController->PlayerInput->Touches); i++)
-	//{
-	//	if (MyController->PlayerInput->Touches[i].Z != 0)
-	//	{
-	//		CurrentTouchState |= (1 << i);
-	//	}
-	//}
+	// detection
+	FVector2D LocalPosition1 = FVector2D(MyController->PlayerInput->Touches[0]);
+	FVector2D LocalPosition2 = FVector2D(MyController->PlayerInput->Touches[1]);
 
-	//// detection
-	//FVector2D LocalPosition1 = FVector2D(MyController->PlayerInput->Touches[0]);
-	//FVector2D LocalPosition2 = FVector2D(MyController->PlayerInput->Touches[1]);
+	DetectOnePointActions(CurrentTouchState & 1, PrevTouchState & 1, DeltaTime, LocalPosition1, TouchAnchors[0], Touch0DownTime);
+	DetectTwoPointsActions((CurrentTouchState & 1) && (CurrentTouchState & 2), (PrevTouchState & 1) && (PrevTouchState & 2), DeltaTime, LocalPosition1, LocalPosition2);
 
-	//DetectOnePointActions(CurrentTouchState & 1, PrevTouchState & 1, DeltaTime, LocalPosition1, TouchAnchors[0], Touch0DownTime);
-	//DetectTwoPointsActions((CurrentTouchState & 1) && (CurrentTouchState & 2), (PrevTouchState & 1) && (PrevTouchState & 2), DeltaTime, LocalPosition1, LocalPosition2);
-
-	//// save states
-	//PrevTouchState = CurrentTouchState;
+	// save states
+	PrevTouchState = CurrentTouchState;
 }
 
 void UMyInput::DetectOnePointActions(bool bCurrentState, bool bPrevState, float DeltaTime, const FVector2D& CurrentPosition, FVector2D& AnchorPosition, float& DownTime)
@@ -262,6 +270,20 @@ void UMyInput::DetectTwoPointsActions(bool bCurrentState, bool bPrevState, float
 	}
 }
 
+
+void UMyInput::SetMyController(AMyPlayerCtrler* _ctrler)
+{
+	mController = _ctrler;
+}
+
+AMyPlayerCtrler* UMyInput::GetMyController()
+{
+	if (mController == nullptr)
+	{
+		mController = Cast<AMyPlayerCtrler>(GetOuter());
+	}
+	return mController;
+}
 
 FVector2D UMyInput::GetTouchAnchor(int32 i) const
 {

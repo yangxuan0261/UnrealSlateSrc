@@ -14,7 +14,7 @@ public:
 
 	virtual void BeginPlay() override;
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
-	virtual void DestroyComponent(bool bPromoteChildren = false);
+	virtual void DestroyComponent(bool bPromoteChildren = false) override;
 
 public:
 	virtual void Reset();
