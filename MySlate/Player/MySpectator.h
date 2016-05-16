@@ -24,7 +24,7 @@ public:
 public:
 	void OnMouseScrollUp();
 	void OnMouseScrollDown();
-	UMyCameraComp*		GetCamera() const { return mCameraComp; }
+	UMyCameraComp*		GetMyCameraComp() const { return mCameraComp; }
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMySpectator")

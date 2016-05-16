@@ -11,10 +11,16 @@ UCLASS()
 class MYSLATE_API AMyGameMode : public AGameMode
 {
 	GENERATED_BODY()
-	
 public:
 	AMyGameMode();
-	
+	virtual ~AMyGameMode();
+	/**
+	* Handle new player, skips pawn spawning.
+	* @param NewPlayer
+	*/
+	virtual void RestartPlayer(AController* NewPlayer) override;
+
+public:
 	UFUNCTION(Exec)
 		virtual void solspeed();
 

@@ -3,6 +3,8 @@
 #include "MyPlayerCtrler.generated.h"
 
 class UMyInput;
+class UMyCameraComp;
+class AMySpectator;
 
 UCLASS()
 class AMyPlayerCtrler : public APlayerController
@@ -35,24 +37,25 @@ protected:
 	void OnPinchStarted(const FVector2D& AnchorPosition1, const FVector2D& AnchorPosition2, float DownTime);
 	void OnPinchUpdate(const FVector2D& ScreenPosition1, const FVector2D& ScreenPosition2, float DownTime);
 
-	/** Navigate player to the current mouse cursor location. */
 	void MoveToMouseCursor();
-
-	/** Navigate player to the current touch location. */
 	void MoveToTouchLocation(const ETouchIndex::Type FingerIndex, const FVector Location);
-	
-	/** Navigate player to the given world location. */
 	void SetNewMoveDestination(const FVector DestLocation);
 
 	/** Input handlers for SetDestination action. */
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
 
-	AActor* GetClickTarget(const FVector2D& ScreenPoint, FVector& WorldPoint) const;
+	AActor*				GetClickTarget(const FVector2D& ScreenPoint, FVector& WorldPoint) const;
+	AMySpectator*		GetMySpectator();
+	UMyCameraComp*		GetMyCameraComp();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyPlayerCtrler")
 		UMyInput* InputHandler;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyPlayerCtrler")
+		UMyCameraComp*	mMyCameraComp;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyPlayerCtrler")
+		AMySpectator*	mMySpectator;
 };
 
 

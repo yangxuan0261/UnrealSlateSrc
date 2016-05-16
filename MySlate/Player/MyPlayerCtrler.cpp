@@ -2,6 +2,8 @@
 #include "MyPlayerCtrler.h"
 
 #include "./MyInput.h"
+#include "./MyCameraComp.h"
+#include "./MySpectator.h"
 #include "../Char/MyChar.h"
 
 AMyPlayerCtrler::AMyPlayerCtrler() : Super()
@@ -10,6 +12,9 @@ AMyPlayerCtrler::AMyPlayerCtrler() : Super()
 	bHidden = false;
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
+	InputHandler = nullptr;
+	mMyCameraComp = nullptr;
+	mMySpectator = nullptr;
 }
 
 AMyPlayerCtrler::~AMyPlayerCtrler()
@@ -96,16 +101,28 @@ void AMyPlayerCtrler::OnHoldReleased(const FVector2D& ScreenPosition, float Down
 void AMyPlayerCtrler::OnSwipeStarted(const FVector2D& AnchorPosition, float DownTime)
 {
 	UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnSwipeStarted, DownTime:%f"), DownTime);
+	if (GetMyCameraComp() != nullptr)
+	{
+		GetMyCameraComp()->OnSwipeStarted(AnchorPosition);
+	}
 }
 
 void AMyPlayerCtrler::OnSwipeUpdate(const FVector2D& ScreenPosition, float DownTime)
 {
 	UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnSwipeUpdate, DownTime:%f"), DownTime);
+	if (GetMyCameraComp() != nullptr)
+	{
+		GetMyCameraComp()->OnSwipeUpdate(ScreenPosition);
+	}
 }
 
 void AMyPlayerCtrler::OnSwipeReleased(const FVector2D& ScreenPosition, float DownTime)
 {
 	UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnSwipeReleased, DownTime:%f"), DownTime);
+	if (GetMyCameraComp() != nullptr)
+	{
+		GetMyCameraComp()->OnSwipeReleased(ScreenPosition);
+	}
 }
 
 void AMyPlayerCtrler::OnSwipeTwoPointsStarted(const FVector2D& ScreenPosition1, const FVector2D& ScreenPosition2, float DownTime)
@@ -196,4 +213,25 @@ AActor* AMyPlayerCtrler::GetClickTarget(const FVector2D& ScreenPoint, FVector& W
 		//}
 	}
 	return nullptr;
+}
+
+AMySpectator* AMyPlayerCtrler::GetMySpectator()
+{
+	if (mMySpectator == nullptr)
+	{
+		mMySpectator = Cast<AMySpectator>(GetSpectatorPawn());
+	}
+	return mMySpectator;
+}
+
+UMyCameraComp* AMyPlayerCtrler::GetMyCameraComp()
+{
+	if (mMyCameraComp == nullptr)
+	{
+		if (GetMySpectator() != nullptr)
+		{
+			mMyCameraComp = GetMySpectator()->GetMyCameraComp();
+		}
+	}
+	return mMyCameraComp;
 }

@@ -23,7 +23,13 @@ public:
 	void MoveForward(float _val);
 	void MoveRight(float _val);
 
+	bool OnSwipeStarted(const FVector2D& SwipePosition);
+	bool OnSwipeUpdate(const FVector2D& SwipePosition);
+	bool OnSwipeReleased(const FVector2D& SwipePosition);
+	void EndSwipeNow();
+
 	APlayerController* GetPlayerController();
+	void SetCameraTarget(const FVector& CameraTarget);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCameraComp")
@@ -36,4 +42,5 @@ public:
 	float		mZoom;
 	float		mMinZoom;
 	float		mMaxZoom;
+	FVector		mStartSwipeCoords;
 };
