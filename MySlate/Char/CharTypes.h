@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "GameTypes.generated.h"
+#include "CharTypes.generated.h"
 
 UENUM()
 enum class EGroup : uint8 //¶ÓÎé±àºÅ

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../GameTypes.h"
+#include "../CharTypes.h"
 #include "../Skill/SkillTypes.h"
 #include "MyAnimInstance.generated.h"
 

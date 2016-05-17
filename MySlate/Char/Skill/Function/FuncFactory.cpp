@@ -1,8 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MySlate.h"
 #include "FuncFactory.h"
-#include "../Utils/CommonDef.h"
+#include "../../../GameUtils.h"
 #include "Funcs/AbsPkEvent.h"
 #include "Funcs/AttackPhy.h"
 #include "Funcs/Suckup.h"

@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include "../MyGameInstance.h"
-
 #include "./Char/Skill/SkillMgr.h"
 #include "./Char/CharMgr.h"
 #include "./Char/Skill/Function/FuncFactory.h"

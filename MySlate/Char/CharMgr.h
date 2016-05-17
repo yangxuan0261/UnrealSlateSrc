@@ -2,7 +2,7 @@
 #pragma once
 
 #include "../Common/ISingleton.h"
-#include "./GameTypes.h"
+#include "./CharTypes.h"
 #include "./Skill/SkillTypes.h"
 
 #include "CharMgr.generated.h"

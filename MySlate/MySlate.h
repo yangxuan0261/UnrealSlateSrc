@@ -8,6 +8,7 @@
 #include "EngineGlobals.h"
 #include "Engine/Engine.h"
 #include "Engine/StreamableManager.h"
+#include "GameFramework/GameState.h"
 
 #include "CanvasItem.h"
 #include "Engine/Canvas.h"

@@ -151,6 +151,7 @@ bool AMyChar::UseSkill(int32 _skillId, int32 _targetId /* = 0 */, FVector _targe
 
 void AMyChar::ChangeState(CharState _state)
 {
+	UE_LOG(GameLogger, Warning, TEXT("--- AMyChar::ChangeState, state = %s"), *GetEnumAsString("CharState", _state));
 	mCharState = _state;
 	if (mAnimation != nullptr)
 	{

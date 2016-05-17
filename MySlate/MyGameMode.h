@@ -1,24 +1,30 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "MyGameMode.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class MYSLATE_API AMyGameMode : public AGameMode
+class AMyGameMode : public AGameMode
 {
 	GENERATED_BODY()
 public:
 	AMyGameMode();
 	virtual ~AMyGameMode();
+
+	/** Transitions to WaitingToStart and calls BeginPlay on actors. */
+	virtual void StartPlay() override;
+
+	virtual void InitGameState() override;
 	/**
 	* Handle new player, skips pawn spawning.
 	* @param NewPlayer
 	*/
 	virtual void RestartPlayer(AController* NewPlayer) override;
+
+	/** Restart the game, by default travel to the current map */
+	virtual void RestartGame() override;
+
+	virtual void BeginDestroy() override;
 
 public:
 	UFUNCTION(Exec)

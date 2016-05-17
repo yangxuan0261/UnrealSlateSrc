@@ -4,7 +4,7 @@
 
 #include "../Function/FuncFactory.h"
 #include "../Filter/AbsFilter.h"
-#include "../Utils/CommonDef.h"
+#include "../../../GameUtils.h"
 #include "../Function/Funcs/AbsPkEvent.h"
 #include "../../Object/ObjMgr.h"
 

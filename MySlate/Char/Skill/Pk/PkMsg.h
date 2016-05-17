@@ -3,7 +3,7 @@
 
 #include "Char/Skill/SkillTypes.h"
 #include "../../Object/ObjInter.h"
-#include "Char/GameTypes.h"
+#include "Char/CharTypes.h"
 
 #include "PkMsg.generated.h"
 

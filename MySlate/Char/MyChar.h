@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "GameTypes.h"
+#include "CharTypes.h"
 #include "./BehavInter.h"
 
 #include "MyChar.generated.h"

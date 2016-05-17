@@ -1,8 +1,9 @@
 #include "MySlate.h"
 #include "MyGameMode.h"
 
-#include "./StandardHUD.h"
-#include "../Player/MyPlayerCtrler.h"
+#include "./Slate/StandardHUD.h"
+#include "./Player/MyPlayerCtrler.h"
+#include "./MyGameState.h"
 
 AMyGameMode::AMyGameMode() : Super()
 {
@@ -22,7 +23,23 @@ AMyGameMode::AMyGameMode() : Super()
 
 AMyGameMode::~AMyGameMode()
 {
+	UE_LOG(GameLogger, Warning, TEXT("AMyGameMode::~AMyGameMode"));
+}
 
+void AMyGameMode::StartPlay()
+{
+	Super::StartPlay();
+}
+
+void AMyGameMode::InitGameState()
+{
+	Super::InitGameState();
+
+	AMyGameState* gameState = GetGameState<AMyGameState>();
+	if (gameState != nullptr)
+	{
+		gameState->StartGame();
+	}
 }
 
 void AMyGameMode::RestartPlayer(AController* NewPlayer)
@@ -43,6 +60,17 @@ void AMyGameMode::RestartPlayer(AController* NewPlayer)
 	{
 		UE_LOG(GameLogger, Warning, TEXT("Player start not found, failed to restart player"));
 	}
+}
+
+void AMyGameMode::RestartGame()
+{
+	Super::RestartGame();
+}
+
+void AMyGameMode::BeginDestroy()
+{
+	UE_LOG(GameLogger, Warning, TEXT("Player start not found, failed to restart player"));
+	Super::BeginDestroy();
 }
 
 void AMyGameMode::solspeed()
