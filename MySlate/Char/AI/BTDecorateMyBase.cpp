@@ -38,20 +38,14 @@ bool UBTDecorateMyBase::CanUseSkill()
 {
 	if (mOwnerChar->mCharState != CharState::Attack) //不在攻击状态且有可放的技能
 	{
-		if (mOwnerChar->mCanUseSkillArr.Num() > 0)
-		{
-			return true;
-		}
+
 	}
 	return false;
 }
 
 void UBTDecorateMyBase::UseSkill()
 {
-	if (mOwnerChar->mCanUseSkillArr.Num() > 0)
-	{
-		//mOwnerChar->mCDComp->UseSkill(mOwnerChar->mCanUseSkillArr[0], 0);
-	}
+
 }
 
 bool UBTDecorateMyBase::IsAttackRange()

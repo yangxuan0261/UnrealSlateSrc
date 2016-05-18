@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../../../GameUtils.h"
 #include "../../Object/ObjInter.h"
 
 #include "FightData.generated.h"

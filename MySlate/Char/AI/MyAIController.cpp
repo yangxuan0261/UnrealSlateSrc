@@ -3,9 +3,9 @@
 
 #include "../MyChar.h"
 
-AMyAIController::AMyAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+AMyAIController::AMyAIController() : Super()
 {
-
+	mAutoAI = false;
 }
 
 AMyAIController::~AMyAIController()

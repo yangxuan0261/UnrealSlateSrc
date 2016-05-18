@@ -29,4 +29,7 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMySpectator")
 		UMyCameraComp* mCameraComp;
+
+private:
+	
 };

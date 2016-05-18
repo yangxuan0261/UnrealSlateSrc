@@ -52,12 +52,7 @@ void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::
 
 	if (targetLoc.SizeSquared() > 0.f)
 	{
-		//TArray<AMyChar*> ignoreChars; 
-		//ETeam ignoreTeam = gGetCharMgr()->GetIgnoreTeam(_msg->GetAttackerTeam(), mSelectType);
-		//gGetCharMgr()->GetIgnoreCharsByTeam(ignoreTeam, ignoreChars);
-
 		TArray<AActor*> ignoreActors;
-		//gGetCharMgr()->ConvertCharsToActors(ignoreChars, ignoreActors);
 
 		TArray<TEnumAsByte<EObjectTypeQuery>>  destObjectTypes; //目的类型集合
 		destObjectTypes.Add((EObjectTypeQuery)ECollisionChannel::ECC_Pawn); //这里强转一下，一一对应的
@@ -90,7 +85,7 @@ void UAbsFilter::Filter(UPkMsg* _msg, EFilterType _filterType /* = EFilterType::
 			}
 
 			tmpTarget = Cast<AMyChar>(dstTarget);
-			if (tmpTarget && tmpTarget->IsAlive() && tmpTarget->GetDataComp()->GetTeamType() == dstTeam) //测试时会主动调用Death, 血量没减
+			if (tmpTarget && tmpTarget->IsAlive() && tmpTarget->GetTeamType() == dstTeam) //测试时会主动调用Death, 血量没减
 			{
 
 				if (target != nullptr && target == tmpTarget)

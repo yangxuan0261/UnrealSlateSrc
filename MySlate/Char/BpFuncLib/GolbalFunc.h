@@ -58,4 +58,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TestForceGC();
 
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static void					TestString(FString _str);
 };

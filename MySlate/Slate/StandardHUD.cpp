@@ -67,10 +67,13 @@ void AStandardHUD::DrawHUD()
 
 void AStandardHUD::DrawActorsHealth()
 {
-	const TMap<int32, AMyChar*>& allChars = gGetCharMgr()->GetAllChars();
-	for (TMap<int32, AMyChar*>::TConstIterator Iter = allChars.CreateConstIterator(); Iter; ++Iter)
+	const auto& allChars = gGetCharMgr()->GetAllChars();
+	for (auto Iter = allChars.CreateConstIterator(); Iter; ++Iter)
 	{
-		DrawHealthBar(Iter->Value, 18 * mUIScale, -20.f);
+		for (TMap<int32, AMyChar*>::TConstIterator Iter2 = Iter->Value.CreateConstIterator(); Iter2; ++Iter2)
+		{
+			DrawHealthBar(Iter2->Value, 18 * mUIScale, -20.f);
+		}
 	}
 
 	//float counter = 30.f;

@@ -28,11 +28,12 @@ UCharMgr::~UCharMgr()
 
 void UCharMgr::BeginDestroy()
 {
-	for (TMap<int32, AMyChar*>::TConstIterator Iter = mAllCharMap.CreateConstIterator(); Iter; ++Iter)
+	for (auto Iter = mGroupCharMap.CreateConstIterator(); Iter; ++Iter)
 	{
-		Iter->Value->Destroy();
+		for (TMap<int32, AMyChar*>::TConstIterator Iter2 = Iter->Value.CreateConstIterator(); Iter2; ++Iter2)
+			Iter2->Value->Destroy();
 	}
-	mAllCharMap.Empty();
+	mGroupCharMap.Empty();
 
 	for (TMap<int32, UCharData*>::TConstIterator Iter = mCharDataMap.CreateConstIterator(); Iter; ++Iter)
 	{
@@ -40,10 +41,6 @@ void UCharMgr::BeginDestroy()
 		Iter->Value->ConditionalBeginDestroy();
 	}
 	mCharDataMap.Empty();
-
-	mSelfCharArr.Empty();
-	mTeamCharArr.Empty();
-	mEnemyCharArr.Empty();
 
 	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UCharMgr::BeginDestroy"));
 	Super::BeginDestroy();
@@ -53,28 +50,38 @@ void UCharMgr::AddChar(AMyChar* _char)
 {
 	if (_char != nullptr)
 	{
-		if (_char->mDataComp->mTeam == ETeam::Teammate)
-		{
-			mTeamCharArr.AddUnique(_char);
-		}
-		else if (_char->mDataComp->mTeam == ETeam::Enemy)
-		{
-			mEnemyCharArr.AddUnique(_char);
-		}
-		_char->SetUuid(::IdGenerator());
-		mAllCharMap.Add(_char->mUuid, _char);
+		int32 uuid = ::IdGenerator();
+		_char->SetUuid(uuid);
+
+		TMap<int32, AMyChar*>& dstGroup = mGroupCharMap.FindOrAdd(_char->GetTeamType());
+		dstGroup.Add(uuid, _char);
 	}
 }
 
 AMyChar* UCharMgr::GetChar(int32 _id)
 {
-	AMyChar** mychar = mAllCharMap.Find(_id);
-	return mychar != nullptr ? *mychar : nullptr;
+	AMyChar** mychar = nullptr;
+	for (auto Iter = mGroupCharMap.CreateIterator(); Iter; ++Iter)
+	{
+		mychar = Iter->Value.Find(_id);
+		if (mychar != nullptr)
+		{
+			return *mychar;
+		}
+	}
+	return nullptr;
 }
 
-void UCharMgr::RemoveChar(int32 _id)
+void UCharMgr::RemoveChar(AMyChar* _target)
 {
-	mAllCharMap.Remove(_id);
+	if (_target != nullptr)
+	{
+		TMap<int32, AMyChar*>* dstGroup = mGroupCharMap.Find(_target->GetTeamType());
+		if (dstGroup != nullptr)
+		{
+			dstGroup->Remove(_target->GetUuid());
+		}
+	}
 }
 
 ETeam UCharMgr::GetDestTeam(ETeam _atkTeam, ESelectType _flag)
@@ -117,39 +124,73 @@ ETeam UCharMgr::GetIgnoreTeam(ETeam _atkTeam, ESelectType _flag)
 	}
 }
 
-void UCharMgr::GetIgnoreCharsByTeam(ETeam _type, UPARAM(ref) TArray<AMyChar*>& _outChars) const
+void UCharMgr::GetDstCharVec(ETeam _dstType, float _radius, const FVector& _loc, TArray<AMyChar*>& _outCharVec)
 {
-	AMyChar* target = nullptr;
-	for (TMap<int32, AMyChar*>::TConstIterator Iter = mAllCharMap.CreateConstIterator(); Iter; ++Iter)
+	AMyChar* dstChar = nullptr;
+	TMap<int32, AMyChar*>* charMap = mGroupCharMap.Find(_dstType);
+	if (charMap != nullptr)
 	{
-		target = Iter->Value;
-		if (target->GetDataComp()->GetTeamType() == _type)
+		for (auto Iter = charMap->CreateConstIterator(); Iter; ++Iter)
 		{
-			_outChars.Add(target);
+			dstChar = Iter->Value;
+			float dst = FVector::DistSquared(_loc, dstChar->GetActorLocation());
+			if (dst > FMath::Pow(_radius, 2))
+			{
+				_outCharVec.Add(dstChar);
+			}
 		}
 	}
 }
 
-void UCharMgr::ConvertCharsToActors(UPARAM(ref) const TArray<AMyChar*>& _srcChars, TArray<AActor*>& _outActors)
+AMyChar* UCharMgr::GetCloseChar(const TArray<AMyChar*>& _inVec, const FVector& _loc)
 {
-	for (AMyChar* tmpChar : _srcChars)
+	float smaller = MAX_FLT;
+	AMyChar* dstChar = nullptr;
+	for (AMyChar* target : _inVec)
 	{
-		_outActors.Add(tmpChar);
-	}
-}
-
-void UCharMgr::ConvertActorsToChars(UPARAM(ref) const TArray<AActor*>& _srcActors, TArray<AMyChar*>& _outChars)
-{
-	AMyChar* target = nullptr;
-	for (AActor* tmpActor : _srcActors)
-	{
-		target = Cast<AMyChar>(tmpActor);
-		if (target != nullptr)
+		float val = FVector::Dist(_loc, target->GetActorLocation());
+		if (val < smaller)
 		{
-			_outChars.Add(target);
+			smaller = val;
+			dstChar = target;
 		}
 	}
+	return dstChar;
 }
+
+//void UCharMgr::GetIgnoreCharsByTeam(ETeam _type, UPARAM(ref) TArray<AMyChar*>& _outChars) const
+//{
+//	AMyChar* target = nullptr;
+//	for (TMap<int32, AMyChar*>::TConstIterator Iter = mAllCharMap.CreateConstIterator(); Iter; ++Iter)
+//	{
+//		target = Iter->Value;
+//		if (target->GetTeamType() == _type)
+//		{
+//			_outChars.Add(target);
+//		}
+//	}
+//}
+//
+//void UCharMgr::ConvertCharsToActors(UPARAM(ref) const TArray<AMyChar*>& _srcChars, TArray<AActor*>& _outActors)
+//{
+//	for (AMyChar* tmpChar : _srcChars)
+//	{
+//		_outActors.Add(tmpChar);
+//	}
+//}
+//
+//void UCharMgr::ConvertActorsToChars(UPARAM(ref) const TArray<AActor*>& _srcActors, TArray<AMyChar*>& _outChars)
+//{
+//	AMyChar* target = nullptr;
+//	for (AActor* tmpActor : _srcActors)
+//	{
+//		target = Cast<AMyChar>(tmpActor);
+//		if (target != nullptr)
+//		{
+//			_outChars.Add(target);
+//		}
+//	}
+//}
 
 UCharData* UCharMgr::GetCharData(int32 _id)
 {
@@ -174,6 +215,7 @@ void UCharMgr::LoadCharData()
 			char1->mDescr = tmpPtr->mDescr;
 			char1->mHeath = tmpPtr->mHeath;
 			char1->mHeathMax = tmpPtr->mHeathMax;
+			char1->mWarnRange = tmpPtr->mWarnRange;
 
 			//Õ½¶·»ù´¡ÊôÐÔ
 			char1->mFightData->mLv = tmpPtr->mFightInfo.mLv;

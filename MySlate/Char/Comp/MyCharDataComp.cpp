@@ -14,8 +14,6 @@ UMyCharDataComp::UMyCharDataComp()
 	PrimaryComponentTick.bCanEverTick = false;
 	bAllowAnyoneToDestroyMe = true;
 
-	mGroup = EGroup::None;
-	mTeam = ETeam::None;
 	mHealth = 0.f;
 	mHealthMax = 0.f;
 	mFightData = nullptr;

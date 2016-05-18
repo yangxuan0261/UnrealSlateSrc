@@ -29,6 +29,9 @@ public:
 		AMyChar*	GetCloestEnemy();
 
 	UFUNCTION(BlueprintCallable, Category = "UBTServiceMyBase")
+		bool		IsAutoAI() const;
+
+	UFUNCTION(BlueprintCallable, Category = "UBTServiceMyBase")
 		AMyChar*	GetChar() const { return mOwnerChar; }
 public:
 

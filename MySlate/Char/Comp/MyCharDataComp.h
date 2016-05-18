@@ -31,9 +31,6 @@ public:
 
 	void		SetCharData(int32 _id);
 	UCharData*	GetCharhData() const { return mCharData; }
-
-	const ETeam& GetTeamType() const { return mTeam; }
-
 	void		SetHealth(float _value) { mHealth = _value; }
 	float		GetHealth() const { return mHealth; }
 	void		SetHealthMax(float _value) { mHealthMax = _value; }
@@ -46,10 +43,6 @@ public:
 		UFightData*		mFightData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
 		UCharData*		mCharData;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
-		EGroup			mGroup;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
-		ETeam			mTeam;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
 		float			mHealth;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")

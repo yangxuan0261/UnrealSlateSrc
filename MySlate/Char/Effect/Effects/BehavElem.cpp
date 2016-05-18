@@ -2,7 +2,6 @@
 #include "MySlate.h"
 #include "BehavElem.h"
 
-#include "../../../GameUtils.h"
 #include "../EffectMgr.h"
 #include "../../MyChar.h"
 #include "../../BehavInter.h"

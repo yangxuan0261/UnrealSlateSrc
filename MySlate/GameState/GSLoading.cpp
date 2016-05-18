@@ -4,9 +4,8 @@
 
 #include "./MyGameState.h"
 
-UGameStateLoading::UGameStateLoading() : Super(), IGameStateInterface()
+UGameStateLoading::UGameStateLoading() : UGameStateBase()
 {
-	IGameStateInterface::SetObj(this);
 	mGameState = EGameState::Loading;
 }
 

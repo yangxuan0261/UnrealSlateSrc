@@ -7,8 +7,9 @@ class UBlackboardComponent;
 UCLASS()
 class AMyAIController : public AAIController
 {
-	GENERATED_UCLASS_BODY()
+	GENERATED_BODY()
 public:
+	AMyAIController();
 	virtual ~AMyAIController();
 
 protected:
@@ -31,4 +32,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MyBehavior")
 	class APawn* GetEnemy() const;
+
+	void		SetAutoAI(bool _b) { mAutoAI = _b; }
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
+		bool			mAutoAI;
 };

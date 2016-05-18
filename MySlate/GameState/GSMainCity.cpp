@@ -4,9 +4,8 @@
 
 #include "./MyGameState.h"
 
-UGameStateMainCity::UGameStateMainCity() : Super(), IGameStateInterface()
+UGameStateMainCity::UGameStateMainCity() : UGameStateBase()
 {
-	IGameStateInterface::SetObj(this);
 	mGameState = EGameState::MainCity;
 }
 

@@ -2,19 +2,8 @@
 #pragma once
 
 #include "Tickable.h"
-#include "./GameState/GSInter.h"
+#include "./GameState/GSBase.h"
 #include "MyGameState.generated.h"
-
-UENUM()
-enum class EGameplayState : uint8 //游戏状态
-{
-	None = 0,
-	Start,
-	Waiting,
-	Playing,
-	Finished,
-	Count,
-};
 
 /*
 等价于GameStateManager
@@ -35,20 +24,16 @@ public:
 	// End FTickableGameObject Interface.
 
 public:
-	void		SetGameplayState(EGameplayState _state);
 	void		StartGame();
-	IGameStateInterface*	GetGameState(EGameState _state);
+	UGameStateBase*	GetGameState(EGameState _state);
 	void		ChangeGameState(EGameState _nextState);
 
 public:
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyGameState")
-	//TArray<TScriptInterface<IGameStateInterface>>	mGameStateVec;
-	TArray<IGameStateInterface*>	mGameStateVec;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyGameState")
+		TArray<UGameStateBase*>	mGameStateVec;
 
 private:
-	IGameStateInterface*	mCurrState;
-
-	EGameplayState	mState;
+	UGameStateBase*	mCurrState;
 	float			mWarmupTime;
 	FTimerHandle	mWarmTimeHandler;
 

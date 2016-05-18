@@ -31,5 +31,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharData")
 		float		mHeathMax;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharData")
+		float		mWarnRange;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UCharData")
 		UFightData*	mFightData;
 };

@@ -3,7 +3,6 @@
 
 #include "../../../Common/CommonHeader.h"
 #include "../SkillTypes.h"
-#include "../../../GameUtils.h"
 #include "../../Object/ObjInter.h"
 #include "SkillTemplate.generated.h"
 

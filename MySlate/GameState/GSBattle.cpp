@@ -4,9 +4,8 @@
 
 #include "./MyGameState.h"
 
-UGameStateBattle::UGameStateBattle() : Super(), IGameStateInterface()
+UGameStateBattle::UGameStateBattle() : UGameStateBase()
 {
-	IGameStateInterface::SetObj(this);
 	mGameState = EGameState::Battle;
 	mFlag = false;
 }

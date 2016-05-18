@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "GSInter.generated.h"
+#include "GSBase.generated.h"
 
 class AMyGameState;
 
@@ -17,28 +17,22 @@ enum class EGameState : uint8 //游戏的各种状态
 	Count,
 };
 
-UINTERFACE()
-class UGameStateInterface : public UInterface
+UCLASS()
+class UGameStateBase : public UObject
 {
-	GENERATED_UINTERFACE_BODY()
-};
-
-class IGameStateInterface
-{
-	GENERATED_IINTERFACE_BODY()
+	GENERATED_BODY()
 public:
-	IGameStateInterface();
+	UGameStateBase();
+	virtual ~UGameStateBase();
 
 public:
 	virtual	void	OnEnterState() {}
 	virtual	void	OnExitState() {}
-	virtual void	OnTick(float DeltaSeconds) = 0;
+	virtual void	OnTick(float DeltaSeconds) {}
 
-	void		SetObj(UObject* _obj) { mOwner = _obj; }
 	EGameState	GetGameState() const { return mGameState; }
 	AMyGameState*	GetMyGameState();
 protected:
-	UObject*		mOwner;
 	EGameState		mGameState;
 	AMyGameState*	mGameStateMgr;
 };

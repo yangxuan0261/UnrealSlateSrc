@@ -48,6 +48,9 @@
 //----- Input Begin -----
 #include "GameFramework/PlayerInput.h"
 
+//----- MyGlobalUtils Begin -----
+#include "./GameUtils.h"
+
 DECLARE_LOG_CATEGORY_EXTERN(LogMySlate, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(FilterLogger, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(FuncLogger, Log, All);

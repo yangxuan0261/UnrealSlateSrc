@@ -6,7 +6,7 @@ class AMyChar;
 class AMyAIController;
 class UBehaviorTreeComponent;
 
-UINTERFACE()
+UINTERFACE(meta = (CannotImplementInterfaceInBlueprint))
 class UBTNodeInterface : public UInterface
 {
 	GENERATED_UINTERFACE_BODY()
@@ -18,6 +18,16 @@ class IBTNodeInterface
 public:
 	IBTNodeInterface();
 
+	UFUNCTION(BlueprintCallable, Category = "IBTNodeInterface")
+		virtual AMyChar*	GetChar() const { return mOwnerChar; }
+
+	UFUNCTION(BlueprintCallable, Category = "IBTNodeInterface")
+		virtual AMyAIController*	GetController() const { return mAICtrl; }
+
+	UFUNCTION(BlueprintCallable, Category = "IBTNodeInterface")
+		virtual UBehaviorTreeComponent*	GetBTComp() const { return mBTComp; }
+
+protected:
 	void		InitData(UBehaviorTreeComponent* _BTComp);
 
 protected:

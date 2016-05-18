@@ -83,6 +83,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		virtual void Reset();
 
+	const ETeam& GetTeamType() const { return mTeam; }
+
 	void	OnCDFinish(UCoolDown* _cd);
 	FDeathMultiNotify&	GetDeathMultiNotify() { return mDeathMultiNotify; }
 	void	AddDeathNotify(const FDeathOneNotify& _notify);
@@ -106,7 +108,7 @@ public:
 		CharState			mCharState;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
-		TArray<UCoolDown*>	mCanUseSkillArr;
+		TArray<UCoolDown*>	mCanUseSkillVec;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		int32				mUuid;
@@ -114,12 +116,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		UCharData*			mCharData;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
+		EGroup			mGroup;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMyCharDataComp")
+		ETeam			mTeam;
+
 private:
 	UCharMgr*		gCharMgr; //char 管理器
 	FTimerHandle	mTimer;
 	FVector			mTurnToLoc; //用来平滑旋转时保存目标Loc，因为用了内部函数lambda
 	FRotator		mTurnToRot; //用来平滑旋转时保存目标Rotate,
-
 
 	UMyAnimInstance*	mAnimation;
 	FDeathMultiNotify	mDeathMultiNotify; //绑定： buff管理器等等

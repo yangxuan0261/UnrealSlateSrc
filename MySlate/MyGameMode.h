@@ -15,11 +15,11 @@ public:
 	virtual void StartPlay() override;
 
 	virtual void InitGameState() override;
-	/**
-	* Handle new player, skips pawn spawning.
-	* @param NewPlayer
-	*/
-	virtual void RestartPlayer(AController* NewPlayer) override;
+	///**
+	//* Handle new player, skips pawn spawning.
+	//* @param NewPlayer
+	//*/
+	//virtual void RestartPlayer(AController* NewPlayer) override;
 
 	/** Restart the game, by default travel to the current map */
 	virtual void RestartGame() override;

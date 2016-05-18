@@ -76,7 +76,8 @@ void AMyPlayerCtrler::OnTapPressed(const FVector2D& ScreenPosition, float DownTi
 	AActor* const HitActor = GetClickTarget(ScreenPosition, WorldPosition);
 
 	AMyChar* tarChar = Cast<AMyChar>(HitActor);
-	if (tarChar != nullptr)
+	AMySpectator* spectator = Cast<AMySpectator>(GetSpectatorPawn());
+	if (spectator != nullptr)
 	{
 		UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnTapPressed, target id:%d"), tarChar->GetUuid());
 	}

@@ -22,4 +22,9 @@ void IBTNodeInterface::InitData(UBehaviorTreeComponent* _BTComp)
 	mBTComp = _BTComp;
 	mAICtrl = mBTComp != nullptr ? Cast<AMyAIController>(_BTComp->GetOwner()) : nullptr;
 	mOwnerChar = mAICtrl != nullptr ? Cast<AMyChar>(mAICtrl->GetPawn()) : nullptr;
+
+	if (!mBTComp || !mAICtrl || !mOwnerChar)
+	{
+		UE_LOG(AILogger, Error, TEXT("--- IBTNodeInterface::InitData, nullptr is found"));
+	}
 }

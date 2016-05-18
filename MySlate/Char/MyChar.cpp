@@ -11,6 +11,7 @@
 #include "./CharData.h"
 #include "./Skill/Buff/BuffMgr.h"
 #include "./Effect/Effects/BehavElem.h"
+#include "./Anim/MyAnimInstance.h"
 
 AMyChar::AMyChar() : Super()
 {
@@ -22,10 +23,13 @@ AMyChar::AMyChar() : Super()
 	mDataComp = nullptr;
 	mUsingSkill = nullptr;
 	mCharState = CharState::IdleRun;
+	mGroup = EGroup::None;
+	mTeam = ETeam::None;
 	mUuid = 0;
 	mCharData = nullptr;
 	mTurnToLoc = FVector::ZeroVector;
 	mAnimation = nullptr;
+	GetCharacterMovement()->bUseRVOAvoidance = true;
 }
 
 AMyChar::~AMyChar()
@@ -101,7 +105,7 @@ void AMyChar::Destroyed()
 void AMyChar::OnCDFinish(UCoolDown* _cd)
 {
 	UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::OnCDFinish, skillId:%d"), _cd->GetSkillId());
-	mCanUseSkillArr.AddUnique(_cd);
+	mCanUseSkillVec.AddUnique(_cd);
 }
 
 void AMyChar::AddDeathNotify(const FDeathOneNotify& _notify)
@@ -216,7 +220,7 @@ void AMyChar::Death()
 	}
 
 	//TODO: 从管理器中移除，这里应该做回收，而不是销毁，暂时先销毁
-	gCharMgr->RemoveChar(mUuid);
+	gCharMgr->RemoveChar(this);
 
 	OnDeath(); //通知一下蓝图
 

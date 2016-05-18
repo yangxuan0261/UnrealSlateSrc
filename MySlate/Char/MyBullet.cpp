@@ -286,7 +286,7 @@ void AMyBullet::OnMyCollisionCompBeginOverlap(class AActor* OtherActor, class UP
 	//TODO: 暂时先只对敌方,飞行过程中碰撞框碰撞到的目标，即时结算，例如黑暗游侠的技能
 	if (mSkillTemp->mBltElem->mLockedType == ELockedType::Loc)
 	{
-		if (target->GetDataComp()->GetTeamType() != mPkMsg->GetAttackerTeam())
+		if (target->GetTeamType() != mPkMsg->GetAttackerTeam())
 		{
 			mPkMsg->SetTargetId(target->GetUuid());
 			mPkMsg->SetTarget(target);

@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "./GSInter.h"
+#include "./GSBase.h"
 #include "GSInit.generated.h"
 
 UCLASS()
-class UGameStateInit : public UObject, public IGameStateInterface
+class UGameStateInit : public UGameStateBase
 {
 	GENERATED_BODY()
 public:

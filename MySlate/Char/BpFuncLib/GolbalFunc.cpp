@@ -52,3 +52,8 @@ void UGolbalFunc::TestForceGC()
 {
 	GWorld->GetWorld()->ForceGarbageCollection(true);
 }
+
+void UGolbalFunc::TestString(FString _str)
+{
+	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UGolbalFunc::BeginDestroy, %s"), *_str);
+}
