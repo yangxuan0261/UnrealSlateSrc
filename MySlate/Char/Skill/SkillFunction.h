@@ -32,13 +32,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		USkillTemplate*	GetSkillTemplate() const { return mSkillTemplate; }
 
-	UFUNCTION(BlueprintCallable, Category = "MyChar")
+	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		void		UseSkill(AMyChar* _target, const FVector& _targetLoc);
 
-	UFUNCTION(BlueprintCallable, Category = "MyChar")
+	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		bool		CanAttack();
 
-	UFUNCTION(BlueprintCallable, Category = "MyChar")
+	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
+		int32		GetSkillId() const { return mSkillId; }
+
+	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		void		CancelSkill();
 
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
@@ -59,7 +62,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		void		SetAttacker(AMyChar* _char) { mAttacker = _char; }
 
-	UFUNCTION(BlueprintCallable, Category = "UCoolDown")
+	UFUNCTION(BlueprintCallable, Category = "USkillFunction")
 		void		SetCD(UCoolDown* _cd) { mOwnerCD = _cd; }
 
 	void	SetPkMsgNull() { mPkMsg = nullptr; }

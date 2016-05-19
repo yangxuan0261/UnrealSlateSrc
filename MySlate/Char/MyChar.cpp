@@ -13,7 +13,7 @@
 #include "./Effect/Effects/BehavElem.h"
 #include "./Anim/MyAnimInstance.h"
 
-AMyChar::AMyChar() : Super()
+AMyChar::AMyChar() : Super(), IBehavInterface(), IMyInputInterface()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -30,6 +30,12 @@ AMyChar::AMyChar() : Super()
 	mTurnToLoc = FVector::ZeroVector;
 	mAnimation = nullptr;
 	GetCharacterMovement()->bUseRVOAvoidance = true;
+
+	mParticleComp = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ParticleSysComp"));
+	mParticleComp->SetEnableGravity(false);
+	mParticleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	mParticleComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+	mParticleComp->AttachTo(GetCapsuleComponent());
 }
 
 AMyChar::~AMyChar()
@@ -65,6 +71,9 @@ void AMyChar::BeginPlay()
 	{
 		UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::BeginPlay, UMyAnimInstance load success"));
 	}
+
+	//不显示选中特效
+	IMyInputInterface::Execute_SetParticleVisible(this, false);
 }
 
 void AMyChar::Tick( float DeltaTime )
@@ -102,6 +111,49 @@ void AMyChar::Destroyed()
 	Super::Destroyed();
 }
 
+void AMyChar::SetParticleVisible_Implementation(bool _b)
+{
+	mParticleComp->SetHiddenInGame(!_b);
+}
+
+void AMyChar::MoveToDst_Implementation(const FVector& _loc)
+{
+
+	if (GetCharacterMovement()->Velocity.Size() > 0.f)
+	{
+		GetController()->StopMovement();
+	}
+
+	UNavigationSystem* const NavSys = GetWorld()->GetNavigationSystem();
+	if (NavSys != nullptr)
+	{
+		NavSys->SimpleMoveToLocation(GetController(), _loc);
+	}
+}
+
+//攻击目标
+void AMyChar::AttackTarget_Implementation(AMyChar* _target, int32 _skillId /* = 0 */)
+{
+	if (mUsingSkill != nullptr) //技能使用中则取消
+	{
+		mUsingSkill->CancelSkill();
+	}
+
+	if (_skillId > 0 )
+	{
+		UseSkill(_skillId, _target, _target->GetActorLocation());
+	}
+	else
+	{	//默认使用cd完的技能， pop出来
+		if (mCanUseSkillVec.Num() > 0)
+		{
+			UCoolDown* cd = mCanUseSkillVec.Pop();
+			USkillFunction* skillFunc = cd->GetSkillFunc();
+			UseSkill(skillFunc->GetSkillId(), _target, _target->GetActorLocation());
+		}
+	}
+}
+
 void AMyChar::OnCDFinish(UCoolDown* _cd)
 {
 	UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::OnCDFinish, skillId:%d"), _cd->GetSkillId());
@@ -123,7 +175,7 @@ bool AMyChar::IsAlive() const
 	return mDataComp->mHealth > 0.f ? true : false;
 }
 
-bool AMyChar::UseSkill(int32 _skillId, int32 _targetId /* = 0 */, FVector _targetLoc /* = FVector::ZeroVector */)
+bool AMyChar::UseSkill(int32 _skillId, AMyChar* _target, FVector _targetLoc /* = FVector::ZeroVector */)
 {
 	bool canUse = false;
 	if (mUsingSkill == nullptr)
@@ -135,12 +187,10 @@ bool AMyChar::UseSkill(int32 _skillId, int32 _targetId /* = 0 */, FVector _targe
 		//	return canUse;
 		//}
 
-		AMyChar* target = gGetCharMgr()->GetChar(_targetId);
-
 		USkillFunction* skillFunc = mCDComp->CanUseSkill(_skillId);
 		if (skillFunc != nullptr)
 		{
-			skillFunc->UseSkill(target, _targetLoc);
+			skillFunc->UseSkill(_target, _targetLoc);
 			mUsingSkill = skillFunc;
 			canUse = true;
 		}

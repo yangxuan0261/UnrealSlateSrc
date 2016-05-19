@@ -42,25 +42,25 @@ void AMyGameMode::InitGameState()
 	}
 }
 
-//void AMyGameMode::RestartPlayer(AController* NewPlayer)
-//{
-//	AActor* const StartSpot = FindPlayerStart(NewPlayer);
-//	if (StartSpot != nullptr)
-//	{
-//		// initialize and start it up
-//		InitStartSpot(StartSpot, NewPlayer);
-//
-//		AMyPlayerCtrler* const NewPC = Cast<AMyPlayerCtrler>(NewPlayer);
-//		if (NewPC != nullptr)
-//		{
-//			NewPC->SetInitialLocationAndRotation(StartSpot->GetActorLocation(), StartSpot->GetActorRotation());
-//		}
-//	}
-//	else
-//	{
-//		UE_LOG(GameLogger, Warning, TEXT("Player start not found, failed to restart player"));
-//	}
-//}
+void AMyGameMode::RestartPlayer(AController* NewPlayer)
+{
+	AActor* const StartSpot = FindPlayerStart(NewPlayer);
+	if (StartSpot != nullptr)
+	{
+		// initialize and start it up
+		InitStartSpot(StartSpot, NewPlayer);
+
+		AMyPlayerCtrler* const NewPC = Cast<AMyPlayerCtrler>(NewPlayer);
+		if (NewPC != nullptr)
+		{
+			NewPC->SetInitialLocationAndRotation(StartSpot->GetActorLocation(), StartSpot->GetActorRotation());
+		}
+	}
+	else
+	{
+		UE_LOG(GameLogger, Warning, TEXT("Player start not found, failed to restart player"));
+	}
+}
 
 void AMyGameMode::RestartGame()
 {

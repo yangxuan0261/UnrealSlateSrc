@@ -5,6 +5,7 @@
 class UMyInput;
 class UMyCameraComp;
 class AMySpectator;
+class AMyChar;
 
 UCLASS()
 class AMyPlayerCtrler : public APlayerController
@@ -41,13 +42,17 @@ protected:
 	void MoveToTouchLocation(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void SetNewMoveDestination(const FVector DestLocation);
 
-	/** Input handlers for SetDestination action. */
-	void OnSetDestinationPressed();
-	void OnSetDestinationReleased();
+	void OnLeftMousePressed();
+	void OnRightMousePressed();
+
+	void OnReadAtk();
+	void MoveDestination(const FVector& DestLocation);
+	void AtkTarget(AMyChar* _target);
 
 	AActor*				GetClickTarget(const FVector2D& ScreenPoint, FVector& WorldPoint) const;
 	AMySpectator*		GetMySpectator();
 	UMyCameraComp*		GetMyCameraComp();
+	void				SetSelected(TArray<AMyChar*>& _selectedVec);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyPlayerCtrler")
@@ -56,6 +61,10 @@ public:
 		UMyCameraComp*	mMyCameraComp;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMyPlayerCtrler")
 		AMySpectator*	mMySpectator;
+
+private:
+	TArray<AMyChar*>	mSelectedVec;
+	bool				mIsReadyAtk;
 };
 
 

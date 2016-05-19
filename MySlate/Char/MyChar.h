@@ -2,7 +2,8 @@
 #pragma once
 
 #include "CharTypes.h"
-#include "./BehavInter.h"
+#include "./ExtInter/BehavInter.h"
+#include "./ExtInter/MyInputInter.h"
 
 #include "MyChar.generated.h"
 
@@ -22,7 +23,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FDeathMultiNotify, AMyChar*);
 DECLARE_DELEGATE_OneParam(FDeathOneNotify, AMyChar*); //为multi服务
 
 UCLASS()
-class AMyChar : public ACharacter, public IBehavInterface
+class AMyChar : public ACharacter, public IBehavInterface, public IMyInputInterface
 {
 	GENERATED_BODY()
 
@@ -35,6 +36,12 @@ public:
 	virtual void Destroyed() override; //用于释放成员，调用Destroy();会立即调用
 
 public:
+	//--- IMyInputInterface Begin ---
+	virtual void SetParticleVisible_Implementation(bool _b);
+	virtual void MoveToDst_Implementation(const FVector& _loc);
+	virtual void AttackTarget_Implementation(AMyChar* _target, int32 _skillId  = 0);
+	//--- IMyInputInterface End ---
+
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void	SetUuid(int32 _uuid) { mUuid = _uuid; }
 
@@ -48,7 +55,7 @@ public:
 		bool		IsAlive() const;
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
-		bool		UseSkill(int32 _skillId, int32 _targetId = 0, FVector _targetLoc = FVector::ZeroVector);
+		bool		UseSkill(int32 _skillId, AMyChar* _target, FVector _targetLoc = FVector::ZeroVector);
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void		SetUsingSkillNull() { mUsingSkill = nullptr; }
@@ -93,6 +100,9 @@ public:
 	/* 设置子弹蓝图类 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
 		TSubclassOf<AMyBullet> BulletClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")
+		UParticleSystemComponent*	mParticleComp; //选中特效
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyChar")

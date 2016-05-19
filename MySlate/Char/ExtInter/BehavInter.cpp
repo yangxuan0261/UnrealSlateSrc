@@ -1,7 +1,7 @@
 #include "MySlate.h"
 #include "BehavInter.h"
 
-#include "./Effect/Effects/BehavElem.h"
+#include "../Effect/Effects/BehavElem.h"
 
 UBehavInterface::UBehavInterface(const class FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

@@ -4,7 +4,7 @@
 
 #include "../EffectMgr.h"
 #include "../../MyChar.h"
-#include "../../BehavInter.h"
+#include "../../ExtInter/BehavInter.h"
 #include "../../Object/ObjMgr.h"
 
 UBehavElem::UBehavElem() : Super(), IObjInterface()

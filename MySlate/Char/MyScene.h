@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "./BehavInter.h"
+#include "./ExtInter/BehavInter.h"
 #include "../Common/ISingleton.h"
 
 #include "MyScene.generated.h"

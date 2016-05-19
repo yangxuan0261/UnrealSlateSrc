@@ -192,6 +192,7 @@ AMyChar* UCharMgr::GetCloseChar(const TArray<AMyChar*>& _inVec, const FVector& _
 //	}
 //}
 
+//-------------------- data ฯเนุ
 UCharData* UCharMgr::GetCharData(int32 _id)
 {
 	UCharData** data = mCharDataMap.Find(_id);

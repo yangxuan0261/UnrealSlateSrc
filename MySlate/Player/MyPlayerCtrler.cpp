@@ -5,6 +5,7 @@
 #include "./MyCameraComp.h"
 #include "./MySpectator.h"
 #include "../Char/MyChar.h"
+#include "../Char/ExtInter/MyInputInter.h"
 
 AMyPlayerCtrler::AMyPlayerCtrler() : Super()
 {
@@ -15,6 +16,7 @@ AMyPlayerCtrler::AMyPlayerCtrler() : Super()
 	InputHandler = nullptr;
 	mMyCameraComp = nullptr;
 	mMySpectator = nullptr;
+	mIsReadyAtk = false;
 }
 
 AMyPlayerCtrler::~AMyPlayerCtrler()
@@ -52,8 +54,11 @@ void AMyPlayerCtrler::SetupInputComponent()
 	BIND_2P_ACTION(InputHandler, EGameKey::Pinch, IE_Repeat, &AMyPlayerCtrler::OnPinchUpdate);
 
 
-	InputComponent->BindAction("MouseClick", IE_Pressed, this, &AMyPlayerCtrler::OnSetDestinationPressed);
-	InputComponent->BindAction("MouseClick", IE_Released, this, &AMyPlayerCtrler::OnSetDestinationReleased);
+	InputComponent->BindAction("LeftMouse", IE_Pressed, this, &AMyPlayerCtrler::OnLeftMousePressed);
+	InputComponent->BindAction("RightMouse", IE_Pressed, this, &AMyPlayerCtrler::OnRightMousePressed);
+
+	//按A键，准备攻击
+	InputComponent->BindAction("ReadyAtk", IE_Pressed, this, &AMyPlayerCtrler::OnReadAtk);
 
 	// support touch devices 
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AMyPlayerCtrler::MoveToTouchLocation);
@@ -62,12 +67,12 @@ void AMyPlayerCtrler::SetupInputComponent()
 
 void AMyPlayerCtrler::ProcessPlayerInput(const float DeltaTime, const bool bGamePaused)
 {
+	Super::ProcessPlayerInput(DeltaTime, bGamePaused);
+
 	if (!bGamePaused && PlayerInput && InputHandler)
 	{
-		InputHandler->UpdateDetection(DeltaTime);
+		//InputHandler->UpdateDetection(DeltaTime);
 	}
-
-	Super::ProcessPlayerInput(DeltaTime, bGamePaused);
 }
 
 void AMyPlayerCtrler::OnTapPressed(const FVector2D& ScreenPosition, float DownTime)
@@ -76,12 +81,14 @@ void AMyPlayerCtrler::OnTapPressed(const FVector2D& ScreenPosition, float DownTi
 	AActor* const HitActor = GetClickTarget(ScreenPosition, WorldPosition);
 
 	AMyChar* tarChar = Cast<AMyChar>(HitActor);
-	AMySpectator* spectator = Cast<AMySpectator>(GetSpectatorPawn());
-	if (spectator != nullptr)
+	//AMySpectator* spectator = Cast<AMySpectator>(GetSpectatorPawn());
+	TArray<AMyChar*> dstCharVec;
+	if (tarChar != nullptr)
 	{
+		dstCharVec.Add(tarChar);
 		UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnTapPressed, target id:%d"), tarChar->GetUuid());
 	}
-
+	SetSelected(dstCharVec);
 	//if (HitActor && HitActor->GetClass()->ImplementsInterface(UStrategyInputInterface::StaticClass())) //检查是否有实现结构
 	//{
 	//	IStrategyInputInterface::Execute_OnInputTap(HitActor);
@@ -91,12 +98,12 @@ void AMyPlayerCtrler::OnTapPressed(const FVector2D& ScreenPosition, float DownTi
 	
 void AMyPlayerCtrler::OnHoldPressed(const FVector2D& ScreenPosition, float DownTime)
 {
-
+	UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnHoldPressed, pos:%s"), *ScreenPosition.ToString());
 }
 
 void AMyPlayerCtrler::OnHoldReleased(const FVector2D& ScreenPosition, float DownTime)
 {
-
+	UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnHoldReleased, pos:%s"), *ScreenPosition.ToString());
 }
 
 void AMyPlayerCtrler::OnSwipeStarted(const FVector2D& AnchorPosition, float DownTime)
@@ -189,29 +196,95 @@ void AMyPlayerCtrler::SetNewMoveDestination(const FVector DestLocation)
 	}
 }
 
-void AMyPlayerCtrler::OnSetDestinationPressed()
+void AMyPlayerCtrler::OnLeftMousePressed()
 {
-	// set flag to keep updating destination until released
-	bMoveToMouseCursor = true;
+	FVector2D pressPos;
+	this->GetMousePosition(pressPos.X, pressPos.Y);
+	UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnLeftMousePressed, pos:%s"), *pressPos.ToString());
+
+	bool isAtk = false;
+	FVector WorldPosition(0.f);
+	AActor* const HitActor = GetClickTarget(pressPos, WorldPosition);
+	AMyChar* tarChar = Cast<AMyChar>(HitActor);
+	if (mSelectedVec.Num() > 0)
+	{
+		if (mIsReadyAtk)
+		{
+			//如果有人就锁定目标， 没人就移动
+
+			if (tarChar != nullptr)
+			{
+				AtkTarget(tarChar);
+			}
+			else
+			{
+				MoveDestination(WorldPosition);
+			}
+
+			isAtk = true;
+			mIsReadyAtk = false;
+		}
+	}
+
+	if (!isAtk)
+	{
+		TArray<AMyChar*> dstCharVec;
+		if (tarChar != nullptr)
+		{
+			dstCharVec.Add(tarChar);
+		}
+		SetSelected(dstCharVec);
+	}
+
+
 }
 
-void AMyPlayerCtrler::OnSetDestinationReleased()
+void AMyPlayerCtrler::OnRightMousePressed()
 {
-	// clear flag to indicate we should stop updating the destination
-	bMoveToMouseCursor = false;
+	FVector2D pressPos;
+	this->GetMousePosition(pressPos.X, pressPos.Y);
+	UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnLeftMousePressed, pos:%s"), *pressPos.ToString());
+
+	FHitResult HitResult;
+	this->GetHitResultAtScreenPosition(pressPos, CurrentClickTraceChannel, true, HitResult);
+	if (HitResult.bBlockingHit)
+	{
+		MoveDestination(HitResult.ImpactPoint);
+	}
+}
+
+void AMyPlayerCtrler::OnReadAtk()
+{
+	mIsReadyAtk = true;
+}
+
+void AMyPlayerCtrler::MoveDestination(const FVector& DestLocation)
+{
+	for (AMyChar* selChar : mSelectedVec)
+	{
+		IMyInputInterface::Execute_MoveToDst(selChar, DestLocation);
+	}
+}
+
+void AMyPlayerCtrler::AtkTarget(AMyChar* _target)
+{
+	for (AMyChar* selChar : mSelectedVec)
+	{
+		if (selChar != _target) //不能攻击自己，其余交给接口判断
+		{
+			IMyInputInterface::Execute_AttackTarget(selChar, _target, 0);
+		}
+	}
 }
 
 AActor* AMyPlayerCtrler::GetClickTarget(const FVector2D& ScreenPoint, FVector& WorldPoint) const
 {
 	//根据屏幕2d点ScreenPoint，和检查标记Collision_Pawn，检测是否点击中world中的某个符合条件的actor
 	FHitResult Hit;
-	if (GetHitResultAtScreenPosition(ScreenPoint, Collision_Pawn, true, Hit)) 
+	if (this->GetHitResultAtScreenPosition(ScreenPoint, Collision_Pawn, true, Hit))
 	{
-		//if (!AStrategyGameMode::OnEnemyTeam(Hit.GetActor(), this))
-		//{
-			WorldPoint = Hit.ImpactPoint;
-			return Hit.GetActor();
-		//}
+		WorldPoint = Hit.ImpactPoint;
+		return Hit.GetActor();
 	}
 	return nullptr;
 }
@@ -236,3 +309,19 @@ UMyCameraComp* AMyPlayerCtrler::GetMyCameraComp()
 	}
 	return mMyCameraComp;
 }
+
+void AMyPlayerCtrler::SetSelected(TArray<AMyChar*>& _selectedVec)
+{
+	for (AMyChar* preChar : mSelectedVec)
+	{
+		IMyInputInterface::Execute_SetParticleVisible(preChar, false);
+	}
+	mSelectedVec.Empty();
+
+	for (AMyChar* selChar : _selectedVec)
+	{
+		IMyInputInterface::Execute_SetParticleVisible(selChar, true);
+		mSelectedVec.Add(selChar);
+	}
+}
+

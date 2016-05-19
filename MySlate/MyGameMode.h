@@ -19,7 +19,7 @@ public:
 	//* Handle new player, skips pawn spawning.
 	//* @param NewPlayer
 	//*/
-	//virtual void RestartPlayer(AController* NewPlayer) override;
+	virtual void RestartPlayer(AController* NewPlayer) override;
 
 	/** Restart the game, by default travel to the current map */
 	virtual void RestartGame() override;
