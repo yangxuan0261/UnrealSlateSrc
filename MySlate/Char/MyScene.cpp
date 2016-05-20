@@ -2,10 +2,12 @@
 #include "MySlate.h"
 #include "MyScene.h"
 
+#include "../Player/MySpectator.h"
+
 AMyScene::AMyScene()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	mCameraActor = nullptr;
+	mSpectator = nullptr;
 }
 
 AMyScene::~AMyScene()
@@ -16,8 +18,10 @@ AMyScene::~AMyScene()
 void AMyScene::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	//mCamera->setlocation
+	AMyScene::SetInstance(this);
+
+	//将场景摄像机绑定到这个actor
+	BindSpectator();
 }
 
 void AMyScene::Tick(float DeltaSeconds)
@@ -31,4 +35,13 @@ void AMyScene::Destroyed()
 	
 	UE_LOG(BulletLogger, Warning, TEXT("--- AMyScene::Destroyed"));
 	Super::Destroyed();
+}
+
+void AMyScene::BindSpectator()
+{
+	APlayerController* ctrler = GetWorld()->GetFirstPlayerController();
+	if (ctrler != nullptr)
+	{
+		mSpectator = Cast<AMySpectator>(ctrler->GetSpectatorPawn());
+	}
 }

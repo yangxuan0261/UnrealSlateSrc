@@ -1,14 +1,15 @@
-
 #pragma once
+
+/*
+场景actor，做场景特效，摄像机振动等, 把观察模式的SpectatorPawn引入
+*/
 
 #include "./ExtInter/BehavInter.h"
 #include "../Common/ISingleton.h"
 
 #include "MyScene.generated.h"
 
-/*
-场景actor，做场景特效，摄像机振动等
-*/
+class AMySpectator;
 
 UCLASS()
 class AMyScene : public AActor, public IBehavInterface, public USingleton<AMyScene>
@@ -25,6 +26,10 @@ public:
 	virtual void Destroyed() override;
 	// End Actor interface
 
-public:
-	ACameraActor*		mCameraActor;
+	void		BindSpectator();
+	AMySpectator*	GetSpectator() const { return mSpectator; }
+private:
+	AMySpectator*	mSpectator;
 };
+
+#define gGetScene()			AMyScene::GetInstance()

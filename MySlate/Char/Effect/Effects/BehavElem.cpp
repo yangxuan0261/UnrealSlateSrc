@@ -6,6 +6,8 @@
 #include "../../MyChar.h"
 #include "../../ExtInter/BehavInter.h"
 #include "../../Object/ObjMgr.h"
+#include "../../MyScene.h"
+#include "../../../Player/MySpectator.h"
 
 UBehavElem::UBehavElem() : Super(), IObjInterface()
 {
@@ -84,6 +86,14 @@ void UBehavElem::SetActor(IBehavInterface* _actor)
 	{
 		AMyChar* mychar = Cast<AMyChar>(_actor);
 		dstTar = mychar != nullptr ? mychar : nullptr;
+		if (dstTar == nullptr)
+		{
+			AMyScene* myScene = Cast<AMyScene>(_actor);
+			if (myScene != nullptr)
+			{
+				dstTar = myScene->GetSpectator();
+			}
+		}
 	}
 
 	_actor->SetActor(dstTar);

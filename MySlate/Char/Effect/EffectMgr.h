@@ -14,6 +14,7 @@ class UBehavData;
 class AMyChar;
 class AMyBullet;
 class IBehavInterface;
+class USkillTemplate;
 
 UCLASS()
 class UEffectMgr : public UObject, public FTickableGameObject, public USingleton<UEffectMgr>
@@ -44,9 +45,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UEffectMgr")
 		int32			AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _tarBullet, int32 _behavDataId);
 
-	//UFUNCTION(BlueprintCallable, Category = "UEffectMgr")
 		void			DetachBehav(IBehavInterface* _actor, int32 _groupId);
-
 		void			AttachMesh(AMyBullet* _bullet, USkillTemplate* _skillTemp);
 
 	UFUNCTION(BlueprintCallable, Category = "UEffectMgr")

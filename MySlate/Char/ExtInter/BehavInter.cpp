@@ -27,6 +27,11 @@ void IBehavInterface::BehavTick(float DeltaSeconds)
 
 void IBehavInterface::AddBehavElem(int32 _groupId, TArray<UBehavElem*> _elemVec)
 {
+	if (_elemVec.Num() == 0)
+	{
+		return;
+	}
+
 	TArray<UBehavElem*>* srcVec = mBehavMap.Find(_groupId);
 	if (srcVec != nullptr)
 	{

@@ -153,153 +153,125 @@ int32 UEffectMgr::AttachBehav(AMyChar* _tarChar, EOwnType _ownType, AMyBullet* _
 		return 0;
 	}
 
-	auto bindShakeFunc = [](UShakeElem* _shake, IBehavInterface* _target, int32 _groupId)->void {
-		UShakeElem* shake = _shake->Clone();
-		shake->mGroupId = _groupId;
-		shake->SetActor(_target);
-		shake->Start();
-	};
-
 	int32 groupId = ::IdGeneratorEffect(); //本次行为数据的识别id
 	TArray<UBehavElem*> allElem;
 
-	//------------- char
+	auto BindShakeFunc = [&](UShakeElem* _shake, IBehavInterface* _target)->void {
+		UShakeElem* shake = _shake->Clone();
+		shake->mGroupId = groupId;
+		shake->SetActor(_target);
+		shake->Start();
+		allElem.Add(shake);
+	};
+
+	auto BindEffectFunc = [&](UEffDataElem* _effect, IBehavInterface* _tar1, AActor* _tar2)->void {
+		UParticleSystem* ps = UResMgr::GetInstance()->GetParticle(_effect->mResId);
+		if (ps == nullptr)
+		{
+			UE_LOG(EffectLogger, Error, TEXT("--- UEffectMgr::AttachBehavData, ps == nullptr, resId:%d"), _effect->mResId);
+			return;
+		}
+
+		UParticleSystemComponent* psComp = nullptr;
+		if (_effect->mFollowType == EFollowType::Follow) //跟随
+		{
+			USceneComponent* dstComp = nullptr;
+			if (_effect->mBindPoint.Len() > 0) //绑定骨骼，人物特殊处理
+			{
+				AMyChar* myChar = Cast<AMyChar>(_tar1);
+				dstComp = myChar != nullptr ? myChar->GetMesh() : nullptr;
+			}
+			else //绑定root组件
+			{
+				dstComp = _tar2->GetRootComponent();
+			}
+			psComp = UGameplayStatics::SpawnEmitterAttached(ps
+				, dstComp
+				, FName(*(_effect->mBindPoint))
+				, _effect->mLoc
+				, _effect->mRotate);
+			if (psComp != nullptr)
+			{
+				psComp->SetRelativeScale3D(_effect->mScale);
+			}
+		}
+		else if (_effect->mFollowType == EFollowType::UnFollow) //不跟随，相对char当前transform进行偏移，scale除外
+		{
+			FTransform srcTran = _tar2->GetTransform();
+			FTransform dstTran(_effect->mRotate + srcTran.Rotator(), _effect->mLoc + srcTran.GetTranslation(), _effect->mScale);
+			psComp = UGameplayStatics::SpawnEmitterAtLocation(
+				GWorld
+				, ps
+				, dstTran);
+		}
+
+		if (psComp != nullptr)
+		{
+			_effect = _effect->Clone();
+			_effect->mGroupId = groupId;
+			_effect->SetActor(_tar1);
+			_effect->SetData(psComp);
+			_effect->Start();
+			allElem.Add(_effect);
+		}
+	};
+
+	//------------- char 人物特效
 	if (_tarChar != nullptr)
 	{
 		TArray<UEffDataElem*> effectVec = _ownType == EOwnType::Self ? behavData->mAtkEffVec : behavData->mTarEffVec;
 		TArray<UShakeElem*> shakeVec = _ownType == EOwnType::Self ? behavData->mAtkShkVec : behavData->mTarShkVec;
-		//StrArr.Append(Arr, ARRAY_COUNT(Arr));
+
 		for (UEffDataElem* effect : effectVec)
 		{
-			UParticleSystem* ps = UResMgr::GetInstance()->GetParticle(effect->mResId);
-			if (ps == nullptr )
-			{
-				UE_LOG(EffectLogger, Error, TEXT("--- UEffectMgr::AttachBehavData, ps == nullptr, resId:%d"), effect->mResId);
-				continue;
-			}
-
-			effect = effect->Clone();
-			effect->mGroupId = groupId;
-			UParticleSystemComponent* psComp = nullptr;
-			if (effect->mFollowType == EFollowType::Follow) //跟随char
-			{
-				USceneComponent* dstComp = nullptr;
-				if (effect->mBindPoint.Len() > 0) //绑定骨骼
-				{
-					dstComp = _tarChar->GetMesh();
-				}
-				else //没绑定骨骼则绑定char的capsule组件
-				{
-					dstComp = _tarChar->GetCapsuleComponent();
-				}
-				psComp = UGameplayStatics::SpawnEmitterAttached(ps
-						, _tarChar->GetMesh()
-						, FName(*(effect->mBindPoint))
-						, effect->mLoc
-						, effect->mRotate);
-				if (psComp != nullptr)
-				{
-					psComp->SetRelativeScale3D(effect->mScale);
-				}
-			}
-			else if (effect->mFollowType == EFollowType::UnFollow) //不跟随，相对char当前transform进行偏移，scale除外
-			{
-				FTransform srcTran = _tarChar->GetTransform();
-				FTransform dstTran(effect->mRotate + srcTran.Rotator(), effect->mLoc + srcTran.GetTranslation(), effect->mScale);
-				psComp = UGameplayStatics::SpawnEmitterAtLocation(
-						GWorld
-						, ps
-						, dstTran);
-			}
-			else
-			{
-				UE_LOG(EffectLogger, Error, TEXT("--- UEffectMgr::AttachBehav, mFollowType == %d"), (int32)effect->mFollowType);
-			}
-
-			if (psComp != nullptr)
-			{
-				effect->SetActor(_tarChar);
-				effect->SetData(psComp);
-				effect->Start();
-				allElem.Add(effect);
-			}
+			BindEffectFunc(effect, _tarChar, _tarChar);
 		}
 
 		for (UShakeElem* shake: shakeVec)
 		{
-			bindShakeFunc(shake, _tarChar, groupId);
-			allElem.Add(shake);
+			BindShakeFunc(shake, _tarChar);
 		}
 
 		_tarChar->AddBehavElem(groupId, allElem);
 	}
 
-	//------------- bullet
+	//------------- bullet 子弹特效
 	if (_tarBullet != nullptr)
 	{
-		//子弹特效，在行为数据中取
 		allElem.Empty();
 		TArray<UEffDataElem*> effectVec = behavData->mBltEffVec;
 		TArray<UShakeElem*> shakeVec = behavData->mBltShkVec;
 
 		for (UEffDataElem* effect : effectVec)
 		{
-			if (effect->mFollowType == EFollowType::Follow) //子弹特效一般都是跟随
-			{
-				UParticleSystem* ps = UResMgr::GetInstance()->GetParticle(effect->mResId);
-				if (ps == nullptr)
-				{
-					UE_LOG(EffectLogger, Error, TEXT("--- UEffectMgr::AttachBehavData, ps == nullptr, resId:%d"), effect->mResId);
-					continue;
-				}
-
-				 UParticleSystemComponent* psComp = UGameplayStatics::SpawnEmitterAttached(ps
-						, _tarBullet->GetRootComponent() //绑道子弹根组件
-						, FName(*(effect->mBindPoint))
-						, effect->mLoc
-						, effect->mRotate);
-				if (psComp != nullptr)
-				{
-					effect = effect->Clone();
-					effect->mGroupId = groupId;
-					psComp->SetRelativeScale3D(effect->mScale);
-					effect->SetActor(_tarBullet);
-					effect->SetData(psComp);
-					effect->Start();
-					allElem.Add(effect);
-				}
-			}
-			else
-			{
-				UE_LOG(EffectLogger, Error, TEXT("--- UEffectMgr::AttachBehav, bullet mFollowType != EFollowType::UnFollow"));
-			}
+			BindEffectFunc(effect, _tarBullet, _tarBullet);
 		}
 
 		for (UShakeElem* shake : shakeVec)
 		{
-			bindShakeFunc(shake, _tarBullet, groupId);
-			allElem.Add(shake);
+			BindShakeFunc(shake, _tarBullet);
 		}
 
 		_tarBullet->AddBehavElem(groupId, allElem);
 	}
 
-	//------------- scene
+	//------------- scene 场景特效
 	TArray<UEffDataElem*> effectVec = behavData->mSceEffVec;
 	TArray<UShakeElem*> shakeVec = behavData->mSceShkVec;
+	AMyScene* myScene = gGetScene();
 
+	allElem.Empty();
 	for (UEffDataElem* effect : effectVec)
 	{
-		effect = effect->Clone();
-		effect->mGroupId = groupId;
+		BindEffectFunc(effect, myScene, myScene);
 	}
 
 	for (UShakeElem* shake : shakeVec)
 	{
-		shake = shake->Clone();
-		shake->mGroupId = groupId;
+		BindShakeFunc(shake, _tarBullet);
 	}
 
+	myScene->AddBehavElem(groupId, allElem);
 	return groupId;
 }
 

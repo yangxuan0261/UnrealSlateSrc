@@ -3,6 +3,7 @@
 #include "ShakeElem.h"
 
 #include "../../Object/ObjMgr.h"
+#include "../../ExtInter/BehavInter.h"
 
 UShakeElem::UShakeElem() : Super()
 {
