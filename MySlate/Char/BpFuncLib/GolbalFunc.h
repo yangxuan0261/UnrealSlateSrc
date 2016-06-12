@@ -60,4 +60,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
 		static void					TestString(FString _str);
+
+	UFUNCTION(BlueprintCallable, Category = "GolbalFunc")
+		static void					testSocket(FString _ip, int32 _port);
+
 };

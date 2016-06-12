@@ -57,3 +57,27 @@ void UGolbalFunc::TestString(FString _str)
 {
 	UE_LOG(GolbalFuncLogger, Warning, TEXT("--- UGolbalFunc::BeginDestroy, %s"), *_str);
 }
+
+void UGolbalFunc::testSocket(FString _ip, int32 _port)
+{
+	//FSocket* Socket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
+
+	//FString address = _ip;
+	//FIPv4Address ip;
+	//FIPv4Address::Parse(address, ip);
+
+	//TSharedRef<FInternetAddr> addr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
+	//addr->SetIp(*ip.ToString());
+	//addr->SetPort(_port);
+
+	//bool connected = Socket->Connect(*addr);
+	//if (connected)
+	//{
+	//	FString serialized = TEXT("loadPlayer|1");
+	//	TCHAR *serializedChar = serialized.GetCharArray().GetData();
+	//	int32 size = FCString::Strlen(serializedChar);
+	//	int32 sent = 0;
+
+	//	bool successful = Socket->Send((uint8*)TCHAR_TO_UTF8(serializedChar), size, sent);
+	//}
+}

@@ -12,7 +12,9 @@ public class MySlate : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "InputCore",
-                "AIModule"
+                "AIModule",
+                "Sockets",
+                "Networking"
             });
 
         // Uncomment if you are using Slate UI

@@ -53,7 +53,6 @@ void AMyPlayerCtrler::SetupInputComponent()
 	BIND_2P_ACTION(InputHandler, EGameKey::Pinch, IE_Pressed, &AMyPlayerCtrler::OnPinchStarted);
 	BIND_2P_ACTION(InputHandler, EGameKey::Pinch, IE_Repeat, &AMyPlayerCtrler::OnPinchUpdate);
 
-
 	InputComponent->BindAction("LeftMouse", IE_Pressed, this, &AMyPlayerCtrler::OnLeftMousePressed);
 	InputComponent->BindAction("RightMouse", IE_Pressed, this, &AMyPlayerCtrler::OnRightMousePressed);
 
