@@ -8,6 +8,7 @@
 #include "./Char/Res/ResMgr.h"
 #include "./Char/Effect/EffectMgr.h"
 #include "./Char/Object/ObjMgr.h"
+#include "./Network/NetWokMgr.h"
 
 USkillMgr*		UMyGameInstance::gSkillMgr = nullptr;
 UCharMgr*		UMyGameInstance::gCharMgr = nullptr;
@@ -16,6 +17,7 @@ UBuffMgr*		UMyGameInstance::gBuffMgr = nullptr;
 UResMgr*		UMyGameInstance::gResMgr = nullptr;
 UEffectMgr*		UMyGameInstance::gEffectMgr = nullptr;
 UObjMgr*		UMyGameInstance::gObjMgr = nullptr;
+UNetWokMgr*		UMyGameInstance::gNetMgr = nullptr;
 
 UMyGameInstance::UMyGameInstance(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer)
@@ -37,6 +39,7 @@ void UMyGameInstance::Init()
 	gBuffMgr = gGetBuffMgr();
 	gResMgr = gGetResMgr();
 	gEffectMgr = gGetEffectMgr();
+	gNetMgr = gGetNetMgr();
 	gObjMgr = gGetObjMgr();
 }
 
@@ -50,6 +53,7 @@ void UMyGameInstance::Shutdown()
 	UBuffMgr::ReleaseInstance();
 	UResMgr::ReleaseInstance();
 	UEffectMgr::ReleaseInstance();
+	UNetWokMgr::ReleaseInstance();
 	UObjMgr::ReleaseInstance(); //暂时不释放对象，避免stop时崩溃
 	gSkillMgr = nullptr;
 	gCharMgr = nullptr;
@@ -57,6 +61,7 @@ void UMyGameInstance::Shutdown()
 	gBuffMgr = nullptr;
 	gResMgr = nullptr;
 	gEffectMgr = nullptr;
+	gNetMgr = nullptr;
 	gObjMgr = nullptr;
 
 	UE_LOG(GameLogger, Warning, TEXT("--- UMyGameInstance::Shutdown"));

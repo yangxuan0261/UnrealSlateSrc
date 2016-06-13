@@ -46,6 +46,7 @@
 #include "Sockets.h"
 #include "SocketSubsystem.h"
 #include "Networking.h"
+#include "IPAddress.h"
 
 //----- Slate Begin -----
 #include "GameFramework/HUD.h"

@@ -23,34 +23,32 @@ public:
 	// End FTickableGameObject Interface.
 
 public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "UNetWokMgr")
+		float GetSpeed();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "UNetWokMgr")
+		int32  GetCadence();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "UNetWokMgr")
+		int32  GetBodyHeartRate();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "UNetWokMgr")
+		int32  GetDirection();
+	UFUNCTION(BlueprintCallable, Category = "UNetWokMgr")
+		bool connectSensor(const FString &IP, const int32 &port);
 
-	FSocket* ListenerSocket;
-	FSocket* ConnectionSocket;
+private:
+	FSocket *ConnectionSocket;
 	FIPv4Endpoint RemoteAddressForConnection;
-	void Launch();
+	FTimerHandle TimerHandle;
 
-	bool StartTCPReceiver(
-		const FString& YourChosenSocketName,
-		const FString& TheIP,
-		const int32 ThePort
-	);
+	float fSpeed;
+	int32 iRotaion;
+	int32 iBodyRate;
+	int32 iDirection;
 
-	FSocket* CreateTCPConnectionListener(
-		const FString& YourChosenSocketName,
-		const FString& TheIP,
-		const int32 ThePort,
-		const int32 ReceiveBufferSize = 2 * 1024 * 1024
-	);
+	bool FormatReceiveDataToNumber(const FString& recvData, int32 &heart, int32 &rotation, float &speed, int32 &direction);
+	FSocket* CreateTCPConnection(const FString& TheIP, const int32 ThePort, const int32 ReceiveBufferSize);
 
-	//Timer functions, could be threads
-	void TCPConnectionListener(); 	//can thread this eventually
-	void TCPSocketListener();		//can thread this eventually
-
-	//Rama's StringFromBinaryArray
 	FString StringFromBinaryArray(const TArray<uint8>& BinaryArray);
-
-public:
-	FTimerHandle       mListener;
+	void TCPSocketListener();
 };
 
-#define gNetMgr()			UNetWokMgr::GetInstance()
+#define gGetNetMgr()			UNetWokMgr::GetInstance()

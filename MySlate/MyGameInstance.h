@@ -10,6 +10,7 @@ class UBuffMgr;
 class UResMgr;
 class UEffectMgr;
 class UObjMgr;
+class UNetWokMgr;
 
 UCLASS()
 class MYSLATE_API UMyGameInstance : public UGameInstance, public USingleton<UMyGameInstance>
@@ -34,6 +35,7 @@ private:
 	static UResMgr*			gResMgr;
 	static UEffectMgr*		gEffectMgr;
 	static UObjMgr*			gObjMgr;
+	static UNetWokMgr*		gNetMgr;
 };
 
 #define GetGame()			UMyGameInstance::GetInstance()

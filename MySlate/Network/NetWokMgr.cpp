@@ -36,102 +36,54 @@ TStatId UNetWokMgr::GetStatId() const
 }
 
 //---------------------------------
-void UNetWokMgr::Launch()
-{
-	//IP = 127.0.0.1, Port = 8890 for my Python test case
-	if (!StartTCPReceiver("RamaSocketListener", "127.0.0.1", 8890))
-	{
-		//UE_LOG  "TCP Socket Listener Created!"
-		return;
-	}
-
-	//UE_LOG  "TCP Socket Listener Created! Yay!"
-}
-
-//Rama's Start TCP Receiver
-bool UNetWokMgr::StartTCPReceiver(
-	const FString& YourChosenSocketName,
-	const FString& TheIP,
-	const int32 ThePort) 
-{
-	//Rama's CreateTCPConnectionListener
-	ListenerSocket = CreateTCPConnectionListener(YourChosenSocketName, TheIP, ThePort);
-
-	//Not created?
-	if (!ListenerSocket)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("StartTCPReceiver>> Listen socket could not be created! ~> %s %d"), *TheIP, ThePort));
+bool UNetWokMgr::connectSensor(const FString &IP, const int32 &port) {
+	ConnectionSocket = CreateTCPConnection(IP, port, 1024);
+	if (!ConnectionSocket) {
 		return false;
 	}
 
-	//Start the Listener! //thread this eventually
-	GetWorld()->GetTimerManager().SetTimer(mListener, FTimerDelegate::CreateUObject(this, &UNetWokMgr::TCPConnectionListener), 0.01, true); //设置定时器
+
+	if (TimerHandle.IsValid() == false) {
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this,
+			&UNetWokMgr::TCPSocketListener, 1.0f / 60.0f, true);
+	}
+
 
 	return true;
 }
 
-//Rama's Create TCP Connection Listener
-FSocket* UNetWokMgr::CreateTCPConnectionListener(const FString& YourChosenSocketName, const FString& TheIP, const int32 ThePort, const int32 ReceiveBufferSize)
+FSocket* UNetWokMgr::CreateTCPConnection(const FString& TheIP, const int32 ThePort, const int32 ReceiveBufferSize)
 {
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	//Create Socket
-	FIPv4Address tmpIpv4;
-	FIPv4Address::Parse(TheIP, tmpIpv4);
-	FIPv4Endpoint Endpoint(tmpIpv4, ThePort);
-	FSocket* ListenSocket = FTcpSocketBuilder(*YourChosenSocketName)
-		.AsReusable()
-		.BoundToEndpoint(Endpoint)
-		.Listening(8);
+	FSocket* retSocket = NULL;
 
-	//Set Buffer Size
-	int32 NewSize = 0;
-	ListenSocket->SetReceiveBufferSize(ReceiveBufferSize, NewSize);
+	ISocketSubsystem* SocketSubsystem = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM);
 
-	//Done!
-	return ListenSocket;
-}
-
-//Rama's TCP Connection Listener
-void UNetWokMgr::TCPConnectionListener()
-{
-	//~~~~~~~~~~~~~
-	if (!ListenerSocket) return;
-	//~~~~~~~~~~~~~
-
-	//Remote address
-	TSharedRef<FInternetAddr> RemoteAddress = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
-	bool Pending;
-
-	// handle incoming connections
-	if (ListenerSocket->HasPendingConnection(Pending) && Pending)
+	if (SocketSubsystem != NULL)
 	{
-		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		//Already have a Connection? destroy previous
-		if (ConnectionSocket)
-		{
-			ConnectionSocket->Close();
-			ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(ConnectionSocket);
-		}
-		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-		//New Connection receive!
-		ConnectionSocket = ListenerSocket->Accept(*RemoteAddress, TEXT("RamaTCP Received Socket Connection"));
-
-		if (ConnectionSocket != NULL)
-		{
-			//Global cache of current Remote Address
-			RemoteAddressForConnection = FIPv4Endpoint(RemoteAddress);
-
-			//UE_LOG "Accepted Connection! WOOOHOOOO!!!";
-
-			//can thread this too
-			GetWorld()->GetTimerManager().SetTimer(mListener, FTimerDelegate::CreateUObject(this, &UNetWokMgr::TCPSocketListener), 0.01, true); //设置定时器
-		}
+		retSocket = SocketSubsystem->CreateSocket(NAME_Stream, "SensorConnect", true);
 	}
+
+	FIPv4Address ip;
+	FIPv4Address::Parse(TheIP, ip);
+	//auto addr = SocketSubsystem->CreateInternetAddr();
+	TSharedRef<FInternetAddr> addr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
+	bool isValid = false;
+	addr->SetIp(*ip.ToString(), isValid);//setIP
+	addr->SetPort(ThePort);
+
+	if (!retSocket->Connect(*addr)) {
+		return NULL;
+	}
+
+
+	UE_LOG(NetLogger, Warning, TEXT("--- UNetWokMgr::CreateTCPConnection"));
+
+
+	return retSocket;
 }
 
 //Rama's String From Binary Array
-//This function requires 
+//This function requires
 //		#include <string>
 FString UNetWokMgr::StringFromBinaryArray(const TArray<uint8>& BinaryArray)
 {
@@ -148,35 +100,73 @@ void UNetWokMgr::TCPSocketListener()
 	//~~~~~~~~~~~~~
 
 
-	//Binary Array!
-	TArray<uint8> ReceivedData;
+	int32 sendType = 1;
+	int sent;
+	ConnectionSocket->Send((uint8 *)&sendType, sizeof(sendType), sent);
 
-	uint32 Size;
+	//Binary Array!
+	uint32 Size = 0;
+
 	while (ConnectionSocket->HasPendingData(Size))
 	{
+		TArray<uint8> ReceivedData;
 		ReceivedData.SetNumUninitialized(FMath::Min(Size, 65507u));
+
 		int32 Read = 0;
 		ConnectionSocket->Recv(ReceivedData.GetData(), ReceivedData.Num(), Read);
+		if (ReceivedData.Num() <= 0)
+		{
+		}
+		else {
+			const FString ReceivedUE4String = StringFromBinaryArray(ReceivedData);
+			FormatReceiveDataToNumber(ReceivedUE4String, iBodyRate, iRotaion, fSpeed, iDirection);
+		}
 
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Data Read! %d"), ReceivedData.Num()));
 	}
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	if (ReceivedData.Num() <= 0)
-	{
-		//No Data Received
-		return;
-	}
-
-	UE_LOG(NetLogger, Error, TEXT("--- UNetWokMgr， Total Data read : %d"), ReceivedData.Num());
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Data Bytes Read ~> %d"), ReceivedData.Num()));
-
-
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	//						Rama's String From Binary Array
-	const FString ReceivedUE4String = StringFromBinaryArray(ReceivedData);
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-	UE_LOG(NetLogger, Error, TEXT("--- UNetWokMgr， As String!!!!! ~> : %s"), *ReceivedUE4String);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("As String Data ~> %s"), *ReceivedUE4String));
 }
+
+bool UNetWokMgr::FormatReceiveDataToNumber(const FString& recvData, int32 &heart, int32 &rotation, float &speed, int32 &direction) {
+	//IP Formatting
+	recvData.Replace(TEXT(" "), TEXT(""));
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	//						   IP 4 Parts
+
+	//String Parts
+	TArray<FString> Parts;
+	recvData.ParseIntoArray(Parts, TEXT(","), true);
+	if (Parts.Num() != 4)
+		return false;
+
+	heart = FCString::Atoi(*Parts[0]);
+	rotation = FCString::Atoi(*Parts[1]);
+	speed = FCString::Atof(*Parts[2]);
+	direction = FCString::Atoi(*Parts[3]);
+
+
+	return true;
+}
+
+float UNetWokMgr::GetSpeed() {
+	if (!ConnectionSocket)return 0.0f;
+	return fSpeed;
+}
+
+int32  UNetWokMgr::GetCadence() {
+	if (!ConnectionSocket) return 0;
+	return iRotaion;
+}
+
+int32  UNetWokMgr::GetBodyHeartRate() {
+	if (!ConnectionSocket) return 0;
+	return iBodyRate;
+}
+
+int32  UNetWokMgr::GetDirection() {
+	if (!ConnectionSocket) return 0;
+	return iDirection;
+}
+
+
+
