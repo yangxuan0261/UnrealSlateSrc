@@ -36,11 +36,6 @@ public:
 	virtual void Destroyed() override; //用于释放成员，调用Destroy();会立即调用
 
 public:
-	//--- IMyInputInterface Begin ---
-	virtual void SetParticleVisible_Implementation(bool _b);
-	virtual void MoveToDst_Implementation(const FVector& _loc);
-	virtual void AttackTarget_Implementation(AMyChar* _target, int32 _skillId  = 0);
-	//--- IMyInputInterface End ---
 
 	UFUNCTION(BlueprintCallable, Category = "MyChar")
 		void	SetUuid(int32 _uuid) { mUuid = _uuid; }

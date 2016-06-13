@@ -73,7 +73,8 @@ void AMyChar::BeginPlay()
 	}
 
 	//不显示选中特效
-	IMyInputInterface::Execute_SetParticleVisible(this, false);
+	IMyInputInterface::SetChar(this);
+	IMyInputInterface::SetParticleVisible(false);
 }
 
 void AMyChar::Tick( float DeltaTime )
@@ -109,49 +110,6 @@ void AMyChar::Destroyed()
 
 	UE_LOG(SkillLogger, Warning, TEXT("--- AMyChar::Destroyed"));
 	Super::Destroyed();
-}
-
-void AMyChar::SetParticleVisible_Implementation(bool _b)
-{
-	mParticleComp->SetHiddenInGame(!_b);
-}
-
-void AMyChar::MoveToDst_Implementation(const FVector& _loc)
-{
-
-	if (GetCharacterMovement()->Velocity.Size() > 0.f)
-	{
-		GetController()->StopMovement();
-	}
-
-	UNavigationSystem* const NavSys = GetWorld()->GetNavigationSystem();
-	if (NavSys != nullptr)
-	{
-		NavSys->SimpleMoveToLocation(GetController(), _loc);
-	}
-}
-
-//攻击目标
-void AMyChar::AttackTarget_Implementation(AMyChar* _target, int32 _skillId /* = 0 */)
-{
-	if (mUsingSkill != nullptr) //技能使用中则取消
-	{
-		mUsingSkill->CancelSkill();
-	}
-
-	if (_skillId > 0 )
-	{
-		UseSkill(_skillId, _target, _target->GetActorLocation());
-	}
-	else
-	{	//默认使用cd完的技能， pop出来
-		if (mCanUseSkillVec.Num() > 0)
-		{
-			UCoolDown* cd = mCanUseSkillVec.Pop();
-			USkillFunction* skillFunc = cd->GetSkillFunc();
-			UseSkill(skillFunc->GetSkillId(), _target, _target->GetActorLocation());
-		}
-	}
 }
 
 void AMyChar::OnCDFinish(UCoolDown* _cd)

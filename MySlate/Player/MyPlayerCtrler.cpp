@@ -88,11 +88,6 @@ void AMyPlayerCtrler::OnTapPressed(const FVector2D& ScreenPosition, float DownTi
 		UE_LOG(GameLogger, Warning, TEXT("--- AMyPlayerCtrler::OnTapPressed, target id:%d"), tarChar->GetUuid());
 	}
 	SetSelected(dstCharVec);
-	//if (HitActor && HitActor->GetClass()->ImplementsInterface(UStrategyInputInterface::StaticClass())) //检查是否有实现结构
-	//{
-	//	IStrategyInputInterface::Execute_OnInputTap(HitActor);
-	//}
-
 }
 	
 void AMyPlayerCtrler::OnHoldPressed(const FVector2D& ScreenPosition, float DownTime)
@@ -261,7 +256,7 @@ void AMyPlayerCtrler::MoveDestination(const FVector& DestLocation)
 {
 	for (AMyChar* selChar : mSelectedVec)
 	{
-		IMyInputInterface::Execute_MoveToDst(selChar, DestLocation);
+		selChar->MoveToDst(nullptr, DestLocation, false);
 	}
 }
 
@@ -271,7 +266,7 @@ void AMyPlayerCtrler::AtkTarget(AMyChar* _target)
 	{
 		if (selChar != _target) //不能攻击自己，其余交给接口判断
 		{
-			IMyInputInterface::Execute_AttackTarget(selChar, _target, 0);
+			selChar->AttackTarget(_target, 0, false);
 		}
 	}
 }
@@ -313,13 +308,13 @@ void AMyPlayerCtrler::SetSelected(TArray<AMyChar*>& _selectedVec)
 {
 	for (AMyChar* preChar : mSelectedVec)
 	{
-		IMyInputInterface::Execute_SetParticleVisible(preChar, false);
+		preChar->SetParticleVisible(false);
 	}
 	mSelectedVec.Empty();
 
 	for (AMyChar* selChar : _selectedVec)
 	{
-		IMyInputInterface::Execute_SetParticleVisible(selChar, true);
+		selChar->SetParticleVisible(true);
 		mSelectedVec.Add(selChar);
 	}
 }

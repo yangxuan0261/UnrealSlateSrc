@@ -52,8 +52,8 @@ void UNetWokMgr::Launch()
 bool UNetWokMgr::StartTCPReceiver(
 	const FString& YourChosenSocketName,
 	const FString& TheIP,
-	const int32 ThePort
-) {
+	const int32 ThePort) 
+{
 	//Rama's CreateTCPConnectionListener
 	ListenerSocket = CreateTCPConnectionListener(YourChosenSocketName, TheIP, ThePort);
 
@@ -154,8 +154,7 @@ void UNetWokMgr::TCPSocketListener()
 	uint32 Size;
 	while (ConnectionSocket->HasPendingData(Size))
 	{
-		ReceivedData.Init(FMath::Min(Size, 65507u));
-
+		ReceivedData.SetNumUninitialized(FMath::Min(Size, 65507u));
 		int32 Read = 0;
 		ConnectionSocket->Recv(ReceivedData.GetData(), ReceivedData.Num(), Read);
 
